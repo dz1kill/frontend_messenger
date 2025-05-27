@@ -28,3 +28,8 @@ export interface UserResSingUpData
   extends Omit<User, "confirmPassword"> {
   role: string;
 }
+
+export type ApiError = {
+  status: number;
+  message: string;
+};

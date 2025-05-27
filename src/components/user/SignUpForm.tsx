@@ -9,6 +9,7 @@ import styles from "../../styles/Auth.module.css";
 import { ROUTES } from "../../utils/routes";
 import { createUser } from "../../features/user/userSlice";
 import { useAppDispatch } from "../../hooks";
+import { messageError } from "./helper";
 
 const SignUpForm = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ const SignUpForm = () => {
     isEmpty: true,
     isLoading: false,
     isError: false,
+    errorMessage: "",
   });
 
   useEffect(() => {
@@ -82,10 +84,15 @@ const SignUpForm = () => {
     if (createUser.fulfilled.match(resultAction)) {
       navigate(ROUTES.LOGIN);
     } else {
+      const statusCode = resultAction.payload?.status || 500;
+
+      const errorText = messageError(statusCode);
+
       setValidate((prev) => ({
         ...prev,
         isLoading: false,
         isError: true,
+        errorMessage: errorText,
       }));
     }
   };
@@ -98,13 +105,12 @@ const SignUpForm = () => {
         </div>
       )}
       <div className={styles.board}>
-        <h1
-          className={
-            validate.isError ? styles.titleError : styles.title
-          }
-        >
-          {validate.isError ? "Ошибка регистрации" : "Регистрация"}
-        </h1>
+        <h1 className={styles.title}>{"Регистрация"}</h1>
+        {validate.isError && (
+          <div className={styles.errorMessage}>
+            {validate.errorMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <label>Имя</label>
@@ -123,13 +129,13 @@ const SignUpForm = () => {
               name="userEmail"
               value={formData.userEmail}
               onChange={handleChange}
-              placeholder="Введите ваш email"
+              placeholder={"Введите ваш email"}
             />
           </div>
 
           <div
             className={
-              validate.passMatch ? styles.inputGroup : styles.errMatch
+              validate.passMatch ? styles.inputGroup : styles.errInput
             }
           >
             <label>Пароль</label>
@@ -149,7 +155,7 @@ const SignUpForm = () => {
 
           <div
             className={
-              validate.passMatch ? styles.inputGroup : styles.errMatch
+              validate.passMatch ? styles.inputGroup : styles.errInput
             }
           >
             <label>Подтвердите пароль</label>

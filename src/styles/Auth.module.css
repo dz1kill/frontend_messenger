@@ -38,7 +38,7 @@
 }
 
 .inputGroup,
-.errMatch {
+.errInput {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +47,7 @@
 }
 
 .inputGroup input,
-.errMatch input {
+.errInput input {
   border-radius: 10px;
   padding: 12px 15px;
   border: 2px solid #e9ecef;
@@ -59,12 +59,12 @@
   background-color: #5c91c717;
 }
 
-.errMatch input {
+.errInput input {
   background-color: #ff220027;
 }
 
 .inputGroup label,
-.errMatch label {
+.errInput label {
   font-family: Montserrat;
   font-size: 15px;
   font-weight: bolder;
@@ -72,7 +72,7 @@
 }
 
 .inputGroup input:focus,
-.errMatch input:focus {
+.errInput input:focus {
   border-color: #637df3;
   outline: none;
   box-shadow: 0 5px 15px rgba(58, 18, 68, 0.2);
@@ -154,4 +154,13 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.errorMessage {
+  font-family: Montserrat;
+  color: #ff4d4f;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bolder;
 }

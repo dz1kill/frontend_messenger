@@ -7,6 +7,7 @@ import axios from "axios";
 
 import { BASE_URL } from "../../utils/constants";
 import {
+  ApiError,
   LoginPayload,
   SingUpPayload,
   UserResLoginData,
@@ -23,7 +24,10 @@ const initialState: UserState = {
 
 export const createUser = createAsyncThunk<
   UserResSingUpData,
-  SingUpPayload
+  SingUpPayload,
+  {
+    rejectValue: ApiError;
+  }
 >("users/createUser", async (payload: SingUpPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResSingUpData>(
@@ -33,11 +37,12 @@ export const createUser = createAsyncThunk<
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      return thunkApi.rejectWithValue(
-        err.response?.data?.message || "Sing up failed"
-      );
+      return thunkApi.rejectWithValue({
+        status: err.status || 500,
+        message: err.response?.data || "Unknown error Sing up",
+      });
     }
-    return thunkApi.rejectWithValue("Unknown error Sing up");
+    throw err;
   }
 });
 
