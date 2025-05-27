@@ -13,6 +13,13 @@ import {
   UserResSingUpData,
   UserState,
 } from "../../types/user";
+import { ROUTES } from "../../utils/routes";
+
+const initialState: UserState = {
+  currentUser: null,
+  isLoading: false,
+  error: null,
+};
 
 export const createUser = createAsyncThunk<
   UserResSingUpData,
@@ -20,7 +27,7 @@ export const createUser = createAsyncThunk<
 >("users/createUser", async (payload: SingUpPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResSingUpData>(
-      `${BASE_URL}/users`,
+      `${BASE_URL}${ROUTES.REGISTER}`,
       payload
     );
     return res.data;
@@ -40,7 +47,7 @@ export const loginUser = createAsyncThunk<
 >("login/loginUser", async (payload: LoginPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResLoginData>(
-      `${BASE_URL}/auth/login`,
+      `${BASE_URL}${ROUTES.LOGIN}`,
       payload
     );
     return res.data;
@@ -53,12 +60,6 @@ export const loginUser = createAsyncThunk<
     return thunkApi.rejectWithValue("Unknown error Login");
   }
 });
-
-const initialState: UserState = {
-  currentUser: null,
-  isLoading: false,
-  error: null,
-};
 
 const userSlice = createSlice({
   name: "user",

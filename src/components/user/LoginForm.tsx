@@ -16,7 +16,7 @@ const LoginForm = () => {
   const dispatch = useAppDispatch();
 
   const [formData, setFormData] = useState({
-    email: "",
+    userEmail: "",
     password: "",
   });
 
@@ -48,7 +48,7 @@ const LoginForm = () => {
     element.preventDefault();
 
     const userData = {
-      email: formData.email,
+      email: formData.userEmail,
       password: formData.password,
     };
 
@@ -92,9 +92,8 @@ const LoginForm = () => {
             <label>Почта</label>
             <input
               type="email"
-              name="email"
-              id="email"
-              value={formData.email}
+              name="userEmail"
+              value={formData.userEmail}
               onChange={handleChange}
               placeholder="Введите ваш email"
             />

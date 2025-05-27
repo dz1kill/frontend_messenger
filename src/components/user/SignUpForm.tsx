@@ -17,8 +17,9 @@ const SignUpForm = () => {
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
-    name: "",
-    email: "",
+    firstName: "",
+    userEmail: "",
+    // lastName: "",
   });
   const [validate, setValidate] = useState({
     passMatch: true,
@@ -49,10 +50,10 @@ const SignUpForm = () => {
     element.preventDefault();
 
     const userData = {
-      name: formData.name,
-      email: formData.email,
+      //  lastName: formData.lastName,
+      firstName: formData.firstName,
+      email: formData.userEmail,
       password: formData.password,
-      avatar: "https://picsum.photos/800",
     };
 
     const passwordsMatch =
@@ -109,9 +110,9 @@ const SignUpForm = () => {
             <label>Имя</label>
             <input
               type="name"
-              name="name"
+              name="firstName"
               onChange={handleChange}
-              value={formData.name}
+              value={formData.firstName}
               placeholder="Введите ваше имя"
             />
           </div>
@@ -119,8 +120,8 @@ const SignUpForm = () => {
             <label>Почта</label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
+              name="userEmail"
+              value={formData.userEmail}
               onChange={handleChange}
               placeholder="Введите ваш email"
             />
