@@ -5,7 +5,6 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { BASE_URL } from "../../utils/constants";
 import {
   ApiError,
   LoginPayload,
@@ -31,7 +30,7 @@ export const createUser = createAsyncThunk<
 >("users/createUser", async (payload: SingUpPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResSingUpData>(
-      `${BASE_URL}${ROUTES.REGISTER}`,
+      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.REGISTER}`,
       payload
     );
     return res.data;
@@ -52,7 +51,7 @@ export const loginUser = createAsyncThunk<
 >("login/loginUser", async (payload: LoginPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResLoginData>(
-      `${BASE_URL}${ROUTES.LOGIN}`,
+      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.LOGIN}`,
       payload
     );
     return res.data;
