@@ -20,23 +20,23 @@ const SignUpForm = () => {
     confirmPassword: "",
     firstName: "",
     userEmail: "",
-    // lastName: "",
+    lastName: "",
   });
   const [validate, setValidate] = useState({
     passMatch: true,
-    isEmpty: true,
+    // isEmpty: true,
     isLoading: false,
     isError: false,
     errorMessage: "",
   });
 
-  useEffect(() => {
-    const checkEmpty = Object.values(formData).some((val) => !val);
-    setValidate((prev) => ({
-      ...prev,
-      isEmpty: checkEmpty,
-    }));
-  }, [formData]);
+  // useEffect(() => {
+  //   const checkEmpty = Object.values(formData).some((val) => !val);
+  //   setValidate((prev) => ({
+  //     ...prev,
+  //     isEmpty: checkEmpty,
+  //   }));
+  // }, [formData]);
 
   const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = element.target;
@@ -52,7 +52,7 @@ const SignUpForm = () => {
     element.preventDefault();
 
     const userData = {
-      //  lastName: formData.lastName,
+      lastName: formData.lastName,
       firstName: formData.firstName,
       email: formData.userEmail,
       password: formData.password,
@@ -113,7 +113,7 @@ const SignUpForm = () => {
         )}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
-            <label>Имя</label>
+            <label>Имя*</label>
             <input
               type="name"
               name="firstName"
@@ -123,7 +123,17 @@ const SignUpForm = () => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>Почта</label>
+            <label>Фамилия</label>
+            <input
+              type="name"
+              name="lastName"
+              onChange={handleChange}
+              value={formData.lastName}
+              placeholder="Введите ваше имя"
+            />
+          </div>
+          <div className={styles.inputGroup}>
+            <label>Почта*</label>
             <input
               type="email"
               name="userEmail"
@@ -138,7 +148,7 @@ const SignUpForm = () => {
               validate.passMatch ? styles.inputGroup : styles.errInput
             }
           >
-            <label>Пароль</label>
+            <label>Пароль*</label>
             <input
               type="password"
               id="password"
@@ -158,7 +168,7 @@ const SignUpForm = () => {
               validate.passMatch ? styles.inputGroup : styles.errInput
             }
           >
-            <label>Подтвердите пароль</label>
+            <label>Подтвердите пароль*</label>
             <input
               type="password"
               id="confirmPassword"
@@ -175,7 +185,7 @@ const SignUpForm = () => {
 
           <button
             className={styles.loginButton}
-            disabled={validate.isEmpty}
+            //  disabled={validate.isEmpty}
             type="submit"
           >
             Зарегистрироваться
