@@ -33,3 +33,26 @@ export type ApiError = {
   status: number;
   message: string;
 };
+
+export type VlidateErrState = {
+  userEmail?: string;
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  confirmPassword?: string;
+};
+
+export type FormDataSignUpState = {
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  userEmail: string;
+  lastName: string;
+};
+
+export type ValidatErrServerState = {
+  isEmpty: boolean;
+  isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+};
