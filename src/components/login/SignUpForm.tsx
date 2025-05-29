@@ -7,9 +7,9 @@ import React, {
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/Auth.module.css";
-import { ROUTES } from "../../utils/routes";
-import { createUser } from "../../features/user/userSlice";
-import { useAppDispatch } from "../../hooks";
+import { ROUTES } from "../../router/routes";
+import { createUser } from "../../store/user/users";
+import { useAppDispatch } from "../../libs/redux/hooks";
 import {
   checkEmptyInput,
   messageErrorSignUp,
@@ -25,6 +25,7 @@ const SignUpForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const optionalFields = useMemo(() => ["lastName"], []);
+
   const [formDataSignUp, setFormDataSignUp] = useState<FormDataSignUpState>({
     password: "",
     confirmPassword: "",

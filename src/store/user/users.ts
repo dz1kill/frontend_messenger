@@ -9,7 +9,7 @@ import {
   UserResSingUpData,
   UserState,
 } from "../../types/user";
-import { ROUTES } from "../../utils/routes";
+import { ROUTES } from "../../router/routes";
 
 const initialState: UserState = {
   currentUser: null,

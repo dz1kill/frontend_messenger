@@ -7,10 +7,10 @@ import React, {
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { ROUTES } from "../../utils/routes";
+import { ROUTES } from "../../router/routes";
 import styles from "../../styles/Auth.module.css";
-import { loginUser } from "../../features/user/userSlice";
-import { useAppDispatch } from "../../hooks";
+import { loginUser } from "../../store/user/users";
+import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
 
