@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { FormDataSignUpState } from "../../types/user";
+import { FormDataLoginState, FormDataSignUpState } from "../../types/user";
 
-export const messageError = (statusCode: number) => {
+export const messageErrorSignUp = (statusCode: number) => {
   switch (statusCode) {
     case 400:
       return "Поля не должны содержать пробелов, а обязатыльные быть пустыми ";
@@ -14,7 +14,18 @@ export const messageError = (statusCode: number) => {
   }
 };
 
-export const validateInput = (formData: FormDataSignUpState) => {
+export const messageErrorLogin = (statusCode: number) => {
+  switch (statusCode) {
+    case 400:
+      return "Не верный пароль или почта";
+    case 500:
+      return "Ошибка сервера";
+    default:
+      return "Неизвестная ошибка сервера";
+  }
+};
+
+export const validateInputSignUp = (formData: FormDataSignUpState) => {
   const UserValidate = z
     .object({
       userEmail: z
@@ -54,8 +65,10 @@ export const validateInput = (formData: FormDataSignUpState) => {
   return UserValidate.safeParse(formData);
 };
 
-export const checkEmptyInput = (formData: FormDataSignUpState) => {
-  const optionalFields = ["lastName"];
+export const checkEmptyInput = (
+  optionalFields: string[],
+  formData: FormDataSignUpState | FormDataLoginState
+) => {
   const arrFormData = Object.entries(formData);
 
   const filterData = arrFormData.filter(

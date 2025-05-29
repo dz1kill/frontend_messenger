@@ -3,6 +3,7 @@ import React, {
   useState,
   ChangeEvent,
   FormEvent,
+  useMemo,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/Auth.module.css";
@@ -11,8 +12,8 @@ import { createUser } from "../../features/user/userSlice";
 import { useAppDispatch } from "../../hooks";
 import {
   checkEmptyInput,
-  messageError,
-  validateInput,
+  messageErrorSignUp,
+  validateInputSignUp,
 } from "./helper";
 import {
   FormDataSignUpState,
@@ -23,15 +24,14 @@ import {
 const SignUpForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const [formDataSignUp, setFormDataSignUp] =
-    useState<FormDataSignUpState>({
-      password: "",
-      confirmPassword: "",
-      firstName: "",
-      userEmail: "",
-      lastName: "",
-    });
+  const optionalFields = useMemo(() => ["lastName"], []);
+  const [formDataSignUp, setFormDataSignUp] = useState<FormDataSignUpState>({
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    userEmail: "",
+    lastName: "",
+  });
 
   const [validatErrServer, setValidatErrServer] =
     useState<ValidatErrServerState>({
@@ -43,12 +43,12 @@ const SignUpForm = () => {
   const [vlidateErr, setvlidateErr] = useState<VlidateErrState>({});
 
   useEffect(() => {
-    const checkEmpty = checkEmptyInput(formDataSignUp);
+    const checkEmpty = checkEmptyInput(optionalFields, formDataSignUp);
     setValidatErrServer((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
-  }, [formDataSignUp]);
+  }, [optionalFields, formDataSignUp]);
 
   const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = element.target;
@@ -58,9 +58,7 @@ const SignUpForm = () => {
     }));
   };
 
-  const handleSubmit = async (
-    element: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (element: FormEvent<HTMLFormElement>) => {
     element.preventDefault();
 
     const userData = {
@@ -70,7 +68,7 @@ const SignUpForm = () => {
       password: formDataSignUp.password,
     };
 
-    const resultValidate = validateInput(formDataSignUp);
+    const resultValidate = validateInputSignUp(formDataSignUp);
     if (!resultValidate.success) {
       const newErrors: Record<string, string> = {};
       resultValidate.error.errors.forEach((err) => {
@@ -96,7 +94,7 @@ const SignUpForm = () => {
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
-      const errorText = messageError(statusCode);
+      const errorText = messageErrorSignUp(statusCode);
 
       setValidatErrServer((prev) => ({
         ...prev,
@@ -124,9 +122,7 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit}>
           <div
             className={
-              vlidateErr.firstName
-                ? styles.errInput
-                : styles.inputGroup
+              vlidateErr.firstName ? styles.errInput : styles.inputGroup
             }
           >
             <label>Имя</label>
@@ -145,9 +141,7 @@ const SignUpForm = () => {
           </div>
           <div
             className={
-              vlidateErr.lastName
-                ? styles.errInput
-                : styles.inputGroup
+              vlidateErr.lastName ? styles.errInput : styles.inputGroup
             }
           >
             <label>Фамилия</label>
@@ -164,9 +158,7 @@ const SignUpForm = () => {
           </div>
           <div
             className={
-              vlidateErr.userEmail
-                ? styles.errInput
-                : styles.inputGroup
+              vlidateErr.userEmail ? styles.errInput : styles.inputGroup
             }
           >
             <label>Почта</label>
@@ -184,9 +176,7 @@ const SignUpForm = () => {
 
           <div
             className={
-              vlidateErr.password
-                ? styles.errInput
-                : styles.inputGroup
+              vlidateErr.password ? styles.errInput : styles.inputGroup
             }
           >
             <label>Пароль</label>
@@ -195,19 +185,17 @@ const SignUpForm = () => {
             </span>
             <input
               type="password"
-              id="password"
               name="password"
               placeholder={"Ведите пароль"}
               value={formDataSignUp.password}
               onChange={handleChange}
+              autoComplete="new-password"
             />
           </div>
 
           <div
             className={
-              vlidateErr.confirmPassword
-                ? styles.errInput
-                : styles.inputGroup
+              vlidateErr.confirmPassword ? styles.errInput : styles.inputGroup
             }
           >
             <label>Подтвердите пароль</label>
@@ -216,11 +204,11 @@ const SignUpForm = () => {
             </span>
             <input
               type="password"
-              id="confirmPassword"
               name="confirmPassword"
               placeholder={"Подтвердите пароль"}
               value={formDataSignUp.confirmPassword}
               onChange={handleChange}
+              autoComplete="new-password"
             />
           </div>
 

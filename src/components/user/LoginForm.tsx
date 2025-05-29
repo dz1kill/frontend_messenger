@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   FormEvent,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,51 +11,52 @@ import { ROUTES } from "../../utils/routes";
 import styles from "../../styles/Auth.module.css";
 import { loginUser } from "../../features/user/userSlice";
 import { useAppDispatch } from "../../hooks";
+import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
+import { checkEmptyInput, messageErrorLogin } from "./helper";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const optionalFields = useMemo(() => [], []);
 
-  const [formData, setFormData] = useState({
+  const [formDataLogin, setFormDataLogin] = useState<FormDataLoginState>({
     userEmail: "",
     password: "",
   });
 
-  const [validate, setValidate] = useState({
-    isEmpty: true,
-    isLoading: false,
-    isError: false,
-  });
+  const [validatErrServer, setValidatErrServer] =
+    useState<ValidatErrServerState>({
+      isEmpty: true,
+      isLoading: false,
+      isErrorServer: false,
+      errorMessageServer: "",
+    });
 
   useEffect(() => {
-    const checkEmpty = Object.values(formData).some((val) => !val);
-    setValidate((prev) => ({
+    const checkEmpty = checkEmptyInput(optionalFields, formDataLogin);
+    setValidatErrServer((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
-  }, [formData]);
+  }, [optionalFields, formDataLogin]);
 
   const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = element.target;
-    setFormData({
-      ...formData,
+    setFormDataLogin({
+      ...formDataLogin,
       [name]: value,
     });
   };
-
-  const handleSubmit = async (
-    element: FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (element: FormEvent<HTMLFormElement>) => {
     element.preventDefault();
 
     const userData = {
-      email: formData.userEmail,
-      password: formData.password,
+      email: formDataLogin.userEmail,
+      password: formDataLogin.password,
     };
 
-    setValidate((prev) => ({
+    setValidatErrServer((prev) => ({
       ...prev,
-      passMatch: true,
       isLoading: true,
     }));
 
@@ -62,63 +64,66 @@ const LoginForm = () => {
     if (loginUser.fulfilled.match(resultAction)) {
       navigate(ROUTES.HOME);
     } else {
-      setValidate((prev) => ({
+      const statusCode = resultAction.payload?.status || 500;
+
+      const errorText = messageErrorLogin(statusCode);
+
+      setValidatErrServer((prev) => ({
         ...prev,
         isLoading: false,
-        isError: true,
+        isErrorServer: true,
+        errorMessageServer: errorText,
       }));
     }
   };
 
   return (
     <div className={styles.page}>
-      {validate.isLoading && (
+      {validatErrServer.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
       )}
       <div className={styles.board}>
-        <h1
-          className={
-            validate.isError ? styles.titleError : styles.title
-          }
-        >
-          {validate.isError
-            ? "Неправильный адрес электронной почты или пароль"
-            : "Вход в систему"}
-        </h1>
+        <h1 className={styles.title}>{"Вход в систему"}</h1>
+        {validatErrServer.isErrorServer && (
+          <div className={styles.errorMessageTitle}>
+            {validatErrServer.errorMessageServer}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <label>Почта</label>
             <input
+              key=""
               type="email"
               name="userEmail"
-              value={formData.userEmail}
+              value={formDataLogin.userEmail}
               onChange={handleChange}
               placeholder="Введите ваш email"
             />
           </div>
           <div className={styles.inputGroup}>
             <label>Пароль</label>
-
             <input
+              key=""
               type="password"
-              id="password"
               name="password"
-              value={formData.password}
+              value={formDataLogin.password}
               onChange={handleChange}
               placeholder="Введите ваш пароль"
+              autoComplete="off"
             />
             <a
               className={styles.forgetPassword}
-              href="http://localhost:3000/"
+              href={process.env.REACT_APP_API_APP_URL}
             >
               Забыли пароль?
             </a>
           </div>
           <button
             className={styles.loginButton}
-            disabled={validate.isEmpty}
+            disabled={validatErrServer.isEmpty}
             type="submit"
           >
             Войти

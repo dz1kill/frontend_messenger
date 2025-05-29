@@ -1,8 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import {
@@ -47,7 +43,10 @@ export const createUser = createAsyncThunk<
 
 export const loginUser = createAsyncThunk<
   UserResLoginData,
-  LoginPayload
+  LoginPayload,
+  {
+    rejectValue: ApiError;
+  }
 >("login/loginUser", async (payload: LoginPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResLoginData>(
@@ -57,11 +56,12 @@ export const loginUser = createAsyncThunk<
     return res.data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
-      return thunkApi.rejectWithValue(
-        err.response?.data?.message || "Login failed"
-      );
+      return thunkApi.rejectWithValue({
+        status: err.status || 500,
+        message: err.response?.data || "Unknown error Login",
+      });
     }
-    return thunkApi.rejectWithValue("Unknown error Login");
+    throw err;
   }
 });
 

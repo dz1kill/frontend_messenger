@@ -1,4 +1,4 @@
-export interface User {
+interface User {
   id: string;
   firstName: string;
   lastName?: string;
@@ -7,11 +7,9 @@ export interface User {
   confirmPassword: string;
 }
 
-export interface SingUpPayload
-  extends Omit<User, "id" | "confirmPassword"> {}
+export interface SingUpPayload extends Omit<User, "id" | "confirmPassword"> {}
 
-export interface LoginPayload
-  extends Pick<User, "email" | "password"> {}
+export interface LoginPayload extends Pick<User, "email" | "password"> {}
 
 export interface UserState {
   currentUser: UserResLoginData | UserResSingUpData | null;
@@ -21,12 +19,11 @@ export interface UserState {
 
 export interface UserResLoginData {
   access_token: string;
-  refresh_token: string;
+  message: string;
 }
 
-export interface UserResSingUpData
-  extends Omit<User, "confirmPassword"> {
-  role: string;
+export interface UserResSingUpData {
+  message: string;
 }
 
 export type ApiError = {
@@ -48,6 +45,10 @@ export type FormDataSignUpState = {
   firstName: string;
   userEmail: string;
   lastName: string;
+};
+export type FormDataLoginState = {
+  password: string;
+  userEmail: string;
 };
 
 export type ValidatErrServerState = {
