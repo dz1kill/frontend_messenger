@@ -9,7 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { ROUTES } from "../../router/routes";
 import styles from "../../styles/Auth.module.css";
-import { loginUser } from "../../store/user/users";
+import { loginUser } from "../../store/auth/users";
 import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
