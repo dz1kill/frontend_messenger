@@ -1,18 +1,20 @@
-// Header.tsx
 import React from "react";
 import styles from "../../styles/Header.module.css";
 
 const Header: React.FC = () => {
   return (
-    <header className={styles.header}>
-      <div className={styles.logo}>Messenger</div>
-      <div className={styles.search}>
-        <input type="text" placeholder="Search..." />
-      </div>
-      <div className={styles.userMenu}>
-        <span>👤 User Name</span>
-      </div>
-    </header>
+    <div>
+      <header className={styles.header}>
+        <div className={styles.leftSection}>
+          <button className={styles.menuButton}>
+            <div className={styles.menuIcon}></div>
+            <div className={styles.menuIcon}></div>
+            <div className={styles.menuIcon}></div>
+          </button>
+          <div className={styles.logo}>Messenger</div>
+        </div>
+      </header>
+    </div>
   );
 };
 
