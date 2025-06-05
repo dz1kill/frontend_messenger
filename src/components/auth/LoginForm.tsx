@@ -14,7 +14,7 @@ import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
 
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const optionalFields = useMemo(() => [], []);
@@ -62,7 +62,7 @@ const LoginForm = () => {
 
     const resultAction = await dispatch(loginUser(userData));
     if (loginUser.fulfilled.match(resultAction)) {
-      navigate(ROUTES.HOME);
+      navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
@@ -128,7 +128,7 @@ const LoginForm = () => {
           >
             Войти
           </button>
-          <Link to={`${ROUTES.REGISTER}`} className={styles.link}>
+          <Link to={`${ROUTES.APP.REGISTER}`} className={styles.link}>
             У меня нет аккаунта
           </Link>
         </form>

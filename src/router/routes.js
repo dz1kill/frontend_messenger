@@ -1,5 +1,11 @@
 export const ROUTES = {
-  HOME: "/",
-  LOGIN: "/auth/login",
-  REGISTER: "/auth/sing-up",
+  SERVER: {
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/sing-up",
+  },
+  APP: {
+    HOME: "/",
+    LOGIN: "/login",
+    REGISTER: "/sing-up",
+  },
 };

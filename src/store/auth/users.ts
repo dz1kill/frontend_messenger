@@ -27,7 +27,7 @@ export const createUser = createAsyncThunk<
   try {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await axios.post<UserResSingUpData>(
-      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.REGISTER}`,
+      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.REGISTER}`,
       payload
     );
     return res.data;
@@ -52,7 +52,7 @@ export const loginUser = createAsyncThunk<
   try {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const res = await axios.post<UserResLoginData>(
-      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.LOGIN}`,
+      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.LOGIN}`,
       payload
     );
     return res.data;

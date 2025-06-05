@@ -21,7 +21,7 @@ import {
   VlidateErrState,
 } from "../../types/user";
 
-const SignUpForm = () => {
+const SignUpForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const optionalFields = useMemo(() => ["lastName"], []);
@@ -91,7 +91,7 @@ const SignUpForm = () => {
 
     const resultAction = await dispatch(createUser(userData));
     if (createUser.fulfilled.match(resultAction)) {
-      navigate(ROUTES.LOGIN);
+      navigate(ROUTES.APP.LOGIN);
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
@@ -220,7 +220,7 @@ const SignUpForm = () => {
           >
             Зарегистрироваться
           </button>
-          <Link to={`${ROUTES.LOGIN}`} className={styles.link}>
+          <Link to={`${ROUTES.APP.LOGIN}`} className={styles.link}>
             У меня уже есть аккаунт
           </Link>
         </form>
