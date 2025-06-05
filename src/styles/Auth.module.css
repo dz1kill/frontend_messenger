@@ -10,9 +10,9 @@
 }
 
 .board {
-  background: #ffffff; /* Белый фон как в Telegram */
+  background: #ffffff;
   border-radius: 10px;
-  box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.1); /* Более мягкая тень */
+  box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.1);
   width: 350px;
   padding: 40px;
   text-align: center;
@@ -21,7 +21,7 @@
 .title {
   font-size: 30px;
   background-clip: text;
-  background: linear-gradient(135deg, #0088cc, #34b7f1); /* Градиент Telegram */
+  background: linear-gradient(135deg, #0088cc, #34b7f1);
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
 }
@@ -39,23 +39,23 @@
 .errInput input {
   border-radius: 10px;
   padding: 12px 15px;
-  border: 2px solid #d9d9d9; /* Серая граница как в Telegram */
+  border: 2px solid #d9d9d9;
   transition: all 0.5s ease;
   width: 90%;
 }
 
 .inputGroup input {
-  background-color: #f0f2f5; /* Светло-серый фон полей */
+  background-color: #f0f2f5;
 }
 
 .errInput input {
-  background-color: #ffebee; /* Светло-красный для ошибок */
-  border-color: #ff3b30; /* Красная граница при ошибке */
+  background-color: #ffebee;
+  border-color: #ff3b30;
 }
 
 .errorInputMessage {
   font-size: 12px;
-  color: #ff3b30; /* Красный для ошибок как в Telegram */
+  color: #ff3b30;
 
   margin-left: 7px;
   margin-right: auto;
@@ -65,19 +65,19 @@
 .errInput label {
   font-size: 15px;
   font-weight: bolder;
-  color: #707579; /* Серый цвет меток */
+  color: #707579;
 }
 
 .inputGroup input:focus,
 .errInput input:focus {
-  border-color: #34b7f1; /* Голубой цвет фокуса как в Telegram */
+  border-color: #34b7f1;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(52, 183, 241, 0.2); /* Светло-голубая тень */
+  box-shadow: 0 0 0 2px rgba(52, 183, 241, 0.2);
 }
 
 .loginButton {
   color: white;
-  background: #0088cc; /* Основной синий Telegram */
+  background: #0088cc;
   cursor: pointer;
   transition: opacity 0.5s;
   margin-top: 10px;
@@ -98,7 +98,7 @@
 
 .link {
   font-size: 12px;
-  color: #0088cc; /* Синий для ссылок */
+  color: #0088cc;
   text-decoration: none;
   display: inline-block;
   margin-top: 25px;
@@ -110,7 +110,7 @@
 
 .forgetPassword {
   font-size: 11px;
-  color: #0088cc; /* Синий для ссылок */
+  color: #0088cc;
   text-decoration: none;
   margin-left: -63%;
 }
@@ -119,7 +119,6 @@
   text-decoration: underline;
 }
 
-/* Остальные стили остаются без изменений */
 .loadingOverlay {
   position: fixed;
   top: 0;
@@ -155,5 +154,5 @@
   margin-bottom: 16px;
   text-align: center;
   font-size: 14px;
-  font-weight: bolder; /* Красный для заголовков ошибок */
+  font-weight: bolder;
 }
