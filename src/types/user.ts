@@ -18,7 +18,7 @@ export interface UserState {
 }
 
 export interface UserResLoginData {
-  access_token: string;
+  token: string;
   message: string;
 }
 

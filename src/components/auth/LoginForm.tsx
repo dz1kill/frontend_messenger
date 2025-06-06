@@ -62,6 +62,7 @@ const LoginForm: React.FC = () => {
 
     const resultAction = await dispatch(loginUser(userData));
     if (loginUser.fulfilled.match(resultAction)) {
+      localStorage.setItem("token", resultAction.payload.token);
       navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;
