@@ -3,10 +3,10 @@ import styles from "../../styles/Sidebar.module.css";
 import ChatItem from "../chatItem/chatItem";
 import resServer from "./data";
 import { formatChatData } from "./helper";
-import { ResListLastMessage } from "../../types/sidebar";
+import { ResListLastMessage } from "../../types/chat";
 
 const Sidebar: React.FC = () => {
-  const chatData = formatChatData(resServer);
+  const chatData = formatChatData(resServer as ResListLastMessage);
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>

@@ -1,4 +1,4 @@
-import { ResListLastMessage } from "../../types/sidebar";
+import { ResListLastMessage } from "../../types/chat";
 
 export const formatDate = (date: string) => {
   const inputDate = new Date(date);

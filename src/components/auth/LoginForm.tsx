@@ -9,10 +9,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { ROUTES } from "../../router/routes";
 import styles from "../../styles/Auth.module.css";
-import { loginUser } from "../../store/auth/users";
+import { loginUser } from "../../store/auth/usersSlice";
 import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
+import { initUseChat } from "../../store/chat/chatSlice";
+import { log } from "console";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -61,8 +63,20 @@ const LoginForm: React.FC = () => {
     }));
 
     const resultAction = await dispatch(loginUser(userData));
+
     if (loginUser.fulfilled.match(resultAction)) {
       localStorage.setItem("token", resultAction.payload.token);
+      const socket = await initUseChat();
+
+      if ("error" in socket) {
+        setValidatErrServer((prev) => ({
+          ...prev,
+          isLoading: false,
+          isErrorServer: true,
+          errorMessageServer: socket.message,
+        }));
+        return;
+      }
       navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;

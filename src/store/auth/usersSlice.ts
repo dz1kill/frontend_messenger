@@ -7,11 +7,11 @@ import {
   SingUpPayload,
   UserResLoginData,
   UserResSingUpData,
-  UserState,
+  AuthState,
 } from "../../types/user";
 import { ROUTES } from "../../router/routes";
 
-const initialState: UserState = {
+const initialState: AuthState = {
   currentUser: null,
   isLoading: false,
   error: null,
