@@ -27,16 +27,19 @@ const initiateConnection = async (
     store.dispatch(socketConnected(socket));
 
     socket.onclose = (event) => {
-      store.dispatch(connectionError(` ${event.code} `));
-      store.dispatch(socketDisconnected());
+      store.dispatch(connectionError(`Connection closed: code ${event.code}`));
 
       if (shouldReconnect && event.code !== 4001) {
         setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
+      } else {
+        store.dispatch(socketDisconnected());
+        console.warn("No reconnect: closed with code", event.code);
       }
     };
 
     socket.onerror = () => {
       store.dispatch(connectionError("WebSocket runtime error"));
+      socket?.close();
     };
   } catch (error: any) {
     store.dispatch(connectionError(error.message));
@@ -63,10 +66,10 @@ export const socketMiddleware: Middleware =
     }
 
     if (action.type === "socket/socketDisconnected") {
-      console.log("🚀 ~ action.type:", action.type);
       shouldReconnect = false;
+
       if (socket) {
-        socket.close();
+        socket.close(4001, "Client requested disconnect"); // передаём код
         socket = null;
         localStorage.removeItem("token");
         store.dispatch(socketDisconnected());
