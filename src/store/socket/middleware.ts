@@ -69,7 +69,7 @@ export const socketMiddleware: Middleware =
       shouldReconnect = false;
 
       if (socket) {
-        socket.close(4001, "Client requested disconnect"); // передаём код
+        socket.close(4001, "Client requested disconnect");
         socket = null;
         localStorage.removeItem("token");
         store.dispatch(socketDisconnected());
