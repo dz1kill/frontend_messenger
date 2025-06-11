@@ -33,7 +33,7 @@ const initiateConnection = async (
         setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
       } else {
         store.dispatch(socketDisconnected());
-        console.warn("No reconnect: closed with code", event.code);
+        console.warn("Unauthorized: closed with code", event.code);
       }
     };
 
