@@ -9,17 +9,18 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { ROUTES } from "../../router/routes";
 import styles from "../../styles/Auth.module.css";
-import { loginUser } from "../../store/auth/usersSlice";
+import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
-import { initUseChat } from "../../store/chat/chatSlice";
-import { log } from "console";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const optionalFields = useMemo(() => [], []);
+  const { isConnected } = useSelector((state: RootState) => state.socket);
 
   const [formDataLogin, setFormDataLogin] = useState<FormDataLoginState>({
     userEmail: "",
@@ -66,21 +67,9 @@ const LoginForm: React.FC = () => {
 
     if (loginUser.fulfilled.match(resultAction)) {
       localStorage.setItem("token", resultAction.payload.token);
-      const socket = await initUseChat();
-
-      if ("error" in socket) {
-        setValidatErrServer((prev) => ({
-          ...prev,
-          isLoading: false,
-          isErrorServer: true,
-          errorMessageServer: socket.message,
-        }));
-        return;
-      }
       navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;
-
       const errorText = messageErrorLogin(statusCode);
 
       setValidatErrServer((prev) => ({

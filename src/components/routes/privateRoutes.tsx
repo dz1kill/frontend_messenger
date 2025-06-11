@@ -1,36 +1,34 @@
-import { Navigate } from "react-router-dom";
-import { PrivateRouteProps } from "../../types/home";
-import { initUseChat } from "../../store/chat/chatSlice";
-
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { PrivateRouteProps } from "../../types/home";
+import { RootState } from "../../store/store";
+import { resetSocketState } from "../../store/socket/slice";
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  // const socket = initUseChat();
+  const dispatch = useDispatch();
+  const { error: connectionError } = useSelector(
+    (state: RootState) => state.socket
+  );
+  const [token] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    dispatch({ type: "socket/connect" });
+  }, [dispatch]);
 
-  return token ? children : <Navigate to="/login" replace />;
+  useEffect(() => {
+    if (connectionError?.includes("4001")) {
+      dispatch(resetSocketState());
+      navigate("/login", { replace: true });
+    }
+  }, [connectionError, navigate, dispatch]);
+
+  if (!token) {
+    navigate("/login", { replace: true });
+  }
+
+  return children;
 };
+
 export default PrivateRoute;
-//@ts-ignore
-
-// socket.onopen = () =>
-//   //@ts-ignore
-//   socket.send(
-//     JSON.stringify({
-//       type: "listLastMessageв",
-//       params: {
-//         limit: 5,
-//         page: 1,
-//       },
-//     })
-//   );
-
-// //@ts-ignore
-// socket.onmessage = (event) => {
-//   const data = JSON.parse(event.data);
-//   console.log("🚀 ~ PrivateRoute ~ data:", data);
-//   dispatch(addMessage(data));
-// };
-
-//@ts-ignore
