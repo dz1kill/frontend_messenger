@@ -1,4 +1,5 @@
 import { ResListLastMessage } from "../../types/chat";
+import { GroupedChatData } from "../../types/sidebar";
 
 export const formatDate = (date: string) => {
   const inputDate = new Date(date);
@@ -35,13 +36,20 @@ export const formatDate = (date: string) => {
 };
 
 export const formatChatData = (resServer: ResListLastMessage) => {
-  return resServer.params.data.map((item) => {
+  let resData: GroupedChatData = {};
+
+  resServer.params.data.forEach((item) => {
     const resultTime = formatDate(item.createdAt);
-    return {
-      name: item.groupName !== null ? item.groupName : item.senderName,
+    const key = item.groupId
+      ? `group_${item.groupId}`
+      : `sender_${item.senderId}`;
+    const name = item.groupName ? item.groupName : item.senderName;
+    resData[key] = {
       id: item.id,
+      name,
       lastMessage: item.content,
       time: resultTime,
     };
   });
+  return resData;
 };

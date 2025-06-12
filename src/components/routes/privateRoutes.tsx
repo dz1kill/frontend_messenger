@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PrivateRouteProps } from "../../types/home";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
 
-const PrivateRoute = ({ children }: PrivateRouteProps) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({
+  children,
+}: PrivateRouteProps) => {
   const dispatch = useDispatch();
   const { error: connectionError } = useSelector(
     (state: RootState) => state.socket

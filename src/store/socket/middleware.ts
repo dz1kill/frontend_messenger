@@ -3,7 +3,6 @@ import { socketConnected, socketDisconnected, connectionError } from "./slice";
 import { RETRY_DELAY } from "../../utils/constants";
 
 let socket: WebSocket | null = null;
-let shouldReconnect = true;
 
 const createSocketConnection = (
   url: string,
@@ -11,7 +10,6 @@ const createSocketConnection = (
 ): Promise<WebSocket> => {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(url, ["auth", token]);
-
     ws.onopen = () => resolve(ws);
     ws.onerror = () => reject(new Error("WebSocket connection error"));
   });
@@ -28,23 +26,19 @@ const initiateConnection = async (
 
     socket.onclose = (event) => {
       store.dispatch(connectionError(`Connection closed: code ${event.code}`));
-
-      if (shouldReconnect && event.code !== 4001) {
+      if (event.code !== 4001) {
         setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
       } else {
         store.dispatch(socketDisconnected());
+        socket?.close(4001, "Client requested disconnect");
+        socket = null;
+        localStorage.removeItem("token");
         console.warn("Unauthorized: closed with code", event.code);
       }
     };
-
-    socket.onerror = () => {
-      store.dispatch(connectionError("WebSocket runtime error"));
-      socket?.close();
-    };
   } catch (error: any) {
     store.dispatch(connectionError(error.message));
-
-    if (shouldReconnect && error.message.includes("connection error")) {
+    if (error.message.includes("connection error")) {
       setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
     }
   }
@@ -53,7 +47,6 @@ const initiateConnection = async (
 export const socketMiddleware: Middleware =
   (store) => (next) => (action: any) => {
     if (action.type === "socket/connect") {
-      shouldReconnect = true;
       const token = localStorage.getItem("token");
       const url = process.env.REACT_APP_API_SOCKET_URL;
 
@@ -63,17 +56,6 @@ export const socketMiddleware: Middleware =
       }
 
       initiateConnection(store, url, token);
-    }
-
-    if (action.type === "socket/socketDisconnected") {
-      shouldReconnect = false;
-
-      if (socket) {
-        socket.close(4001, "Client requested disconnect");
-        socket = null;
-        localStorage.removeItem("token");
-        store.dispatch(socketDisconnected());
-      }
     }
 
     return next(action);

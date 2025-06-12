@@ -4,17 +4,17 @@ const resServ = {
   params: {
     data: [
       {
-        id: 50,
-        senderId: 1,
-        senderName: "Patrick0",
-        receiverId: 7,
-        receiverName: "Patrick6",
+        content: "Message from 4",
+        createdAt: "2025-05-27T12:37:19.642Z",
+        deletedAt: null,
         groupId: null,
         groupName: null,
-        content: "Message from 1",
-        createdAt: "2025-05-27T12:37:19.679Z",
-        updatedAt: "2025-05-27T12:37:19.679Z",
-        deletedAt: null,
+        id: 42,
+        receiverId: 9,
+        receiverName: "Patrick8",
+        senderId: 4,
+        senderName: "Patrick3",
+        updatedAt: "2025-05-27T12:37:19.642Z",
       },
       {
         id: 49,

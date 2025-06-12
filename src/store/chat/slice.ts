@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatResponse, ChatState } from "../../types/chat";
+import { ChatState, ResListLastMessage } from "../../types/chat";
+import { GroupedChatData } from "../../types/sidebar";
 
 const initialState: ChatState = {
-  chats: [],
+  lastMessages: {},
   isLoading: false,
   error: null,
 };
@@ -11,11 +12,24 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<ChatResponse>) => {
-      state.chats.push(action.payload);
+    listLastMessageReceived: (
+      state,
+      action: PayloadAction<GroupedChatData>
+    ) => {
+      state.lastMessages = action.payload;
     },
+    // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
+    //   state.chats.push(action.payload);
+    // },
+    // latestDialogMessageReceived: (
+    //   state,
+    //   action: PayloadAction<{ dialogId: string; message: Message }>
+    // ) => {
+    //   const { dialogId, message } = action.payload;
+    //   state.dialogMessages[dialogId] = message; // Апд по ключу
+    // },
   },
 });
 
-export const { addMessage } = chatSlice.actions;
+export const { listLastMessageReceived } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -1,3 +1,5 @@
+import { GroupedChatData } from "./sidebar";
+
 export interface ResListLastMessage {
   type: "resListLastMessage";
   success: boolean;
@@ -36,10 +38,8 @@ export interface ResLatestMessageDialog {
   };
 }
 
-export type ChatResponse = ResListLastMessage | ResLatestMessageDialog;
-
 export interface ChatState {
-  chats: ChatResponse[];
+  lastMessages: GroupedChatData;
   isLoading: boolean;
   error: string | null;
 }
