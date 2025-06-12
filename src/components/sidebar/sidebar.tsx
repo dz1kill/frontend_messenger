@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
   const dispatch = useDispatch();
   const { lastMessages } = useSelector((state: RootState) => state.chats);
   const [dataListLastMessage, setDataListLastMessage] =
-    useState<GroupedChatData>();
+    useState<GroupedChatData>({});
   const { socket, isConnected } = useSelector(
     (state: RootState) => state.socket
   );
@@ -34,7 +34,6 @@ const Sidebar: React.FC = () => {
     if (socket) {
       socket.onmessage = (event) => {
         const resData = JSON.parse(event.data);
-        console.log("🚀 ~ useEffect ~ resData:", resData);
         if (resData.type === "listLastMessage") {
           const result = formatChatData(resData);
           dispatch(listLastMessageReceived(result));
@@ -56,7 +55,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       <div className={styles.chatList}>
-        {Object.values(dataListLastMessage!).map((chat) => (
+        {Object.values(dataListLastMessage).map((chat) => (
           <ChatItem
             key={chat.id}
             name={chat.name}
