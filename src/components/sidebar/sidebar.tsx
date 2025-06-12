@@ -5,45 +5,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { listLastMessageReceived } from "../../store/chat/slice";
 import { formatChatData } from "./helper";
-import { GroupedChatData } from "../../types/sidebar";
-
-const sendData = {
-  type: "listLastMessage",
-  params: {
-    limit: 5,
-    page: 1,
-  },
-};
+import { ChatData } from "../../types/chat";
 
 const Sidebar: React.FC = () => {
+  const sendData = {
+    type: "listLastMessage",
+    params: {
+      limit: 5,
+      page: 1,
+    },
+  };
+
+  const sendData1 = {
+    type: "listLastMessage",
+    params: {
+      limit: 5,
+      page: 2,
+    },
+  };
   const dispatch = useDispatch();
-  const { lastMessages } = useSelector((state: RootState) => state.chats);
-  const [dataListLastMessage, setDataListLastMessage] =
-    useState<GroupedChatData>({});
+  const [dataListLastMessage, setDataListLastMessage] = useState<ChatData[]>(
+    []
+  );
   const { socket, isConnected } = useSelector(
     (state: RootState) => state.socket
   );
+  const { lastMessages } = useSelector((state: RootState) => state.chats);
 
   useEffect(() => {
     if (socket) {
       if (isConnected) socket.send(JSON.stringify(sendData));
+      socket.send(JSON.stringify(sendData1));
     }
   }, [socket, isConnected]);
 
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
-        const resData = JSON.parse(event.data);
-        if (resData.type === "listLastMessage") {
-          const result = formatChatData(resData);
-          dispatch(listLastMessageReceived(result));
+        const data = JSON.parse(event.data);
+        if (data.type === "listLastMessage") {
+          const result = formatChatData(data);
+          result.forEach((chatData) => {
+            dispatch(listLastMessageReceived(chatData));
+          });
         }
       };
     }
   }, [dispatch, socket]);
 
   useEffect(() => {
-    if (Object.keys(lastMessages).length !== 0) {
+    if (lastMessages.length > 0) {
       setDataListLastMessage(lastMessages);
     }
   }, [lastMessages]);
@@ -55,7 +66,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       <div className={styles.chatList}>
-        {Object.values(dataListLastMessage).map((chat) => (
+        {dataListLastMessage.map((chat) => (
           <ChatItem
             key={chat.id}
             name={chat.name}
