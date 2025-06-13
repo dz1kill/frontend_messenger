@@ -23,3 +23,20 @@
 .chatList {
   padding: 10px 0;
 }
+.sidebar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #dde5ee;
+  border-radius: 1px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #90a6bb;
+}

@@ -13,14 +13,11 @@ import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const optionalFields = useMemo(() => [], []);
-  const { isConnected } = useSelector((state: RootState) => state.socket);
 
   const [formDataLogin, setFormDataLogin] = useState<FormDataLoginState>({
     userEmail: "",

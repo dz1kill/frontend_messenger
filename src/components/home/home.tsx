@@ -7,7 +7,7 @@ import { MessageProcessor } from "../processor/processor";
 const Home: React.FC = () => {
   return (
     <>
-      <MessageProcessor />;
+      <MessageProcessor />
       <Header />
       <Sidebar />
     </>
