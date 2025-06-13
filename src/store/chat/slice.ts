@@ -4,6 +4,7 @@ import { DataListLastMessage, ChatErrror, ChatState } from "../../types/chat";
 const initialState: ChatState = {
   lastMessages: [],
   isError: [],
+  hasFetchedData: false,
 };
 
 const chatSlice = createSlice({
@@ -15,10 +16,17 @@ const chatSlice = createSlice({
       action: PayloadAction<DataListLastMessage>
     ) => {
       state.lastMessages.push(action.payload);
+      state.hasFetchedData = true;
     },
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {
       state.isError.push(action.payload);
     },
+    resetChatsState: (state) => {
+      state.hasFetchedData = false;
+      state.lastMessages = [];
+      state.isError = [];
+    },
+
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
     //   state.chats.push(action.payload);
     // },

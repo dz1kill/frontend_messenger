@@ -14,13 +14,15 @@ const Sidebar: React.FC = () => {
   const { socket, isConnected } = useSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessages } = useSelector((state: RootState) => state.chats);
+  const { lastMessages, hasFetchedData } = useSelector(
+    (state: RootState) => state.chats
+  );
 
   useEffect(() => {
-    if (socket) {
-      if (isConnected) socket.send(JSON.stringify(REQ_LIST_LAST_MESSAGE));
+    if (socket && isConnected && !hasFetchedData) {
+      socket.send(JSON.stringify(REQ_LIST_LAST_MESSAGE));
     }
-  }, [socket, isConnected]);
+  }, [socket, isConnected, hasFetchedData]);
 
   useEffect(() => {
     if (lastMessages.length > 0) {

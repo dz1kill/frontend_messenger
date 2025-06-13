@@ -1,7 +1,7 @@
 export const REQ_LIST_LAST_MESSAGE = {
   type: "listLastMessage",
   params: {
-    limit: 20,
+    limit: 2,
     page: 1,
   },
 };

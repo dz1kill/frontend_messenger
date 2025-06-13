@@ -51,4 +51,5 @@ export interface ResListLastMessage {
 export interface ChatState {
   lastMessages: DataListLastMessage[];
   isError: ChatErrror[];
+  hasFetchedData: boolean;
 }
