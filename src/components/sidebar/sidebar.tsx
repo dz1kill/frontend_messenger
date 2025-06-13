@@ -1,32 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 import styles from "../../styles/Sidebar.module.css";
 import ChatItem from "../chatItem/chatItem";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { listLastMessageReceived } from "../../store/chat/slice";
-import { formatChatData } from "./helper";
-import { ChatData } from "../../types/chat";
+import { DataListLastMessage } from "../../types/chat";
+import { REQ_LIST_LAST_MESSAGE } from "./constants";
 
 const Sidebar: React.FC = () => {
-  const sendData = {
-    type: "listLastMessage",
-    params: {
-      limit: 5,
-      page: 1,
-    },
-  };
-
-  const sendData1 = {
-    type: "listLastMessage",
-    params: {
-      limit: 5,
-      page: 2,
-    },
-  };
-  const dispatch = useDispatch();
-  const [dataListLastMessage, setDataListLastMessage] = useState<ChatData[]>(
-    []
-  );
+  const [dataListLastMessage, setDataListLastMessage] = useState<
+    DataListLastMessage[]
+  >([]);
   const { socket, isConnected } = useSelector(
     (state: RootState) => state.socket
   );
@@ -34,24 +18,9 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     if (socket) {
-      if (isConnected) socket.send(JSON.stringify(sendData));
-      socket.send(JSON.stringify(sendData1));
+      if (isConnected) socket.send(JSON.stringify(REQ_LIST_LAST_MESSAGE));
     }
   }, [socket, isConnected]);
-
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === "listLastMessage") {
-          const result = formatChatData(data);
-          result.forEach((chatData) => {
-            dispatch(listLastMessageReceived(chatData));
-          });
-        }
-      };
-    }
-  }, [dispatch, socket]);
 
   useEffect(() => {
     if (lastMessages.length > 0) {

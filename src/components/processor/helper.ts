@@ -34,7 +34,7 @@ export const formatDate = (date: string) => {
   }
 };
 
-export const formatChatData = (resServer: ResListLastMessage) => {
+export const formatDataListLastMessage = (resServer: ResListLastMessage) => {
   return resServer.params.data.map((item) => {
     const resultTime = formatDate(item.createdAt);
     return {
