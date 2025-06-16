@@ -1,4 +1,7 @@
-import { ResListLastMessage } from "../../types/chat";
+import {
+  DataListLastMessage,
+  FormatDataListLastMessage,
+} from "../../types/chat";
 
 export const formatDate = (date: string) => {
   const inputDate = new Date(date);
@@ -34,14 +37,22 @@ export const formatDate = (date: string) => {
   }
 };
 
-export const formatDataListLastMessage = (resServer: ResListLastMessage) => {
-  return resServer.params.data.map((item) => {
-    const resultTime = formatDate(item.createdAt);
+export const formatDataListLastMessage = (resServer: DataListLastMessage[]) => {
+  return resServer.map((item) => {
+    const resultDate = formatDate(item.createdAt);
     return {
       name: item.groupName !== null ? item.groupName : item.senderName,
       id: item.id,
       lastMessage: item.content,
-      time: resultTime,
+      time: resultDate,
+      createdAt: item.createdAt,
     };
   });
 };
+
+export const sortListLastMessage = (
+  resultFormat: FormatDataListLastMessage[]
+) =>
+  resultFormat.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });

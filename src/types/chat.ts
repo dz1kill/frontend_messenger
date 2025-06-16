@@ -1,8 +1,15 @@
 export interface DataListLastMessage {
-  name: string;
   id: number;
-  lastMessage: string;
-  time: string;
+  senderId: number;
+  senderName: string;
+  receiverId: number | null;
+  receiverName: string | null;
+  groupId: number | null;
+  groupName: string | null;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
 
 export interface ChatErrror {
@@ -32,6 +39,13 @@ export interface ResListLastMessage {
     senderName: string | null;
   };
 }
+export interface FormatDataListLastMessage {
+  name: string;
+  id: number;
+  lastMessage: string;
+  time: string;
+  createdAt: string;
+}
 // export interface ResLatestMessageDialog {
 //   type: "getlatestMessageDialog";
 //   success: boolean;
@@ -49,7 +63,8 @@ export interface ResListLastMessage {
 // }
 
 export interface ChatState {
-  lastMessages: DataListLastMessage[];
-  isError: ChatErrror[];
-  hasFetchedData: boolean;
+  lastMessages: FormatDataListLastMessage[];
+  isErrorMessage: ChatErrror[];
+  firstLoadingData: boolean;
+  isError: boolean;
 }

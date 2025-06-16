@@ -1,10 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DataListLastMessage, ChatErrror, ChatState } from "../../types/chat";
+import {
+  ChatErrror,
+  ChatState,
+  FormatDataListLastMessage,
+} from "../../types/chat";
 
 const initialState: ChatState = {
   lastMessages: [],
-  isError: [],
-  hasFetchedData: false,
+  isErrorMessage: [],
+  firstLoadingData: false,
+  isError: false,
 };
 
 const chatSlice = createSlice({
@@ -13,18 +18,23 @@ const chatSlice = createSlice({
   reducers: {
     listLastMessageReceived: (
       state,
-      action: PayloadAction<DataListLastMessage>
+      action: PayloadAction<FormatDataListLastMessage[]>
     ) => {
-      state.lastMessages.push(action.payload);
-      state.hasFetchedData = true;
+      state.lastMessages = state.lastMessages = [
+        ...state.lastMessages,
+        ...action.payload,
+      ];
+      state.firstLoadingData = true;
     },
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {
-      state.isError.push(action.payload);
+      state.isErrorMessage.push(action.payload);
+      state.isError = false;
     },
     resetChatsState: (state) => {
-      state.hasFetchedData = false;
+      state.isError = false;
+      state.firstLoadingData = false;
       state.lastMessages = [];
-      state.isError = [];
+      state.isErrorMessage = [];
     },
 
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
