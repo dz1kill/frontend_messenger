@@ -11,13 +11,12 @@ const Sidebar: React.FC = () => {
   const prevLengthRef = useRef(0);
   const [infiniteScroll, setInfiniteScroll] = useState({
     cursor: null as string | null,
-    hasMore: true,
     isLoading: false,
   });
   const { socket, isConnected } = useSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessages, firstLoadingData } = useSelector(
+  const { lastMessages, firstLoadingData, lastPageLoaded } = useSelector(
     (state: RootState) => state.chats
   );
 
@@ -42,11 +41,7 @@ const Sidebar: React.FC = () => {
   }, [socket, isConnected, firstLoadingData]);
 
   const handleScroll = () => {
-    if (
-      !chatListRef.current ||
-      infiniteScroll.isLoading ||
-      !infiniteScroll.hasMore
-    )
+    if (!chatListRef.current || infiniteScroll.isLoading || lastPageLoaded)
       return;
 
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
@@ -73,12 +68,10 @@ const Sidebar: React.FC = () => {
     if (!firstLoadingData) return;
 
     const lastMsg = lastMessages[lastMessages.length - 1];
-    const sameLength = lastMessages.length === prevLengthRef.current;
 
     setInfiniteScroll((prev) => ({
       ...prev,
       isLoading: false,
-      hasMore: !sameLength,
       cursor: lastMsg.createdAt,
     }));
 

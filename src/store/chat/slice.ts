@@ -9,6 +9,7 @@ const initialState: ChatState = {
   lastMessages: [],
   isErrorMessage: [],
   firstLoadingData: false,
+  lastPageLoaded: false,
   isError: false,
 };
 
@@ -25,6 +26,7 @@ const chatSlice = createSlice({
         ...action.payload,
       ];
       state.firstLoadingData = true;
+      state.lastPageLoaded = !action.payload.length;
     },
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {
       state.isErrorMessage.push(action.payload);

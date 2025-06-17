@@ -66,5 +66,6 @@ export interface ChatState {
   lastMessages: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
   firstLoadingData: boolean;
+  lastPageLoaded: boolean;
   isError: boolean;
 }
