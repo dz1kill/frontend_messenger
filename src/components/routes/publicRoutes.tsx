@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { PublicRouteProps } from "../../types/routes";
+import { JSX } from "react";
 
-const PublicRoute = ({ children }: PublicRouteProps) => {
+const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isConnected } = useSelector((state: RootState) => state.socket);
 
   const token = localStorage.getItem("token");
