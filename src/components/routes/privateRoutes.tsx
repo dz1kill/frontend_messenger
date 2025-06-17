@@ -20,7 +20,7 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   useEffect(() => {
     if (connectionError?.includes("4001")) {
       dispatch(resetSocketState());
-      <Navigate to={ROUTES.APP.LOGIN} replace />;
+      navigate(ROUTES.APP.LOGIN, { replace: true });
     }
   }, [connectionError, navigate, dispatch]);
 
