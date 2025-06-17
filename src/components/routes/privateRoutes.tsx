@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { PrivateRouteProps } from "../../types/home";
+import { PrivateRouteProps } from "../../types/routes";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
+import { ROUTES } from "../../router/routes";
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({
   children,
@@ -22,12 +23,12 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   useEffect(() => {
     if (connectionError?.includes("4001")) {
       dispatch(resetSocketState());
-      navigate("/login", { replace: true });
+      <Navigate to={ROUTES.APP.LOGIN} replace />;
     }
   }, [connectionError, navigate, dispatch]);
 
   if (!token) {
-    navigate("/login", { replace: true });
+    <Navigate to={ROUTES.APP.LOGIN} replace />;
   }
 
   return children;

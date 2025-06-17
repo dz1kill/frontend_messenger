@@ -6,6 +6,7 @@ import SignUpForm from "../auth/SignUpForm";
 import Home from "../home/home";
 import { ROUTES } from "../../router/routes";
 import PrivateRoute from "./privateRoutes";
+import PublicRoute from "./publicRoutes";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -18,8 +19,22 @@ const AppRoutes: React.FC = () => {
           </PrivateRoute>
         }
       />
-      <Route path={ROUTES.APP.LOGIN} element={<LoginForm />} />
-      <Route path={ROUTES.APP.REGISTER} element={<SignUpForm />} />
+      <Route
+        path={ROUTES.APP.LOGIN}
+        element={
+          <PublicRoute>
+            <LoginForm />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path={ROUTES.APP.REGISTER}
+        element={
+          <PublicRoute>
+            <SignUpForm />
+          </PublicRoute>
+        }
+      />
     </Routes>
   );
 };
