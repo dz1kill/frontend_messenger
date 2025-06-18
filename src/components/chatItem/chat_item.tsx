@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/ChatItem.module.css";
+import styles from "../../styles/chat_item.module.css";
 
 interface ChatItemProps {
   name: string;

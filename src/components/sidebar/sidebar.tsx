@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import styles from "../../styles/Sidebar.module.css";
-import ChatItem from "../chatItem/chatItem";
+import styles from "../../styles/sidebar.module.css";
+import ChatItem from "../chatItem/chat_item";
 import { RootState } from "../../store/store";
 import { REQ_LIST_LAST_MESSAGE } from "./constants";
 

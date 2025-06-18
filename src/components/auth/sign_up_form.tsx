@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "../../styles/Auth.module.css";
+import styles from "../../styles/auth.module.css";
 import { ROUTES } from "../../router/routes";
 import { createUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../libs/redux/hooks";
