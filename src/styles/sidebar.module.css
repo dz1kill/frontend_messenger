@@ -27,23 +27,6 @@
   overflow-y: auto;
   padding: 10px 0;
 }
-.chatList::-webkit-scrollbar {
-  width: 10px;
-}
-
-.chatList::-webkit-scrollbar-track {
-  background: #e3e9f1;
-  border-radius: 1px;
-}
-
-.chatList::-webkit-scrollbar-thumb {
-  background: #adb5bd;
-  border-radius: 3px;
-}
-
-.chatList::-webkit-scrollbar-thumb:hover {
-  background: #90a6bb;
-}
 
 .spinnerContainer {
   display: flex;
