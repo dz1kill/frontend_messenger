@@ -1,11 +1,6 @@
 import React from "react";
 import styles from "../../styles/sidebar_item.module.css";
-
-interface ChatItemProps {
-  name: string;
-  lastMessage: string;
-  time: string;
-}
+import { ChatItemProps } from "../../types/sidebar";
 
 const ChatItem: React.FC<ChatItemProps> = ({ name, lastMessage, time }) => {
   return (
