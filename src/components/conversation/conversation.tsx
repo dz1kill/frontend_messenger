@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../styles/conversation_window.module.css";
+import styles from "../../styles/conversation.module.css";
 
 const ConversationWindow = () => {
   return (
