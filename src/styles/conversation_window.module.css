@@ -1,0 +1,79 @@
+.conversationWindow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.conversationHeader {
+  padding: 1.25rem;
+  background-color: #d8e7ff;
+}
+
+.conversationHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.messagesContainer {
+  flex: 1;
+  padding: 0.75rem 1.125rem;
+  background-color: #f5f6f8;
+}
+
+.messageInput {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  position: sticky;
+  z-index: 1;
+}
+
+.inputField {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: #3498db6b;
+  box-shadow: 0 0 0 2px #3498db6b;
+}
+
+.sendButton {
+  flex-shrink: 0;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  background-color: #34b7f1;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  max-width: 100px;
+}
+
+@media (max-width: 480px) {
+  .sendButton {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.4rem;
+    max-width: 80px;
+  }
+
+  .inputField {
+    font-size: 0.52rem;
+  }
+
+  .messageInput {
+    padding: 0.6rem;
+  }
+  .conversationHeader h2 {
+    font-size: 0.9rem;
+  }
+}

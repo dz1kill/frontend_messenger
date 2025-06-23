@@ -1,19 +1,15 @@
 .sidebar {
-  width: 270px;
-  overflow: hidden;
-  background-color: #f0f2f5;
-  border-right: 1px solid #e0e0e0;
-  height: calc(100vh - 90px);
+  width: 25%;
+  min-width: 150px;
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
-  margin-top: 10px;
+  border-right: 1px solid #e0e0e0;
 }
 
 .sidebarHeader {
   position: sticky;
   top: 0;
-  padding: 15px 20px;
+  padding: 0.9375rem 1.25rem;
   background-color: #d8e7ff;
 }
 
@@ -51,5 +47,10 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+@media (max-width: 480px) {
+  .sidebarHeader h2 {
+    font-size: 0.9rem;
   }
 }
