@@ -1,4 +1,8 @@
-import { ResListLastMessageChat } from "../../types/chat";
+import {
+  DatalatestMessageDialog,
+  DataLatestMessageGroup,
+  ResListLastMessageChat,
+} from "../../types/chat";
 
 export const formatDate = (date: string) => {
   const inputDate = new Date(date);
@@ -41,8 +45,8 @@ export const formatDataListLastMessage = (
     const resultDate = formatDate(item.createdAt);
     return {
       name: item.groupName !== null ? item.groupName : item.senderName,
-      messageId: item.id,
-      lastMessage: item.content,
+      messageId: item.messageId,
+      content: item.content,
       time: resultDate,
       senderId: item.senderId,
       senderName: item.senderName,
@@ -61,3 +65,43 @@ export const sortMessage = <T extends { createdAt: string }>(
   resultFormat.sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
+
+export const formatDatalatestMessageDialog = (
+  messages: DatalatestMessageDialog[]
+) => {
+  const userId = Number(localStorage.getItem("userId"));
+
+  return messages.map((item) => {
+    return {
+      messageId: item.messageId,
+      time: new Date(item.createdAt),
+      content: item.content,
+      sender: item.senderId === userId ? "user" : "contact",
+      senderId: item.senderId,
+      senderName: item.senderName,
+      receiverId: item.receiverId,
+      receiverName: item.receiverName,
+      createdAt: item.createdAt,
+    };
+  });
+};
+
+export const formatDatalatestMessageGroup = (
+  messages: DataLatestMessageGroup[]
+) => {
+  const userId = Number(localStorage.getItem("userId"));
+
+  return messages.map((item) => {
+    return {
+      messageId: item.messageId,
+      time: new Date(item.createdAt),
+      content: item.content,
+      sender: item.senderId === userId ? "user" : "contact",
+      senderId: item.senderId,
+      senderName: item.senderName,
+      groupId: item.groupId,
+      groupName: item.groupName,
+      createdAt: item.createdAt,
+    };
+  });
+};

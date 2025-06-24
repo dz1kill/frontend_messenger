@@ -12,12 +12,14 @@ import {
   TYPE_LATEST_MESSAGE_GROUP,
   TYPE_LIST_LAST_MESSAGE,
 } from "../../utils/constants";
-import { formatDataListLastMessage, sortMessage } from "./helper";
-import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
 import {
-  DatalatestMessageDialog,
-  DataLatestMessageGroup,
-} from "../../types/chat";
+  formatDatalatestMessageDialog,
+  formatDatalatestMessageGroup,
+  formatDataListLastMessage,
+  sortMessage,
+} from "./helper";
+import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
+import { FormaLatestMessageDialog } from "../../types/chat";
 
 export const MessageProcessor = () => {
   const { socket } = useAppSelector((state: RootState) => state.socket);
@@ -40,8 +42,9 @@ export const MessageProcessor = () => {
 
             case TYPE_LATEST_MESSAGE_DIALOG:
               if (data.success) {
-                const messages: DatalatestMessageDialog[] = data.params.data;
-                const resultSort = sortMessage(messages);
+                const resultFormat: FormaLatestMessageDialog[] =
+                  formatDatalatestMessageDialog(data.params.data);
+                const resultSort = sortMessage(resultFormat);
                 dispatch(latestMessageDialogReceived(resultSort));
               } else {
                 dispatch(isErrorReceived(data));
@@ -50,8 +53,10 @@ export const MessageProcessor = () => {
 
             case TYPE_LATEST_MESSAGE_GROUP:
               if (data.success) {
-                const messages: DataLatestMessageGroup[] = data.params.data;
-                const resultSort = sortMessage(messages);
+                const resultFormat = formatDatalatestMessageGroup(
+                  data.params.data
+                );
+                const resultSort = sortMessage(resultFormat);
                 dispatch(latestMessageGroupReceived(resultSort));
               } else {
                 dispatch(isErrorReceived(data));

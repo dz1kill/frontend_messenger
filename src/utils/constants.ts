@@ -10,3 +10,21 @@ export const REQ_LIST_LAST_MESSAGE = {
     cursorCreatedAt: null,
   },
 };
+
+export const REQ_LATEST_MESSAGE_DIALOG = {
+  type: "getlatestMessageDialog",
+  params: {
+    receiverId: null,
+    limit: 13,
+    cursorCreatedAt: null,
+  },
+};
+
+export const REQ_LATEST_MESSAGE_GROUP = {
+  type: "getlatestMessageGroup",
+  params: {
+    groupId: null,
+    limit: 13,
+    cursorCreatedAt: null,
+  },
+};

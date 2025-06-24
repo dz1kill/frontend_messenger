@@ -5,6 +5,16 @@
   height: 100%;
 }
 
+.messagesContainer {
+  flex: 1;
+  padding: 0.75rem 1.125rem;
+  background-color: #f5f6f8;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 .conversationHeader {
   padding: 1.3rem;
   background-color: #cae0f7;

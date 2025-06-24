@@ -16,12 +16,11 @@ const Sidebar: React.FC = () => {
   const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessagesChat, firstLoadingData, lastPageLoaded } = useAppSelector(
-    (state: RootState) => state.chats
-  );
+  const { lastMessagesChat, firstLoadingDataChat, lastPageLoaded } =
+    useAppSelector((state: RootState) => state.chats);
 
   useEffect(() => {
-    if (socket && isConnected && !firstLoadingData) {
+    if (socket && isConnected && !firstLoadingDataChat) {
       setInfiniteScroll((prev) => {
         socket.send(
           JSON.stringify({
@@ -38,7 +37,7 @@ const Sidebar: React.FC = () => {
         };
       });
     }
-  }, [socket, isConnected, firstLoadingData]);
+  }, [socket, isConnected, firstLoadingDataChat]);
 
   const handleScroll = () => {
     if (!chatListRef.current || infiniteScroll.isLoading || lastPageLoaded)
@@ -65,7 +64,7 @@ const Sidebar: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!firstLoadingData) return;
+    if (!firstLoadingDataChat) return;
 
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
 
@@ -76,7 +75,7 @@ const Sidebar: React.FC = () => {
     }));
 
     prevLengthRef.current = lastMessagesChat.length;
-  }, [lastMessagesChat, firstLoadingData]);
+  }, [lastMessagesChat, firstLoadingDataChat]);
 
   return (
     <div className={styles.sidebar}>

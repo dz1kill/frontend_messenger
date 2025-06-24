@@ -3,9 +3,9 @@ import {
   ChatErrror,
   ChatState,
   Conversation,
-  DatalatestMessageDialog,
-  DataLatestMessageGroup,
+  FormaLatestMessageDialog,
   FormatDataListLastMessage,
+  FormatLatestMessageGroup,
 } from "../../types/chat";
 
 const initialState: ChatState = {
@@ -13,7 +13,7 @@ const initialState: ChatState = {
   latestMessageDialog: [],
   lastMessagesChat: [],
   isErrorMessage: [],
-  firstLoadingData: false,
+  firstLoadingDataChat: false,
   lastPageLoaded: false,
   isError: false,
   currentConversation: null,
@@ -32,13 +32,13 @@ const chatSlice = createSlice({
       action: PayloadAction<FormatDataListLastMessage[]>
     ) => {
       state.lastMessagesChat = [...state.lastMessagesChat, ...action.payload];
-      state.firstLoadingData = true;
+      state.firstLoadingDataChat = true;
       state.lastPageLoaded = !action.payload.length;
     },
 
     latestMessageDialogReceived: (
       state,
-      action: PayloadAction<DatalatestMessageDialog[]>
+      action: PayloadAction<FormaLatestMessageDialog[]>
     ) => {
       state.latestMessageDialog = [
         ...state.latestMessageDialog,
@@ -48,7 +48,7 @@ const chatSlice = createSlice({
 
     latestMessageGroupReceived: (
       state,
-      action: PayloadAction<DataLatestMessageGroup[]>
+      action: PayloadAction<FormatLatestMessageGroup[]>
     ) => {
       state.latestMessageGroup = [
         ...state.latestMessageGroup,
@@ -62,7 +62,7 @@ const chatSlice = createSlice({
     },
     resetChatsState: (state) => {
       state.isError = false;
-      state.firstLoadingData = false;
+      state.firstLoadingDataChat = false;
       state.lastMessagesChat = [];
       state.isErrorMessage = [];
       state.currentConversation = null;
