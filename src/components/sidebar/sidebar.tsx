@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/sidebar.module.css";
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
-import { REQ_LIST_LAST_MESSAGE } from "./constants";
 import { useAppSelector } from "../../libs/redux/hooks";
+import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
 
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
   const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessages, firstLoadingData, lastPageLoaded } = useAppSelector(
+  const { lastMessagesChat, firstLoadingData, lastPageLoaded } = useAppSelector(
     (state: RootState) => state.chats
   );
 
@@ -67,7 +67,7 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     if (!firstLoadingData) return;
 
-    const lastMsg = lastMessages[lastMessages.length - 1];
+    const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
 
     setInfiniteScroll((prev) => ({
       ...prev,
@@ -75,8 +75,8 @@ const Sidebar: React.FC = () => {
       cursor: lastMsg.createdAt,
     }));
 
-    prevLengthRef.current = lastMessages.length;
-  }, [lastMessages, firstLoadingData]);
+    prevLengthRef.current = lastMessagesChat.length;
+  }, [lastMessagesChat, firstLoadingData]);
 
   return (
     <div className={styles.sidebar}>
@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
         onScroll={handleScroll}
         ref={chatListRef}
       >
-        {lastMessages.map((chat) => (
+        {lastMessagesChat.map((chat) => (
           <ChatItem key={chat.messageId} {...chat} />
         ))}
         {infiniteScroll.isLoading && (

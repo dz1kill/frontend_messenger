@@ -12,13 +12,25 @@ export interface DataListLastMessage {
   deletedAt: string | null;
 }
 
-export interface ChatErrror {
-  error: string;
-  type: string;
-  message: string;
+export interface DatalatestMessageDialog {
+  senderId: number;
+  senderName: string;
+  receiverId: number;
+  receiverName: string;
+  content: string;
+  createdAt: string;
 }
 
-export interface ResListLastMessage {
+export interface DataLatestMessageGroup {
+  senderId: number;
+  senderName: string;
+  groupId: number;
+  groupName: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface ResListLastMessageChat {
   type: "resListLastMessage";
   success: boolean;
   params: {
@@ -27,6 +39,27 @@ export interface ResListLastMessage {
     senderName: string | null;
   };
 }
+
+export interface ReslatestMessageDialog {
+  type: "getlatestMessageDialog";
+  success: boolean;
+  params: {
+    data: DatalatestMessageDialog[];
+    message: string | null;
+    senderName: string | null;
+  };
+}
+
+export interface ReslatestMessageGroup {
+  type: "getlatestMessageGroup";
+  success: boolean;
+  params: {
+    data: DataLatestMessageGroup[];
+    message: string | null;
+    senderName: string | null;
+  };
+}
+
 export interface FormatDataListLastMessage {
   name: string;
   messageId: number;
@@ -47,8 +80,16 @@ export interface Conversation
     "messageId" | "lastMessage" | "time" | "createdAt"
   > {}
 
+export interface ChatErrror {
+  error: string;
+  type: string;
+  message: string;
+}
+
 export interface ChatState {
-  lastMessages: FormatDataListLastMessage[];
+  latestMessageGroup: DataLatestMessageGroup[];
+  latestMessageDialog: DatalatestMessageDialog[];
+  lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
   firstLoadingData: boolean;
   lastPageLoaded: boolean;
