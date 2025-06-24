@@ -12,7 +12,11 @@ import styles from "../../styles/auth.module.css";
 import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../libs/redux/hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/auth";
-import { checkEmptyInput, messageErrorLogin } from "./helper";
+import {
+  checkEmptyInput,
+  checkResultAction,
+  messageErrorLogin,
+} from "./helper";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -63,7 +67,19 @@ const LoginForm: React.FC = () => {
     const resultAction = await dispatch(loginUser(userData));
 
     if (loginUser.fulfilled.match(resultAction)) {
+      const resultCheck = checkResultAction(resultAction);
+      if (resultCheck?.error) {
+        setValidatErrServer((prev) => ({
+          ...prev,
+          isLoading: false,
+          isErrorServer: true,
+          errorMessageServer: "Invalid response data",
+        }));
+        return;
+      }
       localStorage.setItem("token", resultAction.payload.token);
+      localStorage.setItem("email", resultAction.payload.email);
+      localStorage.setItem("userId", resultAction.payload.id);
       navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;

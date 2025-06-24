@@ -33,6 +33,8 @@ const initiateConnection = async (
         socket?.close(4001, "Client requested disconnect");
         socket = null;
         localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("email");
         console.warn("Unauthorized: closed with code", event.code);
       }
     };

@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { FormDataLoginState, FormDataSignUpState } from "../../types/auth";
+import {
+  FormDataLoginState,
+  FormDataSignUpState,
+  UserResLoginData,
+} from "../../types/auth";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 export const messageErrorSignUp = (statusCode: number) => {
   switch (statusCode) {
@@ -78,4 +83,24 @@ export const checkEmptyInput = (
   const checkEmpty = filterData.some(([, val]) => !val);
 
   return checkEmpty;
+};
+
+export const checkResultAction = (
+  resultAction: PayloadAction<UserResLoginData>
+) => {
+  if (!resultAction || !resultAction.payload) {
+    return { error: true, message: "No payload in resultAction" };
+  }
+
+  if (!resultAction.payload.token) {
+    return { error: true, message: "No token in payload" };
+  }
+
+  if (!resultAction.payload.email) {
+    return { error: true, message: "No email in payload" };
+  }
+
+  if (!resultAction.payload.id) {
+    return { error: true, message: "No userId in payload" };
+  }
 };

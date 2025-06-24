@@ -10,14 +10,16 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { error: connectionError } = useAppSelector(
     (state: RootState) => state.socket
   );
+  const userId = localStorage.getItem("userId");
+  const email = localStorage.getItem("email");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token) {
+    if (token && userId && email) {
       dispatch({ type: "socket/connect" });
     }
-  }, [dispatch, token]);
+  }, [dispatch, token, userId, email]);
 
   useEffect(() => {
     if (connectionError?.includes("4001")) {
@@ -26,7 +28,7 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     }
   }, [connectionError, navigate, dispatch]);
 
-  if (!token) {
+  if (!token || !userId || !email) {
     return <Navigate to={ROUTES.APP.LOGIN} replace />;
   }
 

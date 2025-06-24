@@ -8,12 +8,14 @@ const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isConnected } = useAppSelector((state: RootState) => state.socket);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+  const email = localStorage.getItem("email");
 
   useEffect(() => {
-    if (isConnected || token) {
+    if (!isConnected && token && userId && email) {
       navigate(ROUTES.APP.HOME, { replace: true });
     }
-  }, [isConnected, token, navigate]);
+  }, [isConnected, token, userId, email, navigate]);
 
   return children;
 };
