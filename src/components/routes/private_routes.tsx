@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from "react-router-dom";
-import React, { JSX, useEffect, useState } from "react";
+import React, { JSX, useEffect } from "react";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
 import { ROUTES } from "../../router/routes";
@@ -10,12 +10,14 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { error: connectionError } = useAppSelector(
     (state: RootState) => state.socket
   );
-  const [token] = useState(localStorage.getItem("token"));
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch({ type: "socket/connect" });
-  }, [dispatch]);
+    if (token) {
+      dispatch({ type: "socket/connect" });
+    }
+  }, [dispatch, token]);
 
   useEffect(() => {
     if (connectionError?.includes("4001")) {
@@ -25,7 +27,7 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   }, [connectionError, navigate, dispatch]);
 
   if (!token) {
-    <Navigate to={ROUTES.APP.LOGIN} replace />;
+    return <Navigate to={ROUTES.APP.LOGIN} replace />;
   }
 
   return children;
