@@ -18,6 +18,8 @@ export interface AuthState {
 }
 
 export interface UserResLoginData {
+  id: string;
+  email: string;
   token: string;
   message: string;
 }
