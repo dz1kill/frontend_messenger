@@ -42,9 +42,15 @@ export const formatDataListLastMessage = (resServer: DataListLastMessage[]) => {
     const resultDate = formatDate(item.createdAt);
     return {
       name: item.groupName !== null ? item.groupName : item.senderName,
-      id: item.id,
+      messageId: item.id,
       lastMessage: item.content,
       time: resultDate,
+      senderId: item.senderId,
+      senderName: item.senderName,
+      receiverId: item.receiverId,
+      receiverName: item.receiverName,
+      groupId: item.groupId,
+      groupName: item.groupName,
       createdAt: item.createdAt,
     };
   });

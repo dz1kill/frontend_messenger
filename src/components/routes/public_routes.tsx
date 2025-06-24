@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
-import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { JSX, useEffect } from "react";
+import { useAppSelector } from "../../libs/redux/hooks";
 
 const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { isConnected } = useSelector((state: RootState) => state.socket);
+  const { isConnected } = useAppSelector((state: RootState) => state.socket);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 

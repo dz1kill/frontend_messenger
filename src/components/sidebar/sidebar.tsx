@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 
 import styles from "../../styles/sidebar.module.css";
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
 import { REQ_LIST_LAST_MESSAGE } from "./constants";
+import { useAppSelector } from "../../libs/redux/hooks";
 
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
@@ -13,10 +13,10 @@ const Sidebar: React.FC = () => {
     cursor: null as string | null,
     isLoading: false,
   });
-  const { socket, isConnected } = useSelector(
+  const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessages, firstLoadingData, lastPageLoaded } = useSelector(
+  const { lastMessages, firstLoadingData, lastPageLoaded } = useAppSelector(
     (state: RootState) => state.chats
   );
 
@@ -90,12 +90,7 @@ const Sidebar: React.FC = () => {
         ref={chatListRef}
       >
         {lastMessages.map((chat) => (
-          <ChatItem
-            key={chat.id}
-            name={chat.name}
-            lastMessage={chat.lastMessage}
-            time={chat.time}
-          />
+          <ChatItem key={chat.messageId} {...chat} />
         ))}
         {infiniteScroll.isLoading && (
           <div className={styles.spinnerContainer}>

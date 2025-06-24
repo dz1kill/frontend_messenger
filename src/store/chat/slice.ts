@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ChatErrror,
   ChatState,
+  Conversation,
   FormatDataListLastMessage,
 } from "../../types/chat";
 
@@ -11,20 +12,22 @@ const initialState: ChatState = {
   firstLoadingData: false,
   lastPageLoaded: false,
   isError: false,
+  currentConversation: null,
 };
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    conversation: (state, action: PayloadAction<Conversation>) => {
+      state.currentConversation = action.payload;
+    },
+
     listLastMessageReceived: (
       state,
       action: PayloadAction<FormatDataListLastMessage[]>
     ) => {
-      state.lastMessages = state.lastMessages = [
-        ...state.lastMessages,
-        ...action.payload,
-      ];
+      state.lastMessages = [...state.lastMessages, ...action.payload];
       state.firstLoadingData = true;
       state.lastPageLoaded = !action.payload.length;
     },
@@ -37,6 +40,7 @@ const chatSlice = createSlice({
       state.firstLoadingData = false;
       state.lastMessages = [];
       state.isErrorMessage = [];
+      state.currentConversation = null;
     },
 
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
@@ -52,5 +56,10 @@ const chatSlice = createSlice({
   },
 });
 
-export const { listLastMessageReceived, isErrorReceived } = chatSlice.actions;
+export const {
+  listLastMessageReceived,
+  isErrorReceived,
+  conversation,
+  resetChatsState,
+} = chatSlice.actions;
 export default chatSlice.reducer;

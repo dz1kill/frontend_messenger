@@ -1,13 +1,13 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import React, { JSX, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
 import { ROUTES } from "../../router/routes";
+import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
 
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const dispatch = useDispatch();
-  const { error: connectionError } = useSelector(
+  const dispatch = useAppDispatch();
+  const { error: connectionError } = useAppSelector(
     (state: RootState) => state.socket
   );
   const [token] = useState(localStorage.getItem("token"));

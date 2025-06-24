@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../store/store";
 import {
@@ -8,10 +7,11 @@ import {
 } from "../../store/chat/slice";
 import { TYPE_LIST_LAST_MESSAGE } from "../../utils/constants";
 import { formatDataListLastMessage, sortListLastMessage } from "./helper";
+import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
 
 export const MessageProcessor = () => {
-  const { socket } = useSelector((state: RootState) => state.socket);
-  const dispatch = useDispatch();
+  const { socket } = useAppSelector((state: RootState) => state.socket);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
