@@ -19,7 +19,7 @@ import {
   FormDataSignUpState,
   ValidatErrServerState,
   VlidateErrState,
-} from "../../types/user";
+} from "../../types/auth";
 
 const SignUpForm: React.FC = () => {
   const dispatch = useAppDispatch();

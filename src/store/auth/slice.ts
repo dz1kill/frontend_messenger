@@ -8,7 +8,7 @@ import {
   UserResLoginData,
   UserResSingUpData,
   AuthState,
-} from "../../types/user";
+} from "../../types/auth";
 import { ROUTES } from "../../router/routes";
 
 const initialState: AuthState = {
@@ -67,8 +67,8 @@ export const loginUser = createAsyncThunk<
   }
 });
 
-const userSlice = createSlice({
-  name: "user",
+const authSlice = createSlice({
+  name: "auth",
   initialState,
   reducers: {},
 
@@ -91,4 +91,4 @@ const userSlice = createSlice({
   },
 });
 
-export default userSlice.reducer;
+export default authSlice.reducer;

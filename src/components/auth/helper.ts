@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FormDataLoginState, FormDataSignUpState } from "../../types/user";
+import { FormDataLoginState, FormDataSignUpState } from "../../types/auth";
 
 export const messageErrorSignUp = (statusCode: number) => {
   switch (statusCode) {

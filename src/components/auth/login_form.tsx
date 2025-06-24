@@ -11,7 +11,7 @@ import { ROUTES } from "../../router/routes";
 import styles from "../../styles/auth.module.css";
 import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../libs/redux/hooks";
-import { FormDataLoginState, ValidatErrServerState } from "../../types/user";
+import { FormDataLoginState, ValidatErrServerState } from "../../types/auth";
 import { checkEmptyInput, messageErrorLogin } from "./helper";
 
 const LoginForm: React.FC = () => {
