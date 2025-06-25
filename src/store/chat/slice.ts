@@ -31,7 +31,13 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormatDataListLastMessage[]>
     ) => {
-      state.lastMessagesChat = [...state.lastMessagesChat, ...action.payload];
+      state.lastMessagesChat = [
+        ...state.lastMessagesChat,
+        ...action.payload,
+      ].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
       state.firstLoadingDataChat = true;
       state.lastPageLoaded = !action.payload.length;
     },
@@ -43,7 +49,10 @@ const chatSlice = createSlice({
       state.latestMessageDialog = [
         ...state.latestMessageDialog,
         ...action.payload,
-      ];
+      ].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     },
 
     latestMessageGroupReceived: (
@@ -53,7 +62,10 @@ const chatSlice = createSlice({
       state.latestMessageGroup = [
         ...state.latestMessageGroup,
         ...action.payload,
-      ];
+      ].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     },
 
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {

@@ -65,13 +65,6 @@ export const formatDataListLastMessage = (
   });
 };
 
-export const sortMessage = <T extends { createdAt: string }>(
-  resultFormat: T[]
-): T[] =>
-  resultFormat.sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-
 export const formatDatalatestMessageDialog = (
   messages: DatalatestMessageDialog[]
 ) => {

@@ -16,7 +16,6 @@ import {
   formatDatalatestMessageDialog,
   formatDatalatestMessageGroup,
   formatDataListLastMessage,
-  sortMessage,
 } from "./helper";
 import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
 import { FormaLatestMessageDialog } from "../../types/chat";
@@ -33,8 +32,7 @@ export const MessageProcessor = () => {
             case TYPE_LIST_LAST_MESSAGE:
               if (data.success) {
                 const resultFormat = formatDataListLastMessage(data);
-                const resultSort = sortMessage(resultFormat);
-                dispatch(listLastMessageReceived(resultSort));
+                dispatch(listLastMessageReceived(resultFormat));
               } else {
                 dispatch(isErrorReceived(data));
               }
@@ -44,8 +42,7 @@ export const MessageProcessor = () => {
               if (data.success) {
                 const resultFormat: FormaLatestMessageDialog[] =
                   formatDatalatestMessageDialog(data.params.data);
-                const resultSort = sortMessage(resultFormat);
-                dispatch(latestMessageDialogReceived(resultSort));
+                dispatch(latestMessageDialogReceived(resultFormat));
               } else {
                 dispatch(isErrorReceived(data));
               }
@@ -56,8 +53,7 @@ export const MessageProcessor = () => {
                 const resultFormat = formatDatalatestMessageGroup(
                   data.params.data
                 );
-                const resultSort = sortMessage(resultFormat);
-                dispatch(latestMessageGroupReceived(resultSort));
+                dispatch(latestMessageGroupReceived(resultFormat));
               } else {
                 dispatch(isErrorReceived(data));
               }
