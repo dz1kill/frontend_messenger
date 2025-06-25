@@ -16,6 +16,7 @@ const initialState: ChatState = {
   lastPageLoaded: false,
   isError: false,
   currentConversation: null,
+  hasFetchedOnceChat: false,
 };
 
 const chatSlice = createSlice({
@@ -37,6 +38,7 @@ const chatSlice = createSlice({
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
+      state.hasFetchedOnceChat = true;
       state.lastPageLoaded = !action.payload.length;
     },
 
@@ -75,6 +77,7 @@ const chatSlice = createSlice({
       state.lastMessagesChat = [];
       state.isErrorMessage = [];
       state.currentConversation = null;
+      state.hasFetchedOnceChat = false;
     },
 
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {

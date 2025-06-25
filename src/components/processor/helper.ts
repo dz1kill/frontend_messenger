@@ -73,7 +73,6 @@ export const formatDatalatestMessageDialog = (
   return messages.map((item) => {
     return {
       messageId: item.messageId,
-      time: new Date(item.createdAt),
       content: item.content,
       sender: item.senderId === userId ? "user" : "contact",
       senderId: item.senderId,
@@ -93,7 +92,6 @@ export const formatDatalatestMessageGroup = (
   return messages.map((item) => {
     return {
       messageId: item.messageId,
-      time: new Date(item.createdAt),
       content: item.content,
       sender: item.senderId === userId ? "user" : "contact",
       senderId: item.senderId,

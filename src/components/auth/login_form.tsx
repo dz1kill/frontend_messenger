@@ -68,12 +68,12 @@ const LoginForm: React.FC = () => {
 
     if (loginUser.fulfilled.match(resultAction)) {
       const resultCheck = checkResultAction(resultAction);
-      if (resultCheck?.error) {
+      if (resultCheck) {
         setValidatErrServer((prev) => ({
           ...prev,
           isLoading: false,
           isErrorServer: true,
-          errorMessageServer: "Invalid response data",
+          errorMessageServer: "Ошибка сервера",
         }));
         return;
       }

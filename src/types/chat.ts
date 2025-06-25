@@ -48,7 +48,6 @@ export interface ReslatestMessageDialog {
 }
 
 export interface FormaLatestMessageDialog extends DatalatestMessageDialog {
-  time: Date;
   sender: string;
 }
 
@@ -73,7 +72,6 @@ export interface ReslatestMessageGroup {
 }
 
 export interface FormatLatestMessageGroup extends DataLatestMessageGroup {
-  time: Date;
   sender: string;
 }
 
@@ -94,6 +92,7 @@ export interface ChatState {
   latestMessageDialog: FormaLatestMessageDialog[];
   lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
+  hasFetchedOnceChat: boolean;
   lastPageLoaded: boolean;
   isError: boolean;
   currentConversation: Conversation | null;

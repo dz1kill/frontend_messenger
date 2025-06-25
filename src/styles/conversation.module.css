@@ -22,7 +22,7 @@
 
 .conversationHeader h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.12rem;
   font-weight: 600;
 }
 
@@ -64,6 +64,14 @@
   max-width: 100px;
 }
 
+.dateDivider {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 13px;
+  color: #888;
+  position: relative;
+}
+
 @media (max-width: 480px) {
   .sendButton {
     font-size: 0.7rem;
@@ -80,5 +88,10 @@
   }
   .conversationHeader h2 {
     font-size: 0.9rem;
+  }
+
+  .dateDivider {
+    font-size: 9px;
+    margin: 8px 0;
   }
 }

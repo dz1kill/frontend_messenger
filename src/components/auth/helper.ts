@@ -89,18 +89,22 @@ export const checkResultAction = (
   resultAction: PayloadAction<UserResLoginData>
 ) => {
   if (!resultAction || !resultAction.payload) {
-    return { error: true, message: "No payload in resultAction" };
+    console.warn("No payload in resultAction");
+    return true;
   }
 
   if (!resultAction.payload.token) {
-    return { error: true, message: "No token in payload" };
+    console.warn("No token in payload");
+    return true;
   }
 
   if (!resultAction.payload.email) {
-    return { error: true, message: "No email in payload" };
+    console.warn("No email in payload");
+    return true;
   }
 
   if (!resultAction.payload.id) {
-    return { error: true, message: "No userId in payload" };
+    console.warn("No userId in payload");
+    return true;
   }
 };
