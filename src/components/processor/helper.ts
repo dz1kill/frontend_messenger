@@ -41,10 +41,16 @@ export const formatDate = (date: string) => {
 export const formatDataListLastMessage = (
   resServer: ResListLastMessageChat
 ) => {
+  const userId = Number(localStorage.getItem("userId"));
   return resServer.params.data.map((item) => {
     const resultDate = formatDate(item.createdAt);
+    const nameConversation =
+      item.groupName ??
+      (item.senderId === userId ? item.receiverName : item.senderName) ??
+      "Без имени";
+
     return {
-      name: item.groupName !== null ? item.groupName : item.senderName,
+      name: nameConversation,
       messageId: item.messageId,
       content: item.content,
       time: resultDate,
