@@ -14,7 +14,7 @@ const Conversation: React.FC = () => {
         <h2>{currentConversation ? currentConversation.name : ""}</h2>
       </div>
       <div className={styles.messagesContainer}>
-        {latestMessageGroup.map((chat) => (
+        {latestMessageDialog.map((chat) => (
           <ConversationItem key={chat.messageId} {...chat} />
         ))}
       </div>

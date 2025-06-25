@@ -9,6 +9,7 @@ import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
+  const hasFetchedOnce = useRef(false);
   const [infiniteScroll, setInfiniteScroll] = useState({
     cursor: null as string | null,
     isLoading: false,
@@ -16,11 +17,13 @@ const Sidebar: React.FC = () => {
   const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
-  const { lastMessagesChat, firstLoadingDataChat, lastPageLoaded } =
-    useAppSelector((state: RootState) => state.chats);
+  const { lastMessagesChat, lastPageLoaded } = useAppSelector(
+    (state: RootState) => state.chats
+  );
 
   useEffect(() => {
-    if (socket && isConnected && !firstLoadingDataChat) {
+    if (socket && isConnected && !hasFetchedOnce.current) {
+      hasFetchedOnce.current = true;
       setInfiniteScroll((prev) => {
         socket.send(
           JSON.stringify({
@@ -37,7 +40,7 @@ const Sidebar: React.FC = () => {
         };
       });
     }
-  }, [socket, isConnected, firstLoadingDataChat]);
+  }, [socket, isConnected]);
 
   const handleScroll = () => {
     if (!chatListRef.current || infiniteScroll.isLoading || lastPageLoaded)
@@ -64,7 +67,7 @@ const Sidebar: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!firstLoadingDataChat) return;
+    if (!hasFetchedOnce.current) return;
 
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
 
@@ -75,7 +78,7 @@ const Sidebar: React.FC = () => {
     }));
 
     prevLengthRef.current = lastMessagesChat.length;
-  }, [lastMessagesChat, firstLoadingDataChat]);
+  }, [lastMessagesChat]);
 
   return (
     <div className={styles.sidebar}>

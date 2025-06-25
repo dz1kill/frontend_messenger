@@ -94,7 +94,6 @@ export interface ChatState {
   latestMessageDialog: FormaLatestMessageDialog[];
   lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
-  firstLoadingDataChat: boolean;
   lastPageLoaded: boolean;
   isError: boolean;
   currentConversation: Conversation | null;

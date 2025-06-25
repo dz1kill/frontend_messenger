@@ -13,7 +13,6 @@ const initialState: ChatState = {
   latestMessageDialog: [],
   lastMessagesChat: [],
   isErrorMessage: [],
-  firstLoadingDataChat: false,
   lastPageLoaded: false,
   isError: false,
   currentConversation: null,
@@ -38,7 +37,6 @@ const chatSlice = createSlice({
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
-      state.firstLoadingDataChat = true;
       state.lastPageLoaded = !action.payload.length;
     },
 
@@ -74,7 +72,6 @@ const chatSlice = createSlice({
     },
     resetChatsState: (state) => {
       state.isError = false;
-      state.firstLoadingDataChat = false;
       state.lastMessagesChat = [];
       state.isErrorMessage = [];
       state.currentConversation = null;
