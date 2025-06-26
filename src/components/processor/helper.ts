@@ -42,6 +42,7 @@ export const formatDataListLastMessage = (
   resServer: ResListLastMessageChat
 ) => {
   const userId = Number(localStorage.getItem("userId"));
+
   return resServer.params.data.map((item) => {
     const resultDate = formatDate(item.createdAt);
     const nameConversation =

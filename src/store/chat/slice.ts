@@ -55,7 +55,7 @@ const chatSlice = createSlice({
       if (!state.latestMessageDialog[companionId]) {
         state.latestMessageDialog[companionId] = action.payload.sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       } else {
         state.latestMessageDialog[companionId] = [
@@ -63,7 +63,7 @@ const chatSlice = createSlice({
           ...action.payload,
         ].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       }
     },
@@ -76,7 +76,7 @@ const chatSlice = createSlice({
       if (!state.latestMessageGroup[groupId]) {
         state.latestMessageGroup[groupId] = action.payload.sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       } else {
         state.latestMessageGroup[groupId] = [
@@ -84,7 +84,7 @@ const chatSlice = createSlice({
           ...action.payload,
         ].sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       }
     },
