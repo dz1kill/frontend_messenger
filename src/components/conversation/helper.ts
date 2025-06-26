@@ -1,4 +1,8 @@
-import { FormaLatestMessageDialog } from "../../types/chat";
+import {
+  Conversation,
+  FormaLatestMessageDialog,
+  LatestMessageDialogState,
+} from "../../types/chat";
 
 export const formatTime = (createdAt: string) => {
   const date = new Date(createdAt);
@@ -58,4 +62,15 @@ export const shouldShowDate = (
     : null;
 
   return !prevDate || currentDate.toDateString() !== prevDate.toDateString();
+};
+
+export const getMessagesForCurrentConversation = (
+  currentConversation: Conversation | null,
+  latestMessageDialog: LatestMessageDialogState
+) => {
+  if (!currentConversation || !currentConversation.companionId) {
+    return [];
+  }
+  const companionKey = currentConversation.companionId.toString() || "";
+  return latestMessageDialog[companionKey] || [];
 };

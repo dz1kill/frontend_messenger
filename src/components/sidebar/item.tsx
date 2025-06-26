@@ -7,6 +7,8 @@ import { FormatDataListLastMessage } from "../../types/chat";
 const ChatItem: React.FC<FormatDataListLastMessage> = ({
   name,
   content,
+  companionName,
+  companionId,
   time,
   senderId,
   senderName,
@@ -20,6 +22,8 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
     dispatch(
       conversation({
         name,
+        companionName,
+        companionId,
         senderId,
         senderName,
         receiverId,

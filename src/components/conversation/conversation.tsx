@@ -1,23 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
 import { useAppSelector } from "../../libs/redux/hooks";
 import { RootState } from "../../store/store";
 import { messages } from "./data";
-import { formatDateLabel, shouldShowDate } from "./helper";
+import {
+  formatDateLabel,
+  getMessagesForCurrentConversation,
+  shouldShowDate,
+} from "./helper";
 import {
   REQ_LATEST_MESSAGE_DIALOG,
   REQ_LATEST_MESSAGE_GROUP,
 } from "../../utils/constants";
 
 const Conversation: React.FC = () => {
-  const { currentConversation } = useAppSelector(
+  const { currentConversation, latestMessageDialog } = useAppSelector(
     (state: RootState) => state.chats
   );
   const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
+
   const userId = Number(localStorage.getItem("userId"));
+
+  useEffect(() => {
+    if (!socket || !isConnected || !userId || !currentConversation) return;
+    if (currentConversation.companionId) {
+      socket.send(
+        JSON.stringify({
+          ...REQ_LATEST_MESSAGE_DIALOG,
+          params: {
+            receiverId: currentConversation.companionId,
+            limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
+            cursorCreatedAt: null,
+          },
+        })
+      );
+    }
+  }, [currentConversation]);
 
   // if (!socket || !isConnected || !userId || !currentConversation) return;
   // if (!currentConversation.groupId) {
@@ -53,7 +74,10 @@ const Conversation: React.FC = () => {
         <h2>{currentConversation ? currentConversation.name : ""}</h2>
       </div>
       <div className={styles.messagesContainer}>
-        {messages.map((chat, index) => (
+        {getMessagesForCurrentConversation(
+          currentConversation,
+          latestMessageDialog
+        ).map((chat, index) => (
           <React.Fragment key={chat.messageId}>
             {shouldShowDate(messages, index) && (
               <div className={styles.dateDivider}>

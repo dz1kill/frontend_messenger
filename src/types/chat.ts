@@ -25,6 +25,8 @@ export interface FormatDataListLastMessage
   extends Omit<DataListLastMessage, "updatedAt" | "deletedAt"> {
   name: string;
   time: string;
+  companionName: string | null;
+  companionId: number | null;
 }
 
 export interface DatalatestMessageDialog {
@@ -49,6 +51,9 @@ export interface ReslatestMessageDialog {
 
 export interface FormaLatestMessageDialog extends DatalatestMessageDialog {
   sender: string;
+}
+export interface LatestMessageDialogState {
+  [senderId: string]: FormaLatestMessageDialog[];
 }
 
 export interface DataLatestMessageGroup {
@@ -89,7 +94,7 @@ export interface ChatErrror {
 
 export interface ChatState {
   latestMessageGroup: FormatLatestMessageGroup[];
-  latestMessageDialog: FormaLatestMessageDialog[];
+  latestMessageDialog: LatestMessageDialogState;
   lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
   hasFetchedOnceChat: boolean;

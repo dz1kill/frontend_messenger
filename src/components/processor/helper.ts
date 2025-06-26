@@ -49,7 +49,23 @@ export const formatDataListLastMessage = (
       (item.senderId === userId ? item.receiverName : item.senderName) ??
       "Без имени";
 
+    const companionName =
+      item.groupId != null
+        ? null
+        : item.senderId === userId
+        ? item.receiverName
+        : item.senderName;
+
+    const companionId =
+      item.groupId != null
+        ? null
+        : item.senderId === userId
+        ? item.receiverId
+        : item.senderId;
+
     return {
+      companionName,
+      companionId,
       name: nameConversation,
       messageId: item.messageId,
       content: item.content,

@@ -10,7 +10,7 @@ import {
 
 const initialState: ChatState = {
   latestMessageGroup: [],
-  latestMessageDialog: [],
+  latestMessageDialog: {},
   lastMessagesChat: [],
   isErrorMessage: [],
   lastPageLoaded: false,
@@ -18,7 +18,7 @@ const initialState: ChatState = {
   currentConversation: null,
   hasFetchedOnceChat: false,
 };
-
+const userId = Number(localStorage.getItem("userId"));
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -46,13 +46,22 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormaLatestMessageDialog[]>
     ) => {
-      state.latestMessageDialog = [
-        ...state.latestMessageDialog,
-        ...action.payload,
-      ].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
+      const companionId =
+        action.payload[0].senderId === userId
+          ? action.payload[0].receiverId
+          : action.payload[0].senderId;
+
+      if (!state.latestMessageDialog[companionId]) {
+        state.latestMessageDialog[companionId] = action.payload;
+      } else {
+        state.latestMessageDialog[companionId] = [
+          ...state.latestMessageDialog[companionId],
+          ...action.payload,
+        ].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
     },
 
     latestMessageGroupReceived: (
