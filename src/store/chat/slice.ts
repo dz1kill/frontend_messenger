@@ -94,14 +94,14 @@ const chatSlice = createSlice({
       state.isError = false;
     },
     resetChatsState: (state) => {
-      (state.latestMessageGroup = {}),
-        (state.latestMessageDialog = {}),
-        (state.lastMessagesChat = []),
-        (state.isErrorMessage = []),
-        (state.lastPageLoaded = false),
-        (state.isError = false),
-        (state.currentConversation = null),
-        (state.hasFetchedOnceChat = false);
+      state.latestMessageGroup = {};
+      state.latestMessageDialog = {};
+      state.lastMessagesChat = [];
+      state.isErrorMessage = [];
+      state.lastPageLoaded = false;
+      state.isError = false;
+      state.currentConversation = null;
+      state.hasFetchedOnceChat = false;
     },
 
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
