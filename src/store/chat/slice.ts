@@ -9,7 +9,7 @@ import {
 } from "../../types/chat";
 
 const initialState: ChatState = {
-  latestMessageGroup: [],
+  latestMessageGroup: {},
   latestMessageDialog: {},
   lastMessagesChat: [],
   isErrorMessage: [],
@@ -52,7 +52,10 @@ const chatSlice = createSlice({
           : action.payload[0].senderId;
 
       if (!state.latestMessageDialog[companionId]) {
-        state.latestMessageDialog[companionId] = action.payload;
+        state.latestMessageDialog[companionId] = action.payload.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       } else {
         state.latestMessageDialog[companionId] = [
           ...state.latestMessageDialog[companionId],
@@ -68,13 +71,21 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormatLatestMessageGroup[]>
     ) => {
-      state.latestMessageGroup = [
-        ...state.latestMessageGroup,
-        ...action.payload,
-      ].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
+      const groupId = action.payload[0].groupId;
+      if (!state.latestMessageGroup[groupId]) {
+        state.latestMessageGroup[groupId] = action.payload.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      } else {
+        state.latestMessageGroup[groupId] = [
+          ...state.latestMessageGroup[groupId],
+          ...action.payload,
+        ].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
     },
 
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {

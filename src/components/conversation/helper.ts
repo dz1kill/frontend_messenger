@@ -1,7 +1,9 @@
 import {
   Conversation,
   FormaLatestMessageDialog,
+  FormatLatestMessageGroup,
   LatestMessageDialogState,
+  LatestMessageGroupState,
 } from "../../types/chat";
 
 export const formatTime = (createdAt: string) => {
@@ -53,7 +55,7 @@ export const formatDateLabel = (date: Date) => {
 };
 
 export const shouldShowDate = (
-  messages: FormaLatestMessageDialog[],
+  messages: FormaLatestMessageDialog[] | FormatLatestMessageGroup[],
   index: number
 ) => {
   const currentDate = new Date(messages[index].createdAt);
@@ -64,7 +66,7 @@ export const shouldShowDate = (
   return !prevDate || currentDate.toDateString() !== prevDate.toDateString();
 };
 
-export const getMessagesForCurrentConversation = (
+export const getMessagesForCurrentConversationDialog = (
   currentConversation: Conversation | null,
   latestMessageDialog: LatestMessageDialogState
 ) => {
@@ -73,4 +75,37 @@ export const getMessagesForCurrentConversation = (
   }
   const companionKey = currentConversation.companionId.toString() || "";
   return latestMessageDialog[companionKey] || [];
+};
+
+export const getMessagesForCurrentConversationGroup = (
+  currentConversation: Conversation | null,
+  latestMessageGroup: LatestMessageGroupState
+) => {
+  if (!currentConversation || !currentConversation.groupId) {
+    return [];
+  }
+  const groupId = currentConversation.groupId.toString() || "";
+  return latestMessageGroup[groupId] || [];
+};
+
+export const checkFirstLoad = (
+  currentConversation: Conversation | null,
+  latestMessageDialog: LatestMessageDialogState,
+  latestMessageGroup: LatestMessageGroupState
+): boolean => {
+  if (!currentConversation) return false;
+
+  const { companionId, groupId } = currentConversation;
+
+  if (companionId) {
+    const key = companionId.toString();
+    if (latestMessageDialog[key]) return true;
+  }
+
+  if (groupId) {
+    const key = groupId.toString();
+    if (latestMessageGroup[key]) return true;
+  }
+
+  return false;
 };

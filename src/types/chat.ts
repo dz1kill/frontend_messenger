@@ -53,7 +53,7 @@ export interface FormaLatestMessageDialog extends DatalatestMessageDialog {
   sender: string;
 }
 export interface LatestMessageDialogState {
-  [senderId: string]: FormaLatestMessageDialog[];
+  [companionId: string]: FormaLatestMessageDialog[];
 }
 
 export interface DataLatestMessageGroup {
@@ -80,6 +80,10 @@ export interface FormatLatestMessageGroup extends DataLatestMessageGroup {
   sender: string;
 }
 
+export interface LatestMessageGroupState {
+  [groupId: string]: FormatLatestMessageGroup[];
+}
+
 export interface Conversation
   extends Omit<
     FormatDataListLastMessage,
@@ -93,7 +97,7 @@ export interface ChatErrror {
 }
 
 export interface ChatState {
-  latestMessageGroup: FormatLatestMessageGroup[];
+  latestMessageGroup: LatestMessageGroupState;
   latestMessageDialog: LatestMessageDialogState;
   lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
