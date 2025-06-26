@@ -19,6 +19,7 @@ const initialState: ChatState = {
   hasFetchedOnceChat: false,
 };
 const userId = Number(localStorage.getItem("userId"));
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -93,11 +94,14 @@ const chatSlice = createSlice({
       state.isError = false;
     },
     resetChatsState: (state) => {
-      state.isError = false;
-      state.lastMessagesChat = [];
-      state.isErrorMessage = [];
-      state.currentConversation = null;
-      state.hasFetchedOnceChat = false;
+      (state.latestMessageGroup = {}),
+        (state.latestMessageDialog = {}),
+        (state.lastMessagesChat = []),
+        (state.isErrorMessage = []),
+        (state.lastPageLoaded = false),
+        (state.isError = false),
+        (state.currentConversation = null),
+        (state.hasFetchedOnceChat = false);
     },
 
     // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
