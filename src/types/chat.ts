@@ -49,11 +49,11 @@ export interface ReslatestMessageDialog {
   };
 }
 
-export interface FormaLatestMessageDialog extends DatalatestMessageDialog {
+export interface FormatLatestMessageDialog extends DatalatestMessageDialog {
   sender: string;
 }
 export interface LatestMessageDialogState {
-  [companionId: string]: FormaLatestMessageDialog[];
+  [companionId: string]: FormatLatestMessageDialog[];
 }
 
 export interface DataLatestMessageGroup {

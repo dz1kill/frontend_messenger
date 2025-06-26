@@ -3,7 +3,7 @@ import {
   ChatErrror,
   ChatState,
   Conversation,
-  FormaLatestMessageDialog,
+  FormatLatestMessageDialog,
   FormatDataListLastMessage,
   FormatLatestMessageGroup,
 } from "../../types/chat";
@@ -24,7 +24,7 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    conversation: (state, action: PayloadAction<Conversation>) => {
+    targetConversation: (state, action: PayloadAction<Conversation>) => {
       state.currentConversation = action.payload;
     },
 
@@ -45,7 +45,7 @@ const chatSlice = createSlice({
 
     latestMessageDialogReceived: (
       state,
-      action: PayloadAction<FormaLatestMessageDialog[]>
+      action: PayloadAction<FormatLatestMessageDialog[]>
     ) => {
       const companionId =
         action.payload[0].senderId === userId
@@ -120,7 +120,7 @@ const chatSlice = createSlice({
 export const {
   listLastMessageReceived,
   isErrorReceived,
-  conversation,
+  targetConversation,
   resetChatsState,
   latestMessageDialogReceived,
   latestMessageGroupReceived,

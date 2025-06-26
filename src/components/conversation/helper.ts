@@ -1,6 +1,6 @@
 import {
   Conversation,
-  FormaLatestMessageDialog,
+  FormatLatestMessageDialog,
   FormatLatestMessageGroup,
   LatestMessageDialogState,
   LatestMessageGroupState,
@@ -55,7 +55,7 @@ export const formatDateLabel = (date: Date) => {
 };
 
 export const shouldShowDate = (
-  messages: FormaLatestMessageDialog[] | FormatLatestMessageGroup[],
+  messages: FormatLatestMessageDialog[] | FormatLatestMessageGroup[],
   index: number
 ) => {
   const currentDate = new Date(messages[index].createdAt);

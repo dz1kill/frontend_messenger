@@ -18,7 +18,7 @@ import {
   formatDataListLastMessage,
 } from "./helper";
 import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
-import { FormaLatestMessageDialog } from "../../types/chat";
+import { FormatLatestMessageDialog } from "../../types/chat";
 
 export const MessageProcessor = () => {
   const { socket } = useAppSelector((state: RootState) => state.socket);
@@ -40,7 +40,7 @@ export const MessageProcessor = () => {
 
             case TYPE_LATEST_MESSAGE_DIALOG:
               if (data.success) {
-                const resultFormat: FormaLatestMessageDialog[] =
+                const resultFormat: FormatLatestMessageDialog[] =
                   formatDatalatestMessageDialog(data.params.data);
                 dispatch(latestMessageDialogReceived(resultFormat));
               } else {

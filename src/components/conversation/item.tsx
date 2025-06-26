@@ -1,12 +1,12 @@
 import styles from "../../styles/conversation_item.module.css";
 import {
-  FormaLatestMessageDialog,
+  FormatLatestMessageDialog,
   FormatLatestMessageGroup,
 } from "../../types/chat";
 import { formatTime } from "./helper";
 
 const ConversationItem: React.FC<
-  FormaLatestMessageDialog | FormatLatestMessageGroup
+  FormatLatestMessageDialog | FormatLatestMessageGroup
 > = ({ sender, content, createdAt }) => {
   return (
     <div
