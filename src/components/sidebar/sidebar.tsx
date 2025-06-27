@@ -9,7 +9,7 @@ import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
-  const [infiniteScroll, setInfiniteScroll] = useState({
+  const [paginationState, setPaginationState] = useState({
     cursor: null as string | null,
     isLoading: false,
   });
@@ -21,7 +21,7 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     if (socket && isConnected && !hasFetchedOnceChat) {
-      setInfiniteScroll((prev) => {
+      setPaginationState((prev) => {
         socket.send(
           JSON.stringify({
             ...REQ_LIST_LAST_MESSAGE,
@@ -40,14 +40,14 @@ const Sidebar: React.FC = () => {
   }, [socket, isConnected, hasFetchedOnceChat]);
 
   const handleScroll = () => {
-    if (!chatListRef.current || infiniteScroll.isLoading || lastPageLoaded)
+    if (!chatListRef.current || paginationState.isLoading || lastPageLoaded)
       return;
 
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
     const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 5;
 
     if (isNearBottom && socket && isConnected) {
-      setInfiniteScroll((prev) => ({
+      setPaginationState((prev) => ({
         ...prev,
         isLoading: true,
       }));
@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
           ...REQ_LIST_LAST_MESSAGE,
           params: {
             limit: REQ_LIST_LAST_MESSAGE.params.limit,
-            cursorCreatedAt: infiniteScroll.cursor,
+            cursorCreatedAt: paginationState.cursor,
           },
         })
       );
@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
 
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
 
-    setInfiniteScroll((prev) => ({
+    setPaginationState((prev) => ({
       ...prev,
       isLoading: false,
       cursor: lastMsg.createdAt,
@@ -91,7 +91,7 @@ const Sidebar: React.FC = () => {
         {lastMessagesChat.map((chat) => (
           <ChatItem key={chat.messageId} {...chat} />
         ))}
-        {infiniteScroll.isLoading && (
+        {paginationState.isLoading && (
           <div className={styles.spinnerContainer}>
             <div className={styles.spinner}></div>
           </div>

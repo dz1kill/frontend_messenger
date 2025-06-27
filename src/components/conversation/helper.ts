@@ -66,7 +66,7 @@ export const shouldShowDate = (
   return !prevDate || currentDate.toDateString() !== prevDate.toDateString();
 };
 
-export const getMessagesForCurrentConversationDialog = (
+export const getMsgConversationDialog = (
   currentConversation: Conversation | null,
   latestMessageDialog: LatestMessageDialogState
 ) => {
@@ -77,7 +77,7 @@ export const getMessagesForCurrentConversationDialog = (
   return latestMessageDialog[companionKey] || [];
 };
 
-export const getMessagesForCurrentConversationGroup = (
+export const getMsgConversationGroup = (
   currentConversation: Conversation | null,
   latestMessageGroup: LatestMessageGroupState
 ) => {
@@ -109,3 +109,7 @@ export const checkFirstLoad = (
 
   return false;
 };
+
+export const getLastMessageTime = (
+  messages: FormatLatestMessageDialog[] | FormatLatestMessageGroup[]
+) => messages[messages.length - 1]?.createdAt;

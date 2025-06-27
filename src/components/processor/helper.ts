@@ -78,6 +78,7 @@ export const formatDataListLastMessage = (
       groupId: item.groupId,
       groupName: item.groupName,
       createdAt: item.createdAt,
+      cursorCreatedAt: null,
     };
   });
 };

@@ -27,6 +27,7 @@ export interface FormatDataListLastMessage
   time: string;
   companionName: string | null;
   companionId: number | null;
+  cursorCreatedAt: string | null;
 }
 
 export interface DatalatestMessageDialog {

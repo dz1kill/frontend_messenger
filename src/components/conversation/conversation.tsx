@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
-import { useAppSelector } from "../../libs/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
 import { RootState } from "../../store/store";
 import {
   checkFirstLoad,
   formatDateLabel,
-  getMessagesForCurrentConversationDialog,
-  getMessagesForCurrentConversationGroup,
+  getLastMessageTime,
+  getMsgConversationDialog,
+  getMsgConversationGroup,
   shouldShowDate,
 } from "./helper";
 import {
@@ -15,12 +16,18 @@ import {
   REQ_LATEST_MESSAGE_GROUP,
 } from "../../utils/constants";
 
+import { targetConversation } from "../../store/chat/slice";
+
 const Conversation: React.FC = () => {
   const { currentConversation, latestMessageDialog, latestMessageGroup } =
     useAppSelector((state: RootState) => state.chats);
   const { socket, isConnected } = useAppSelector(
     (state: RootState) => state.socket
   );
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+  });
+  const dispatch = useAppDispatch();
   const userId = Number(localStorage.getItem("userId"));
   const socketRef = useRef(socket);
   const isConnectedRef = useRef(isConnected);
@@ -50,7 +57,6 @@ const Conversation: React.FC = () => {
       isFirstLoaded
     )
       return;
-
     const request = currentConversation.companionId
       ? {
           ...REQ_LATEST_MESSAGE_DIALOG,
@@ -68,19 +74,52 @@ const Conversation: React.FC = () => {
             cursorCreatedAt: null,
           },
         };
-
+    setLoadingState((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
     socketRef.current.send(JSON.stringify(request));
   }, [currentConversation]);
 
-  const messages = currentConversation?.groupId
-    ? getMessagesForCurrentConversationGroup(
+  useEffect(() => {
+    if (
+      !currentConversation ||
+      !checkFirstLoad(
         currentConversation,
-        latestMessageGroup
+        latestMessageDialogRef.current,
+        latestMessageGroupRef.current
       )
-    : getMessagesForCurrentConversationDialog(
-        currentConversation,
-        latestMessageDialog
-      );
+    ) {
+      return;
+    }
+    const newCursor =
+      getLastMessageTime(
+        getMsgConversationDialog(currentConversation, latestMessageDialog)
+      ) ??
+      getLastMessageTime(
+        getMsgConversationGroup(currentConversation, latestMessageGroup)
+      ) ??
+      null;
+
+    setLoadingState((prev) => ({
+      ...prev,
+      isLoading: false,
+    }));
+
+    if (currentConversation.cursorCreatedAt === newCursor) {
+      return;
+    }
+    dispatch(
+      targetConversation({
+        ...currentConversation,
+        cursorCreatedAt: newCursor,
+      })
+    );
+  }, [latestMessageDialog, latestMessageGroup, currentConversation, dispatch]);
+
+  const messages = currentConversation?.groupId
+    ? getMsgConversationGroup(currentConversation, latestMessageGroup)
+    : getMsgConversationDialog(currentConversation, latestMessageDialog);
 
   return (
     <div className={styles.conversationWindow}>
@@ -88,6 +127,11 @@ const Conversation: React.FC = () => {
         <h2>{currentConversation ? currentConversation.name : ""}</h2>
       </div>
       <div className={styles.messagesContainer}>
+        {loadingState.isLoading && (
+          <div className={styles.spinnerContainer}>
+            <div className={styles.spinner}></div>
+          </div>
+        )}
         {Array.isArray(messages) &&
           messages.map((chat, index) => (
             <React.Fragment key={chat.messageId}>

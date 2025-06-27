@@ -16,6 +16,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   receiverName,
   groupId,
   groupName,
+  cursorCreatedAt,
 }) => {
   const dispatch = useAppDispatch();
   const handleClick = () => {
@@ -31,6 +32,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
         groupId,
         groupName,
         content,
+        cursorCreatedAt,
       })
     );
   };
