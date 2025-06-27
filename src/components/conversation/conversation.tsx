@@ -6,9 +6,9 @@ import { RootState } from "../../store/store";
 import {
   checkFirstLoad,
   formatDateLabel,
-  getLastMessageTime,
   getMsgConversationDialog,
   getMsgConversationGroup,
+  getNewCursor,
   shouldShowDate,
 } from "./helper";
 import {
@@ -57,50 +57,54 @@ const Conversation: React.FC = () => {
       isFirstLoaded
     )
       return;
-    const request = currentConversation.companionId
-      ? {
-          ...REQ_LATEST_MESSAGE_DIALOG,
-          params: {
-            receiverId: currentConversation.companionId,
-            limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
-            cursorCreatedAt: null,
-          },
-        }
-      : {
-          ...REQ_LATEST_MESSAGE_GROUP,
-          params: {
-            groupId: currentConversation.groupId,
-            limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
-            cursorCreatedAt: null,
-          },
-        };
+
+    let request;
+    if (currentConversation.companionId) {
+      request = {
+        ...REQ_LATEST_MESSAGE_DIALOG,
+        params: {
+          receiverId: currentConversation.companionId,
+          limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
+          cursorCreatedAt: null,
+        },
+      };
+    }
+    if (currentConversation.groupId) {
+      request = {
+        ...REQ_LATEST_MESSAGE_GROUP,
+        params: {
+          groupId: currentConversation.groupId,
+          limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
+          cursorCreatedAt: null,
+        },
+      };
+    }
+
+    if (!request) return;
+
     setLoadingState((prev) => ({
       ...prev,
       isLoading: true,
     }));
+
     socketRef.current.send(JSON.stringify(request));
   }, [currentConversation]);
 
   useEffect(() => {
-    if (
-      !currentConversation ||
-      !checkFirstLoad(
-        currentConversation,
-        latestMessageDialogRef.current,
-        latestMessageGroupRef.current
-      )
-    ) {
-      return;
-    }
-    const newCursor =
-      getLastMessageTime(
-        getMsgConversationDialog(currentConversation, latestMessageDialog)
-      ) ??
-      getLastMessageTime(
-        getMsgConversationGroup(currentConversation, latestMessageGroup)
-      ) ??
-      null;
+    const isFirstLoaded = checkFirstLoad(
+      currentConversation,
+      latestMessageDialogRef.current,
+      latestMessageGroupRef.current
+    );
+    const isReadyToFetch = !!currentConversation && isFirstLoaded;
 
+    if (!isReadyToFetch) return;
+
+    const newCursor = getNewCursor(
+      currentConversation,
+      latestMessageDialog,
+      latestMessageGroup
+    );
     setLoadingState((prev) => ({
       ...prev,
       isLoading: false,

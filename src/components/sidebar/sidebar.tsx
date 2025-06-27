@@ -65,7 +65,13 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     if (!hasFetchedOnceChat) return;
-
+    if (lastMessagesChat.length === 0) {
+      setPaginationState((prev) => ({
+        ...prev,
+        isLoading: false,
+      }));
+      return;
+    }
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
 
     setPaginationState((prev) => ({

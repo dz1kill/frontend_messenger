@@ -113,3 +113,20 @@ export const checkFirstLoad = (
 export const getLastMessageTime = (
   messages: FormatLatestMessageDialog[] | FormatLatestMessageGroup[]
 ) => messages[messages.length - 1]?.createdAt;
+
+export const getNewCursor = (
+  currentConversation: Conversation | null,
+  latestMessageDialog: LatestMessageDialogState,
+  latestMessageGroup: LatestMessageGroupState
+) => {
+  if (currentConversation?.companionId)
+    return getLastMessageTime(
+      getMsgConversationDialog(currentConversation, latestMessageDialog)
+    );
+  if (currentConversation?.groupId)
+    return getLastMessageTime(
+      getMsgConversationGroup(currentConversation, latestMessageGroup)
+    );
+
+  return null;
+};
