@@ -88,7 +88,7 @@ export interface LatestMessageGroupState {
 export interface Conversation
   extends Omit<
     FormatDataListLastMessage,
-    "messageId" | "lastMessage" | "time" | "createdAt"
+    "lastMessage" | "time" | "createdAt"
   > {}
 
 export interface ChatErrror {

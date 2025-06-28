@@ -17,7 +17,7 @@ import {
   formatDatalatestMessageGroup,
   formatDataListLastMessage,
 } from "./helper";
-import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { FormatLatestMessageDialog } from "../../types/chat";
 
 export const MessageProcessor = () => {

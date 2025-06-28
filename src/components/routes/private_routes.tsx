@@ -3,7 +3,7 @@ import React, { JSX, useEffect } from "react";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
 import { ROUTES } from "../../router/routes";
-import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 
 const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const dispatch = useAppDispatch();

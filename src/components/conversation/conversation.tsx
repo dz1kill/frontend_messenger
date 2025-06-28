@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
-import { useAppDispatch, useAppSelector } from "../../libs/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { RootState } from "../../store/store";
 import {
   checkFirstLoad,
@@ -17,45 +17,32 @@ import {
 } from "../../utils/constants";
 
 import { targetConversation } from "../../store/chat/slice";
+import { useSocket } from "../../hooks/use_socket";
 
 const Conversation: React.FC = () => {
   const { currentConversation, latestMessageDialog, latestMessageGroup } =
     useAppSelector((state: RootState) => state.chats);
-  const { socket, isConnected } = useAppSelector(
-    (state: RootState) => state.socket
-  );
+
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
   });
   const dispatch = useAppDispatch();
   const userId = Number(localStorage.getItem("userId"));
-  const socketRef = useRef(socket);
-  const isConnectedRef = useRef(isConnected);
-  const userIdRef = useRef(userId);
-  const latestMessageDialogRef = useRef(latestMessageDialog);
-  const latestMessageGroupRef = useRef(latestMessageGroup);
+  const prevMessageIdRef = useRef(currentConversation?.messageId);
+  const { sendSocketMessage, isReadySocket } = useSocket();
 
   useEffect(() => {
-    socketRef.current = socket;
-    isConnectedRef.current = isConnected;
-    userIdRef.current = userId;
-    latestMessageDialogRef.current = latestMessageDialog;
-    latestMessageGroupRef.current = latestMessageGroup;
-  }, [socket, isConnected, userId, latestMessageDialog, latestMessageGroup]);
-
-  useEffect(() => {
+    const isCurrentConversationChanged =
+      currentConversation?.messageId !== prevMessageIdRef.current;
     const isFirstLoaded = checkFirstLoad(
       currentConversation,
-      latestMessageDialogRef.current,
-      latestMessageGroupRef.current
+      latestMessageDialog,
+      latestMessageGroup
     );
-    if (
-      !socketRef.current ||
-      !isConnectedRef.current ||
-      !userIdRef.current ||
-      !currentConversation ||
-      isFirstLoaded
-    )
+    if (!isCurrentConversationChanged) return;
+    prevMessageIdRef.current = currentConversation?.messageId;
+
+    if (!isReadySocket || !userId || !currentConversation || isFirstLoaded)
       return;
 
     let request;
@@ -87,14 +74,21 @@ const Conversation: React.FC = () => {
       isLoading: true,
     }));
 
-    socketRef.current.send(JSON.stringify(request));
-  }, [currentConversation]);
+    sendSocketMessage(request);
+  }, [
+    currentConversation,
+    isReadySocket,
+    latestMessageDialog,
+    latestMessageGroup,
+    userId,
+    sendSocketMessage,
+  ]);
 
   useEffect(() => {
     const isFirstLoaded = checkFirstLoad(
       currentConversation,
-      latestMessageDialogRef.current,
-      latestMessageGroupRef.current
+      latestMessageDialog,
+      latestMessageGroup
     );
     const isReadyToFetch = !!currentConversation && isFirstLoaded;
 

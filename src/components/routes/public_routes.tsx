@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import { RootState } from "../../store/store";
 import { JSX, useEffect } from "react";
-import { useAppSelector } from "../../libs/redux/hooks";
+import { useAppSelector } from "../../hooks/redux_hooks";
 
 const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isConnected } = useAppSelector((state: RootState) => state.socket);

@@ -1,10 +1,11 @@
 import React from "react";
 import styles from "../../styles/sidebar_item.module.css";
-import { useAppDispatch } from "../../libs/redux/hooks";
+import { useAppDispatch } from "../../hooks/redux_hooks";
 import { targetConversation } from "../../store/chat/slice";
 import { FormatDataListLastMessage } from "../../types/chat";
 
 const ChatItem: React.FC<FormatDataListLastMessage> = ({
+  messageId,
   name,
   content,
   companionName,
@@ -22,6 +23,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   const handleClick = () => {
     dispatch(
       targetConversation({
+        messageId,
         name,
         companionName,
         companionId,

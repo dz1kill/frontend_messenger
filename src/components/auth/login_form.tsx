@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import styles from "../../styles/auth.module.css";
 import { loginUser } from "../../store/auth/slice";
-import { useAppDispatch } from "../../libs/redux/hooks";
+import { useAppDispatch } from "../../hooks/redux_hooks";
 import { FormDataLoginState, ValidatErrServerState } from "../../types/auth";
 import {
   checkEmptyInput,
