@@ -22,7 +22,6 @@ import { useSocket } from "../../hooks/use_socket";
 const Conversation: React.FC = () => {
   const { currentConversation, latestMessageDialog, latestMessageGroup } =
     useAppSelector((state: RootState) => state.chats);
-
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
   });
@@ -41,10 +40,8 @@ const Conversation: React.FC = () => {
     );
     if (!isCurrentConversationChanged) return;
     prevMessageIdRef.current = currentConversation?.messageId;
-
     if (!isReadySocket || !userId || !currentConversation || isFirstLoaded)
       return;
-
     let request;
     if (currentConversation.companionId) {
       request = {
@@ -66,14 +63,11 @@ const Conversation: React.FC = () => {
         },
       };
     }
-
     if (!request) return;
-
     setLoadingState((prev) => ({
       ...prev,
       isLoading: true,
     }));
-
     sendSocketMessage(request);
   }, [
     currentConversation,
@@ -91,9 +85,7 @@ const Conversation: React.FC = () => {
       latestMessageGroup
     );
     const isReadyToFetch = !!currentConversation && isFirstLoaded;
-
     if (!isReadyToFetch) return;
-
     const newCursor = getNewCursor(
       currentConversation,
       latestMessageDialog,
@@ -103,7 +95,6 @@ const Conversation: React.FC = () => {
       ...prev,
       isLoading: false,
     }));
-
     if (currentConversation.cursorCreatedAt === newCursor) {
       return;
     }

@@ -11,7 +11,6 @@ export const formatTime = (createdAt: string) => {
   const time = date.toLocaleTimeString("ru-RU", {
     hour: "2-digit",
     minute: "2-digit",
-    timeZone: "UTC",
   });
   return time;
 };
@@ -35,11 +34,9 @@ export const formatDateLabel = (date: Date) => {
   if (isToday) {
     return "Сегодня";
   }
-
   if (isYesterday) {
     return "Вчера";
   }
-
   if (date.getFullYear() === now.getFullYear()) {
     return date.toLocaleDateString("ru-RU", {
       day: "numeric",
@@ -55,15 +52,19 @@ export const formatDateLabel = (date: Date) => {
 };
 
 export const shouldShowDate = (
-  messages: FormatLatestMessageDialog[] | FormatLatestMessageGroup[],
+  messages: Array<{ createdAt: string }>,
   index: number
 ) => {
-  const currentDate = new Date(messages[index].createdAt);
-  const prevDate = messages[index - 1]
-    ? new Date(messages[index - 1].createdAt)
-    : null;
+  if (index === 0) return true;
 
-  return !prevDate || currentDate.toDateString() !== prevDate.toDateString();
+  const current = new Date(messages[index].createdAt);
+  const prev = new Date(messages[index - 1].createdAt);
+
+  return (
+    current.getFullYear() !== prev.getFullYear() ||
+    current.getMonth() !== prev.getMonth() ||
+    current.getDate() !== prev.getDate()
+  );
 };
 
 export const getMsgConversationDialog = (

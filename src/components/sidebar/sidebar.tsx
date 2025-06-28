@@ -39,10 +39,8 @@ const Sidebar: React.FC = () => {
   const handleScroll = () => {
     if (!chatListRef.current || paginationState.isLoading || lastPageLoaded)
       return;
-
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
     const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 5;
-
     if (isNearBottom && isReadySocket) {
       setPaginationState((prev) => ({
         ...prev,
@@ -68,13 +66,11 @@ const Sidebar: React.FC = () => {
       return;
     }
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
-
     setPaginationState((prev) => ({
       ...prev,
       isLoading: false,
       cursor: lastMsg.createdAt,
     }));
-
     prevLengthRef.current = lastMessagesChat.length;
   }, [lastMessagesChat, hasFetchedOnceChat]);
 

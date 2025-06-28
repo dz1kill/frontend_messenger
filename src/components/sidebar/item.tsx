@@ -3,6 +3,7 @@ import styles from "../../styles/sidebar_item.module.css";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { targetConversation } from "../../store/chat/slice";
 import { FormatDataListLastMessage } from "../../types/chat";
+import { formatDate } from "./helper";
 
 const ChatItem: React.FC<FormatDataListLastMessage> = ({
   messageId,
@@ -10,14 +11,13 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   content,
   companionName,
   companionId,
-  time,
   senderId,
   senderName,
   receiverId,
   receiverName,
   groupId,
   groupName,
-  cursorCreatedAt,
+  createdAt,
 }) => {
   const dispatch = useAppDispatch();
   const handleClick = () => {
@@ -34,7 +34,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
         groupId,
         groupName,
         content,
-        cursorCreatedAt,
+        cursorCreatedAt: null,
       })
     );
   };
@@ -45,7 +45,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>
           <span className={styles.name}>{name}</span>
-          <span className={styles.time}>{time}</span>
+          <span className={styles.time}>{formatDate(createdAt)}</span>
         </div>
         <div className={styles.bottomRow}>
           <p className={styles.lastMessage}>{content}</p>

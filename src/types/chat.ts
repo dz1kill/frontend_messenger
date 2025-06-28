@@ -24,10 +24,8 @@ export interface ResListLastMessageChat {
 export interface FormatDataListLastMessage
   extends Omit<DataListLastMessage, "updatedAt" | "deletedAt"> {
   name: string;
-  time: string;
   companionName: string | null;
   companionId: number | null;
-  cursorCreatedAt: string | null;
 }
 
 export interface DatalatestMessageDialog {
@@ -86,10 +84,9 @@ export interface LatestMessageGroupState {
 }
 
 export interface Conversation
-  extends Omit<
-    FormatDataListLastMessage,
-    "lastMessage" | "time" | "createdAt"
-  > {}
+  extends Omit<FormatDataListLastMessage, "lastMessage" | "createdAt"> {
+  cursorCreatedAt: string | null;
+}
 
 export interface ChatErrror {
   error: string;
