@@ -95,7 +95,10 @@ const Conversation: React.FC = () => {
       ...prev,
       isLoading: false,
     }));
-    if (currentConversation.cursorCreatedAt === newCursor) {
+    if (
+      (!isFirstLoaded && !newCursor) ||
+      currentConversation.cursorCreatedAt === newCursor
+    ) {
       return;
     }
     dispatch(
