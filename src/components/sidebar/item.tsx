@@ -35,6 +35,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
         groupName,
         content,
         cursorCreatedAt: null,
+        isFirstLoaded: false,
       })
     );
   };

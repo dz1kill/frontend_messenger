@@ -15,7 +15,7 @@ export const REQ_LATEST_MESSAGE_DIALOG = {
   type: "getlatestMessageDialog",
   params: {
     receiverId: null,
-    limit: 7,
+    limit: 9,
     cursorCreatedAt: null,
   },
 };
@@ -24,7 +24,7 @@ export const REQ_LATEST_MESSAGE_GROUP = {
   type: "getlatestMessageGroup",
   params: {
     groupId: null,
-    limit: 7,
+    limit: 9,
     cursorCreatedAt: null,
   },
 };

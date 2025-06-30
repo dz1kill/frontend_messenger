@@ -86,6 +86,7 @@ export interface LatestMessageGroupState {
 export interface Conversation
   extends Omit<FormatDataListLastMessage, "lastMessage" | "createdAt"> {
   cursorCreatedAt: string | null;
+  isFirstLoaded: boolean;
 }
 
 export interface ChatErrror {

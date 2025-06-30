@@ -29,18 +29,20 @@ const Conversation: React.FC = () => {
   const userId = Number(localStorage.getItem("userId"));
   const prevMessageIdRef = useRef(currentConversation?.messageId);
   const { sendSocketMessage, isReadySocket } = useSocket();
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const scrollOffsetRef = useRef<number | null>(null);
 
   useEffect(() => {
     const isCurrentConversationChanged =
       currentConversation?.messageId !== prevMessageIdRef.current;
-    const isFirstLoaded = checkFirstLoad(
-      currentConversation,
-      latestMessageDialog,
-      latestMessageGroup
-    );
     if (!isCurrentConversationChanged) return;
     prevMessageIdRef.current = currentConversation?.messageId;
-    if (!isReadySocket || !userId || !currentConversation || isFirstLoaded)
+    if (
+      !isReadySocket ||
+      !userId ||
+      !currentConversation ||
+      currentConversation.isFirstLoaded
+    )
       return;
     let request;
     if (currentConversation.companionId) {
@@ -105,6 +107,7 @@ const Conversation: React.FC = () => {
       targetConversation({
         ...currentConversation,
         cursorCreatedAt: newCursor,
+        isFirstLoaded: true,
       })
     );
   }, [latestMessageDialog, latestMessageGroup, currentConversation, dispatch]);
@@ -113,12 +116,71 @@ const Conversation: React.FC = () => {
     ? getMsgConversationGroup(currentConversation, latestMessageGroup)
     : getMsgConversationDialog(currentConversation, latestMessageDialog);
 
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container || !currentConversation) return;
+
+    if (scrollOffsetRef.current !== null && currentConversation.isFirstLoaded) {
+      container.scrollTop = container.scrollHeight - scrollOffsetRef.current;
+      scrollOffsetRef.current = null;
+    } else if (!currentConversation.isFirstLoaded) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [messages, loadingState.isLoading, currentConversation]);
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight } = messagesContainerRef.current;
+      const atTop = scrollTop <= 5;
+
+      if (
+        !currentConversation ||
+        !isReadySocket ||
+        loadingState.isLoading ||
+        !atTop
+      )
+        return;
+      scrollOffsetRef.current = scrollHeight - scrollTop;
+      let request;
+      if (currentConversation.companionId) {
+        request = {
+          ...REQ_LATEST_MESSAGE_DIALOG,
+          params: {
+            receiverId: currentConversation.companionId,
+            limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
+            cursorCreatedAt: currentConversation.cursorCreatedAt,
+          },
+        };
+      }
+      if (currentConversation.groupId) {
+        request = {
+          ...REQ_LATEST_MESSAGE_GROUP,
+          params: {
+            groupId: currentConversation.groupId,
+            limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
+            cursorCreatedAt: currentConversation.cursorCreatedAt,
+          },
+        };
+      }
+      if (!request) return;
+      setLoadingState((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+      sendSocketMessage(request);
+    }
+  };
+
   return (
     <div className={styles.conversationWindow}>
       <div className={styles.conversationHeader}>
         <h2>{currentConversation ? currentConversation.name : ""}</h2>
       </div>
-      <div className={styles.messagesContainer}>
+      <div
+        className={styles.messagesContainer}
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+      >
         {loadingState.isLoading && (
           <div className={styles.spinnerContainer}>
             <div className={styles.spinner}></div>
