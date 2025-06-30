@@ -2,12 +2,17 @@
   display: flex;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.1s, transform 0.1s;
   gap: 15px;
 }
 
 .chatItem:hover {
   background-color: #e5e5e5;
+}
+
+.chatItem:active {
+  background-color: #eaf4ff;
+  transform: scale(0.98);
 }
 
 .avatar {
