@@ -10,17 +10,17 @@ import { useSocket } from "../../hooks/use_socket";
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
-  const [paginationState, setPaginationState] = useState({
+  const [loadingState, setLoadingState] = useState({
     cursor: null as string | null,
     isLoading: false,
   });
-  const { lastMessagesChat, lastPageLoaded, hasFetchedOnceChat } =
+  const { lastMessagesChat, lastPageLoadedChat, hasFetchedOnceChat } =
     useAppSelector((state: RootState) => state.chats);
   const { sendSocketMessage, isReadySocket } = useSocket();
 
   useEffect(() => {
     if (isReadySocket && !hasFetchedOnceChat) {
-      setPaginationState((prev) => {
+      setLoadingState((prev) => {
         sendSocketMessage({
           ...REQ_LIST_LAST_MESSAGE,
           params: {
@@ -37,12 +37,12 @@ const Sidebar: React.FC = () => {
   }, [isReadySocket, hasFetchedOnceChat, sendSocketMessage]);
 
   const handleScroll = () => {
-    if (!chatListRef.current || paginationState.isLoading || lastPageLoaded)
+    if (!chatListRef.current || loadingState.isLoading || lastPageLoadedChat)
       return;
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
     const isNearBottom = scrollHeight - (scrollTop + clientHeight) < 5;
     if (isNearBottom && isReadySocket) {
-      setPaginationState((prev) => ({
+      setLoadingState((prev) => ({
         ...prev,
         isLoading: true,
       }));
@@ -50,7 +50,7 @@ const Sidebar: React.FC = () => {
         ...REQ_LIST_LAST_MESSAGE,
         params: {
           limit: REQ_LIST_LAST_MESSAGE.params.limit,
-          cursorCreatedAt: paginationState.cursor,
+          cursorCreatedAt: loadingState.cursor,
         },
       });
     }
@@ -59,14 +59,14 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     if (!hasFetchedOnceChat) return;
     if (lastMessagesChat.length === 0) {
-      setPaginationState((prev) => ({
+      setLoadingState((prev) => ({
         ...prev,
         isLoading: false,
       }));
       return;
     }
     const lastMsg = lastMessagesChat[lastMessagesChat.length - 1];
-    setPaginationState((prev) => ({
+    setLoadingState((prev) => ({
       ...prev,
       isLoading: false,
       cursor: lastMsg.createdAt,
@@ -88,7 +88,7 @@ const Sidebar: React.FC = () => {
         {lastMessagesChat.map((chat) => (
           <ChatItem key={chat.messageId} {...chat} />
         ))}
-        {paginationState.isLoading && (
+        {loadingState.isLoading && (
           <div className={styles.spinnerContainer}>
             <div className={styles.spinner}></div>
           </div>

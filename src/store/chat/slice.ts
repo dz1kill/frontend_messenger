@@ -13,7 +13,7 @@ const initialState: ChatState = {
   latestMessageDialog: {},
   lastMessagesChat: [],
   isErrorMessage: [],
-  lastPageLoaded: false,
+  lastPageLoadedChat: false,
   isError: false,
   currentConversation: null,
   hasFetchedOnceChat: false,
@@ -40,13 +40,16 @@ const chatSlice = createSlice({
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       state.hasFetchedOnceChat = true;
-      state.lastPageLoaded = !action.payload.length;
+      state.lastPageLoadedChat = !action.payload.length;
     },
 
     latestMessageDialogReceived: (
       state,
       action: PayloadAction<FormatLatestMessageDialog[]>
     ) => {
+      if (action.payload.length === 0) {
+        return;
+      }
       const companionId =
         action.payload[0].senderId === userId
           ? action.payload[0].receiverId
@@ -98,7 +101,7 @@ const chatSlice = createSlice({
       state.latestMessageDialog = {};
       state.lastMessagesChat = [];
       state.isErrorMessage = [];
-      state.lastPageLoaded = false;
+      state.lastPageLoadedChat = false;
       state.isError = false;
       state.currentConversation = null;
       state.hasFetchedOnceChat = false;

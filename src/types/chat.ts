@@ -100,7 +100,7 @@ export interface ChatState {
   lastMessagesChat: FormatDataListLastMessage[];
   isErrorMessage: ChatErrror[];
   hasFetchedOnceChat: boolean;
-  lastPageLoaded: boolean;
+  lastPageLoadedChat: boolean;
   isError: boolean;
   currentConversation: Conversation | null;
 }

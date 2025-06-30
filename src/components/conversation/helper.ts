@@ -113,7 +113,7 @@ export const checkFirstLoad = (
 
 export const getLastMessageTime = (
   messages: FormatLatestMessageDialog[] | FormatLatestMessageGroup[]
-) => messages[messages.length - 1]?.createdAt;
+) => messages[0]?.createdAt;
 
 export const getNewCursor = (
   currentConversation: Conversation | null,
