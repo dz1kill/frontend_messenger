@@ -165,8 +165,7 @@ const Conversation: React.FC = () => {
         messagesContainerRef.current;
       const atTop = scrollTop <= 20;
 
-      const scrollBottom = scrollHeight - scrollTop - clientHeight;
-      scrollOffsetRef.current = scrollBottom;
+      scrollOffsetRef.current = scrollHeight - scrollTop - clientHeight;
 
       if (
         !currentConversation ||
@@ -183,8 +182,6 @@ const Conversation: React.FC = () => {
         latestMessageGroup
       );
       if (!isFirstLoaded) return;
-
-      scrollOffsetRef.current = scrollHeight - scrollTop;
       let request;
       if (currentConversation.companionId) {
         request = {
