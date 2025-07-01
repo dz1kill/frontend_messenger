@@ -163,7 +163,7 @@ const Conversation: React.FC = () => {
     if (messagesContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } =
         messagesContainerRef.current;
-      const atTop = scrollTop <= 20;
+      const atTop = scrollTop <= 25;
 
       scrollOffsetRef.current = scrollHeight - scrollTop - clientHeight;
 
