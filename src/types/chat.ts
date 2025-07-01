@@ -102,6 +102,7 @@ export interface ChatState {
   isErrorMessage: ChatErrror[];
   hasFetchedOnceChat: boolean;
   lastPageLoadedChat: boolean;
+  isLastPageLoadedConversation: boolean;
   isError: boolean;
   currentConversation: Conversation | null;
 }

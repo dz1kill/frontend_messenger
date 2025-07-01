@@ -14,6 +14,7 @@ const initialState: ChatState = {
   lastMessagesChat: [],
   isErrorMessage: [],
   lastPageLoadedChat: false,
+  isLastPageLoadedConversation: false,
   isError: false,
   currentConversation: null,
   hasFetchedOnceChat: false,
@@ -26,6 +27,9 @@ const chatSlice = createSlice({
   reducers: {
     targetConversation: (state, action: PayloadAction<Conversation>) => {
       state.currentConversation = action.payload;
+    },
+    setIsLastPageLoadedConversation(state, action: PayloadAction<boolean>) {
+      state.isLastPageLoadedConversation = action.payload;
     },
 
     listLastMessageReceived: (
@@ -48,13 +52,13 @@ const chatSlice = createSlice({
       action: PayloadAction<FormatLatestMessageDialog[]>
     ) => {
       if (action.payload.length === 0) {
+        state.isLastPageLoadedConversation = true;
         return;
       }
       const companionId =
         action.payload[0].senderId === userId
           ? action.payload[0].receiverId
           : action.payload[0].senderId;
-
       if (!state.latestMessageDialog[companionId]) {
         state.latestMessageDialog[companionId] = action.payload.sort(
           (a, b) =>
@@ -75,6 +79,11 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormatLatestMessageGroup[]>
     ) => {
+      if (action.payload.length === 0) {
+        state.isLastPageLoadedConversation = true;
+        return;
+      }
+      state.isLastPageLoadedConversation = !action.payload.length;
       const groupId = action.payload[0].groupId;
       if (!state.latestMessageGroup[groupId]) {
         state.latestMessageGroup[groupId] = action.payload.sort(
@@ -127,5 +136,6 @@ export const {
   resetChatsState,
   latestMessageDialogReceived,
   latestMessageGroupReceived,
+  setIsLastPageLoadedConversation,
 } = chatSlice.actions;
 export default chatSlice.reducer;

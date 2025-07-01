@@ -16,12 +16,19 @@ import {
   REQ_LATEST_MESSAGE_GROUP,
 } from "../../utils/constants";
 
-import { targetConversation } from "../../store/chat/slice";
+import {
+  setIsLastPageLoadedConversation,
+  targetConversation,
+} from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
 
 const Conversation: React.FC = () => {
-  const { currentConversation, latestMessageDialog, latestMessageGroup } =
-    useAppSelector((state: RootState) => state.chats);
+  const {
+    currentConversation,
+    latestMessageDialog,
+    latestMessageGroup,
+    isLastPageLoadedConversation,
+  } = useAppSelector((state: RootState) => state.chats);
   const [loadingState, setLoadingState] = useState({
     isLoading: false,
   });
@@ -35,14 +42,24 @@ const Conversation: React.FC = () => {
   useEffect(() => {
     const isCurrentConversationChanged =
       currentConversation?.messageId !== prevMessageIdRef.current;
+    if (isCurrentConversationChanged) {
+      dispatch(setIsLastPageLoadedConversation(false));
+    }
+  }, [latestMessageDialog, latestMessageGroup, dispatch, currentConversation]);
+
+  useEffect(() => {
+    const isCurrentConversationChanged =
+      currentConversation?.messageId !== prevMessageIdRef.current;
+
     if (!isCurrentConversationChanged) return;
+
     prevMessageIdRef.current = currentConversation?.messageId;
-    if (
-      !isReadySocket ||
-      !userId ||
-      !currentConversation ||
-      currentConversation.isFirstLoaded
-    )
+    const isFirstLoaded = checkFirstLoad(
+      currentConversation,
+      latestMessageDialog,
+      latestMessageGroup
+    );
+    if (!isReadySocket || !userId || isFirstLoaded || !currentConversation)
       return;
     let request;
     if (currentConversation.companionId) {
@@ -97,49 +114,76 @@ const Conversation: React.FC = () => {
       ...prev,
       isLoading: false,
     }));
-    if (
-      (!isFirstLoaded && !newCursor) ||
-      currentConversation.cursorCreatedAt === newCursor
-    ) {
+    if (!newCursor || currentConversation.cursorCreatedAt === newCursor) {
       return;
     }
     dispatch(
       targetConversation({
         ...currentConversation,
         cursorCreatedAt: newCursor,
-        isFirstLoaded: true,
       })
     );
-  }, [latestMessageDialog, latestMessageGroup, currentConversation, dispatch]);
+  }, [
+    latestMessageDialog,
+    latestMessageGroup,
+    currentConversation,
+    dispatch,
+    isLastPageLoadedConversation,
+  ]);
 
   const messages = currentConversation?.groupId
     ? getMsgConversationGroup(currentConversation, latestMessageGroup)
     : getMsgConversationDialog(currentConversation, latestMessageDialog);
 
   useEffect(() => {
+    if (loadingState.isLoading) return;
+    const isFirstLoaded = checkFirstLoad(
+      currentConversation,
+      latestMessageDialog,
+      latestMessageGroup
+    );
     const container = messagesContainerRef.current;
-    if (!container || !currentConversation) return;
-
-    if (scrollOffsetRef.current !== null && currentConversation.isFirstLoaded) {
-      container.scrollTop = container.scrollHeight - scrollOffsetRef.current;
-      scrollOffsetRef.current = null;
-    } else if (!currentConversation.isFirstLoaded) {
+    if (!container) return;
+    if (scrollOffsetRef.current !== null && isFirstLoaded) {
+      container.scrollTop =
+        container.scrollHeight -
+        container.clientHeight -
+        scrollOffsetRef.current;
+    } else {
       container.scrollTop = container.scrollHeight;
     }
-  }, [messages, loadingState.isLoading, currentConversation]);
+  }, [
+    latestMessageDialog,
+    latestMessageGroup,
+    loadingState.isLoading,
+    currentConversation,
+  ]);
 
   const handleScroll = () => {
     if (messagesContainerRef.current) {
-      const { scrollTop, scrollHeight } = messagesContainerRef.current;
-      const atTop = scrollTop <= 5;
+      const { scrollTop, scrollHeight, clientHeight } =
+        messagesContainerRef.current;
+      const atTop = scrollTop <= 1;
+
+      const scrollBottom = scrollHeight - scrollTop - clientHeight;
+      scrollOffsetRef.current = scrollBottom;
 
       if (
         !currentConversation ||
         !isReadySocket ||
         loadingState.isLoading ||
-        !atTop
+        !atTop ||
+        isLastPageLoadedConversation
       )
         return;
+
+      const isFirstLoaded = checkFirstLoad(
+        currentConversation,
+        latestMessageDialog,
+        latestMessageGroup
+      );
+      if (!isFirstLoaded) return;
+
       scrollOffsetRef.current = scrollHeight - scrollTop;
       let request;
       if (currentConversation.companionId) {
