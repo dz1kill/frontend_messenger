@@ -11,11 +11,14 @@ import {
   TYPE_LATEST_MESSAGE_DIALOG,
   TYPE_LATEST_MESSAGE_GROUP,
   TYPE_LIST_LAST_MESSAGE,
+  TYPE_PRIVATE_MESSAGE,
 } from "../../utils/constants";
 import {
   formatDatalatestMessageDialog,
   formatDatalatestMessageGroup,
   formatDataListLastMessage,
+  formatPrivateMessageChat,
+  formatPrivateMessageConversation,
 } from "./helper";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { FormatLatestMessageDialog } from "../../types/chat";
@@ -57,6 +60,24 @@ export const MessageProcessor = () => {
               } else {
                 dispatch(isErrorReceived(data));
               }
+              break;
+
+            case TYPE_PRIVATE_MESSAGE:
+              if (data.success) {
+                if (!data.params.isBroadcast) return;
+                const resultFormatConversation =
+                  formatPrivateMessageConversation(data.params.item);
+                const resultFormatChat = formatPrivateMessageChat(
+                  data.params.item
+                );
+                //@ts-ignore
+                dispatch(listLastMessageReceived(resultFormatChat));
+                //@ts-ignore
+                dispatch(latestMessageDialogReceived(resultFormatConversation));
+              } else {
+                dispatch(isErrorReceived(data));
+              }
+
               break;
             default:
               dispatch(isErrorReceived(data));

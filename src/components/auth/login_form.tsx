@@ -77,6 +77,7 @@ const LoginForm: React.FC = () => {
         }));
         return;
       }
+      localStorage.setItem("userName", resultAction.payload.firstName);
       localStorage.setItem("token", resultAction.payload.token);
       localStorage.setItem("email", resultAction.payload.email);
       localStorage.setItem("userId", resultAction.payload.id);

@@ -93,6 +93,12 @@
   animation: spin 1s linear infinite;
 }
 
+.disabledButton {
+  background-color: #f8eaea94;
+  color: #666666;
+  cursor: not-allowed;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

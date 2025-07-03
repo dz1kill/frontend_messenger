@@ -2,6 +2,7 @@ export const RETRY_DELAY = 2000;
 export const TYPE_LIST_LAST_MESSAGE = "listLastMessage";
 export const TYPE_LATEST_MESSAGE_DIALOG = "getlatestMessageDialog";
 export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup";
+export const TYPE_PRIVATE_MESSAGE = "privateMessage";
 
 export const REQ_LIST_LAST_MESSAGE = {
   type: "listLastMessage",
@@ -26,5 +27,23 @@ export const REQ_LATEST_MESSAGE_GROUP = {
     groupId: null,
     limit: 9,
     cursorCreatedAt: null,
+  },
+};
+
+export const REQ_SEND_MESSAGE_GROUP = {
+  type: "messageInGroup",
+  params: {
+    messageId: null,
+    groupId: null,
+    content: null,
+  },
+};
+
+export const REQ_SEND_MESSAGE_DIALOG = {
+  type: "privateMessage",
+  params: {
+    messageId: null,
+    receiverId: null,
+    content: null,
   },
 };

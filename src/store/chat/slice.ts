@@ -19,7 +19,7 @@ const initialState: ChatState = {
   currentConversation: null,
   hasFetchedOnceChat: false,
 };
-const userId = Number(localStorage.getItem("userId"));
+const userId = localStorage.getItem("userId");
 
 const chatSlice = createSlice({
   name: "chat",
@@ -36,13 +36,27 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormatDataListLastMessage[]>
     ) => {
-      state.lastMessagesChat = [
-        ...state.lastMessagesChat,
-        ...action.payload,
-      ].sort(
+      let updatedMessages = [...state.lastMessagesChat];
+
+      action.payload.forEach((newMessage) => {
+        if (newMessage.groupId === null) {
+          updatedMessages = updatedMessages.filter(
+            (message) => message.companionId !== newMessage.companionId
+          );
+        }
+        if (newMessage.groupId !== null) {
+          updatedMessages = updatedMessages.filter(
+            (message) => message.groupId !== newMessage.groupId
+          );
+        }
+        updatedMessages.push(newMessage);
+      });
+
+      state.lastMessagesChat = updatedMessages.sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
+
       state.hasFetchedOnceChat = true;
       state.lastPageLoadedChat = !action.payload.length;
     },
@@ -111,6 +125,7 @@ const chatSlice = createSlice({
       state.lastMessagesChat = [];
       state.isErrorMessage = [];
       state.lastPageLoadedChat = false;
+      state.isLastPageLoadedConversation = false;
       state.isError = false;
       state.currentConversation = null;
       state.hasFetchedOnceChat = false;

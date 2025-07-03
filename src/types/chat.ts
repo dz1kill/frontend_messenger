@@ -1,10 +1,10 @@
 export interface DataListLastMessage {
-  messageId: number;
-  senderId: number;
+  messageId: string;
+  senderId: string;
   senderName: string;
-  receiverId: number | null;
+  receiverId: string | null;
   receiverName: string | null;
-  groupId: number | null;
+  groupId: string | null;
   groupName: string | null;
   content: string;
   createdAt: string;
@@ -25,14 +25,14 @@ export interface FormatDataListLastMessage
   extends Omit<DataListLastMessage, "updatedAt" | "deletedAt"> {
   name: string;
   companionName: string | null;
-  companionId: number | null;
+  companionId: string | null;
 }
 
 export interface DatalatestMessageDialog {
-  messageId: number;
-  senderId: number;
+  messageId: string;
+  senderId: string;
   senderName: string;
-  receiverId: number;
+  receiverId: string;
   receiverName: string;
   content: string;
   createdAt: string;
@@ -56,10 +56,10 @@ export interface LatestMessageDialogState {
 }
 
 export interface DataLatestMessageGroup {
-  messageId: number;
-  senderId: number;
+  messageId: string;
+  senderId: string;
   senderName: string;
-  groupId: number;
+  groupId: string;
   groupName: string;
   content: string;
   createdAt: string;

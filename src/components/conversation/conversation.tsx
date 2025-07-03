@@ -1,22 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { RootState } from "../../store/store";
 import {
+  dataToChatState,
   checkFirstLoad,
   formatDateLabel,
   getMsgConversationDialog,
   getMsgConversationGroup,
   getNewCursor,
   shouldShowDate,
+  dataToDialogState,
+  dataToGroupState,
 } from "./helper";
 import {
   REQ_LATEST_MESSAGE_DIALOG,
   REQ_LATEST_MESSAGE_GROUP,
+  REQ_SEND_MESSAGE_DIALOG,
+  REQ_SEND_MESSAGE_GROUP,
 } from "../../utils/constants";
 
 import {
+  latestMessageDialogReceived,
+  latestMessageGroupReceived,
+  listLastMessageReceived,
   setIsLastPageLoadedConversation,
   targetConversation,
 } from "../../store/chat/slice";
@@ -33,11 +42,12 @@ const Conversation: React.FC = () => {
     isLoading: false,
   });
   const dispatch = useAppDispatch();
-  const userId = Number(localStorage.getItem("userId"));
+  const userId = localStorage.getItem("userId");
   const prevMessageIdRef = useRef(currentConversation?.messageId);
   const { sendSocketMessage, isReadySocket } = useSocket();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const scrollOffsetRef = useRef<number | null>(null);
+  const [inputData, setInputData] = useState<string>("");
 
   useEffect(() => {
     const isCurrentConversationChanged =
@@ -59,6 +69,7 @@ const Conversation: React.FC = () => {
       latestMessageDialog,
       latestMessageGroup
     );
+
     if (!isReadySocket || !userId || isFirstLoaded || !currentConversation)
       return;
     let request;
@@ -149,6 +160,7 @@ const Conversation: React.FC = () => {
         container.scrollHeight -
         container.clientHeight -
         scrollOffsetRef.current;
+      scrollOffsetRef.current = null;
     } else {
       container.scrollTop = container.scrollHeight;
     }
@@ -212,6 +224,51 @@ const Conversation: React.FC = () => {
     }
   };
 
+  const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
+    const { value } = element.target;
+    setInputData(value);
+  };
+
+  const sendMessage = () => {
+    const messageId = uuidv4();
+    if (!currentConversation) return;
+    dispatch(
+      listLastMessageReceived(
+        dataToChatState(currentConversation, inputData, messageId)
+      )
+    );
+    if (currentConversation.groupId === null) {
+      dispatch(
+        latestMessageDialogReceived(
+          dataToDialogState(currentConversation, inputData, messageId)
+        )
+      );
+      sendSocketMessage({
+        ...REQ_SEND_MESSAGE_DIALOG,
+        params: {
+          messageId,
+          receiverId: currentConversation.companionId,
+          content: inputData,
+        },
+      });
+    } else {
+      dispatch(
+        latestMessageGroupReceived(
+          dataToGroupState(currentConversation, inputData, messageId)
+        )
+      );
+      sendSocketMessage({
+        ...REQ_SEND_MESSAGE_GROUP,
+        params: {
+          messageId,
+          groupId: currentConversation.groupId,
+          content: inputData,
+        },
+      });
+    }
+    setInputData("");
+  };
+
   return (
     <div className={styles.conversationWindow}>
       <div className={styles.conversationHeader}>
@@ -241,11 +298,26 @@ const Conversation: React.FC = () => {
       </div>
       <div className={styles.messageInput}>
         <input
+          key=""
           type="text"
+          name="message"
+          value={inputData}
           placeholder="Написать сообщение..."
+          autoComplete="off"
           className={styles.inputField}
+          onChange={handleChange}
         />
-        <button className={styles.sendButton}>Отправить</button>
+        <button
+          className={`${styles.sendButton} ${
+            !inputData.trim() || !currentConversation
+              ? styles.disabledButton
+              : ""
+          }`}
+          disabled={!inputData.trim() || !currentConversation}
+          onClick={sendMessage}
+        >
+          Отправить
+        </button>
       </div>
     </div>
   );

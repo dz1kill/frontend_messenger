@@ -131,3 +131,101 @@ export const getNewCursor = (
 
   return null;
 };
+
+export const dataToChatState = (
+  currentConversation: Conversation | null,
+  inputData: string,
+  messageId: string
+) => {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
+
+  if (!currentConversation || !userId || !userName) return [];
+
+  const dataSendChatMessage = [
+    {
+      messageId,
+      companionName: currentConversation.companionName,
+      companionId: currentConversation.companionId,
+      name:
+        currentConversation.groupName ??
+        (currentConversation.senderId === userId
+          ? currentConversation.receiverName
+          : currentConversation.senderName) ??
+        "Без имени",
+      content: inputData,
+      senderId: userId,
+      senderName: userName,
+      receiverId: currentConversation.companionId,
+      receiverName: currentConversation.companionName,
+      groupId: currentConversation.groupId,
+      groupName: currentConversation.groupName,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  return dataSendChatMessage;
+};
+
+export const dataToDialogState = (
+  currentConversation: Conversation | null,
+  inputData: string,
+  messageId: string
+) => {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
+
+  if (
+    !currentConversation ||
+    !userId ||
+    !userName ||
+    !currentConversation.companionId ||
+    !currentConversation.companionName
+  )
+    return [];
+
+  const dataSendDialogMessage = [
+    {
+      messageId,
+      content: inputData,
+      sender: "user",
+      senderId: userId,
+      senderName: userName,
+      receiverId: currentConversation.companionId,
+      receiverName: currentConversation.companionName,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+  return dataSendDialogMessage;
+};
+
+export const dataToGroupState = (
+  currentConversation: Conversation | null,
+  inputData: string,
+  messageId: string
+) => {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
+
+  if (
+    !currentConversation ||
+    !userId ||
+    !userName ||
+    !currentConversation.groupId ||
+    !currentConversation.groupName
+  )
+    return [];
+  const dataSendGroupMessage = [
+    {
+      messageId,
+      content: inputData,
+      sender: "user",
+      senderId: userId,
+      senderName: userName,
+      groupId: currentConversation.groupId,
+      groupName: currentConversation.groupName,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+  return dataSendGroupMessage;
+};

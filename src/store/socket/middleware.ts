@@ -35,6 +35,8 @@ const initiateConnection = async (
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("email");
+        localStorage.removeItem("userName");
+
         console.warn("Unauthorized: closed with code", event.code);
       }
     };

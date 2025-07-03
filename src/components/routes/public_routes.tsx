@@ -10,9 +10,10 @@ const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const email = localStorage.getItem("email");
+  const userName = localStorage.getItem("userName");
 
   useEffect(() => {
-    if (!isConnected && token && userId && email) {
+    if (!isConnected && token && userId && email && userName) {
       navigate(ROUTES.APP.HOME, { replace: true });
     }
   }, [isConnected, token, userId, email, navigate]);
