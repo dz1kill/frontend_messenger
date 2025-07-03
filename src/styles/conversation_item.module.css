@@ -12,6 +12,7 @@
   color: white;
   border-bottom-right-radius: 4px;
   box-shadow: 0 1px 3px #00000031;
+  padding-top: 0.9rem;
 }
 
 .contactMessage {
@@ -24,7 +25,7 @@
 }
 
 .messageContent {
-  font-weight: 480;
+  font-weight: 550;
   font-size: 0.9rem;
   line-height: 1.4;
 }

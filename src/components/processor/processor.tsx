@@ -37,87 +37,83 @@ export const MessageProcessor = () => {
     if (socket) {
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        setTimeout(() => {
-          switch (data.type) {
-            case TYPE_LIST_LAST_MESSAGE:
-              if (data.success) {
-                const resultFormat = formatDataListLastMessage(data);
-                dispatch(listLastMessageReceived(resultFormat));
-              } else {
-                dispatch(isErrorReceived(data));
-              }
-              break;
-
-            case TYPE_LATEST_MESSAGE_DIALOG:
-              if (data.success) {
-                const resultFormat: FormatLatestMessageDialog[] =
-                  formatDatalatestMessageDialog(data.params.data);
-                dispatch(latestMessageDialogReceived(resultFormat));
-              } else {
-                dispatch(isErrorReceived(data));
-              }
-              break;
-
-            case TYPE_LATEST_MESSAGE_GROUP:
-              if (data.success) {
-                const resultFormat = formatDatalatestMessageGroup(
-                  data.params.data
-                );
-
-                dispatch(latestMessageGroupReceived(resultFormat));
-              } else {
-                dispatch(isErrorReceived(data));
-              }
-              break;
-
-            case TYPE_PRIVATE_MESSAGE:
-              if (data.success) {
-                if (!data.params.isBroadcast) return;
-                const isFirstLoaded = checkFirstLoad(
-                  data.params.item,
-                  latestMessageDialog,
-                  latestMessageGroup
-                );
-                const resultFormatConversation = formatPrivateMessage(
-                  data.params.item
-                );
-                const resultFormatChat = formatPrivateMessageChat(
-                  data.params.item
-                );
-                dispatch(listLastMessageReceived(resultFormatChat));
-                if (!isFirstLoaded) return;
-                dispatch(latestMessageDialogReceived(resultFormatConversation));
-              } else {
-                dispatch(isErrorReceived(data));
-              }
-
-              break;
-
-            case TYPE_GROUP_MESSAGE:
-              if (data.success) {
-                if (!data.params.isBroadcast) return;
-                const isFirstLoaded = checkFirstLoad(
-                  data.params.item,
-                  latestMessageDialog,
-                  latestMessageGroup
-                );
-                const resultFormat = formatGroupMessage(data.params.item);
-                const resultFormatChat = formatGroupMessageChat(
-                  data.params.item
-                );
-                dispatch(listLastMessageReceived(resultFormatChat));
-                if (!isFirstLoaded) return;
-                dispatch(latestMessageGroupReceived(resultFormat));
-              } else {
-                dispatch(isErrorReceived(data));
-              }
-
-              break;
-            default:
+        switch (data.type) {
+          case TYPE_LIST_LAST_MESSAGE:
+            if (data.success) {
+              const resultFormat = formatDataListLastMessage(data);
+              dispatch(listLastMessageReceived(resultFormat));
+            } else {
               dispatch(isErrorReceived(data));
-              break;
-          }
-        }, 500);
+            }
+            break;
+
+          case TYPE_LATEST_MESSAGE_DIALOG:
+            if (data.success) {
+              const resultFormat: FormatLatestMessageDialog[] =
+                formatDatalatestMessageDialog(data.params.data);
+              dispatch(latestMessageDialogReceived(resultFormat));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
+            break;
+
+          case TYPE_LATEST_MESSAGE_GROUP:
+            if (data.success) {
+              const resultFormat = formatDatalatestMessageGroup(
+                data.params.data
+              );
+
+              dispatch(latestMessageGroupReceived(resultFormat));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
+            break;
+
+          case TYPE_PRIVATE_MESSAGE:
+            if (data.success) {
+              if (!data.params.isBroadcast) return;
+              const isFirstLoaded = checkFirstLoad(
+                data.params.item,
+                latestMessageDialog,
+                latestMessageGroup
+              );
+              const resultFormatConversation = formatPrivateMessage(
+                data.params.item
+              );
+              const resultFormatChat = formatPrivateMessageChat(
+                data.params.item
+              );
+              dispatch(listLastMessageReceived(resultFormatChat));
+              if (!isFirstLoaded) return;
+              dispatch(latestMessageDialogReceived(resultFormatConversation));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
+
+            break;
+
+          case TYPE_GROUP_MESSAGE:
+            if (data.success) {
+              if (!data.params.isBroadcast) return;
+              const isFirstLoaded = checkFirstLoad(
+                data.params.item,
+                latestMessageDialog,
+                latestMessageGroup
+              );
+              const resultFormat = formatGroupMessage(data.params.item);
+              const resultFormatChat = formatGroupMessageChat(data.params.item);
+              dispatch(listLastMessageReceived(resultFormatChat));
+              if (!isFirstLoaded) return;
+              dispatch(latestMessageGroupReceived(resultFormat));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
+
+            break;
+          default:
+            dispatch(isErrorReceived(data));
+            break;
+        }
       };
     }
   }, [dispatch, socket, latestMessageDialog, latestMessageGroup]);
