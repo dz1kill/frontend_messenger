@@ -34,6 +34,10 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   if (!token || !userId || !email || !userName) {
     dispatch(resetSocketState());
     dispatch(resetChatsState());
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("userName");
     return <Navigate to={ROUTES.APP.LOGIN} replace />;
   }
 

@@ -17,8 +17,8 @@ export interface ResListLastMessageChat {
   success: boolean;
   params: {
     data: DataListLastMessage[];
-    message: string | null;
-    senderName: string | null;
+    isBroadcast: boolean;
+    item: null;
   };
 }
 export interface FormatDataListLastMessage
@@ -43,8 +43,8 @@ export interface ReslatestMessageDialog {
   success: boolean;
   params: {
     data: DatalatestMessageDialog[];
-    message: string | null;
-    senderName: string | null;
+    isBroadcast: boolean;
+    item: null;
   };
 }
 
@@ -70,8 +70,46 @@ export interface ReslatestMessageGroup {
   success: boolean;
   params: {
     data: DataLatestMessageGroup[];
-    message: string | null;
-    senderName: string | null;
+    isBroadcast: boolean;
+    item: null;
+  };
+}
+
+export interface ItemPrivateMessage {
+  messageId: string;
+  message: string;
+  senderName: string;
+  senderId: string;
+  createdAt: string;
+}
+
+export interface ResItemPrivateMessage {
+  type: "privateMessage";
+  success: boolean;
+  params: {
+    data: null;
+    isBroadcast: boolean;
+    item: ItemPrivateMessage;
+  };
+}
+
+export interface ItemGroupMessage {
+  groupId: string;
+  groupName: string;
+  messageId: string;
+  message: string;
+  senderName: string;
+  senderId: string;
+  createdAt: string;
+}
+
+export interface ResItemGroupMessage {
+  type: "messageInGroup";
+  success: boolean;
+  params: {
+    data: null;
+    isBroadcast: boolean;
+    item: ItemGroupMessage;
   };
 }
 

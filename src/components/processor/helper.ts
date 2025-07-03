@@ -1,6 +1,10 @@
 import {
   DatalatestMessageDialog,
   DataLatestMessageGroup,
+  ItemGroupMessage,
+  ItemPrivateMessage,
+  LatestMessageDialogState,
+  LatestMessageGroupState,
   ResListLastMessageChat,
 } from "../../types/chat";
 
@@ -83,9 +87,10 @@ export const formatDatalatestMessageGroup = (
   });
 };
 
-export const formatPrivateMessageConversation = (message: any) => {
+export const formatPrivateMessage = (message: ItemPrivateMessage) => {
   const userId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
+  if (!userId || !userName) return [];
 
   return [
     {
@@ -101,9 +106,11 @@ export const formatPrivateMessageConversation = (message: any) => {
   ];
 };
 
-export const formatPrivateMessageChat = (message: any) => {
+export const formatPrivateMessageChat = (message: ItemPrivateMessage) => {
   const userId = localStorage.getItem("userId");
   const userName = localStorage.getItem("userName");
+
+  if (!userId || !userName) return [];
   return [
     {
       companionName: message.senderName,
@@ -120,4 +127,54 @@ export const formatPrivateMessageChat = (message: any) => {
       createdAt: message.createdAt,
     },
   ];
+};
+
+export const formatGroupMessage = (message: ItemGroupMessage) => {
+  return [
+    {
+      messageId: message.messageId,
+      content: message.message,
+      sender: "contact",
+      senderId: message.senderId,
+      senderName: message.senderName,
+      groupId: message.groupId,
+      groupName: message.groupName,
+      createdAt: message.createdAt,
+    },
+  ];
+};
+export const formatGroupMessageChat = (message: ItemGroupMessage) => {
+  return [
+    {
+      messageId: message.messageId,
+      companionName: null,
+      companionId: null,
+      name: message.groupName,
+      content: message.message,
+      senderId: message.senderId,
+      senderName: message.senderName,
+      receiverId: null,
+      receiverName: null,
+      groupId: message.groupId,
+      groupName: message.groupName,
+      createdAt: message.createdAt,
+    },
+  ];
+};
+
+export const checkFirstLoad = (
+  item: ItemPrivateMessage | ItemGroupMessage,
+  latestMessageDialog: LatestMessageDialogState,
+  latestMessageGroup: LatestMessageGroupState
+): boolean => {
+  if (!item) return false;
+
+  if ("groupId" in item) {
+    if (latestMessageGroup[item.groupId]) return true;
+  }
+  if ("senderId" in item) {
+    if (latestMessageDialog[item.senderId]) return true;
+  }
+
+  return false;
 };

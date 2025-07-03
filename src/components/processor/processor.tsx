@@ -8,6 +8,7 @@ import {
   listLastMessageReceived,
 } from "../../store/chat/slice";
 import {
+  TYPE_GROUP_MESSAGE,
   TYPE_LATEST_MESSAGE_DIALOG,
   TYPE_LATEST_MESSAGE_GROUP,
   TYPE_LIST_LAST_MESSAGE,
@@ -17,15 +18,21 @@ import {
   formatDatalatestMessageDialog,
   formatDatalatestMessageGroup,
   formatDataListLastMessage,
+  formatGroupMessageChat,
+  formatGroupMessage,
   formatPrivateMessageChat,
-  formatPrivateMessageConversation,
+  formatPrivateMessage,
 } from "./helper";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { FormatLatestMessageDialog } from "../../types/chat";
+import { checkFirstLoad } from "./helper";
 
 export const MessageProcessor = () => {
   const { socket } = useAppSelector((state: RootState) => state.socket);
   const dispatch = useAppDispatch();
+  const { latestMessageDialog, latestMessageGroup } = useAppSelector(
+    (state: RootState) => state.chats
+  );
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
@@ -56,6 +63,7 @@ export const MessageProcessor = () => {
                 const resultFormat = formatDatalatestMessageGroup(
                   data.params.data
                 );
+
                 dispatch(latestMessageGroupReceived(resultFormat));
               } else {
                 dispatch(isErrorReceived(data));
@@ -65,15 +73,41 @@ export const MessageProcessor = () => {
             case TYPE_PRIVATE_MESSAGE:
               if (data.success) {
                 if (!data.params.isBroadcast) return;
-                const resultFormatConversation =
-                  formatPrivateMessageConversation(data.params.item);
+                const isFirstLoaded = checkFirstLoad(
+                  data.params.item,
+                  latestMessageDialog,
+                  latestMessageGroup
+                );
+                const resultFormatConversation = formatPrivateMessage(
+                  data.params.item
+                );
                 const resultFormatChat = formatPrivateMessageChat(
                   data.params.item
                 );
-                //@ts-ignore
                 dispatch(listLastMessageReceived(resultFormatChat));
-                //@ts-ignore
+                if (!isFirstLoaded) return;
                 dispatch(latestMessageDialogReceived(resultFormatConversation));
+              } else {
+                dispatch(isErrorReceived(data));
+              }
+
+              break;
+
+            case TYPE_GROUP_MESSAGE:
+              if (data.success) {
+                if (!data.params.isBroadcast) return;
+                const isFirstLoaded = checkFirstLoad(
+                  data.params.item,
+                  latestMessageDialog,
+                  latestMessageGroup
+                );
+                const resultFormat = formatGroupMessage(data.params.item);
+                const resultFormatChat = formatGroupMessageChat(
+                  data.params.item
+                );
+                dispatch(listLastMessageReceived(resultFormatChat));
+                if (!isFirstLoaded) return;
+                dispatch(latestMessageGroupReceived(resultFormat));
               } else {
                 dispatch(isErrorReceived(data));
               }
@@ -83,9 +117,9 @@ export const MessageProcessor = () => {
               dispatch(isErrorReceived(data));
               break;
           }
-        }, 1000);
+        }, 500);
       };
     }
-  }, [dispatch, socket]);
+  }, [dispatch, socket, latestMessageDialog, latestMessageGroup]);
   return null;
 };

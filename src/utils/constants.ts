@@ -3,6 +3,7 @@ export const TYPE_LIST_LAST_MESSAGE = "listLastMessage";
 export const TYPE_LATEST_MESSAGE_DIALOG = "getlatestMessageDialog";
 export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup";
 export const TYPE_PRIVATE_MESSAGE = "privateMessage";
+export const TYPE_GROUP_MESSAGE = "messageInGroup";
 
 export const REQ_LIST_LAST_MESSAGE = {
   type: "listLastMessage",
@@ -24,6 +25,7 @@ export const REQ_LATEST_MESSAGE_DIALOG = {
 export const REQ_LATEST_MESSAGE_GROUP = {
   type: "getlatestMessageGroup",
   params: {
+    groupName: null,
     groupId: null,
     limit: 9,
     cursorCreatedAt: null,

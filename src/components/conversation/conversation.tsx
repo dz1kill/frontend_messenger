@@ -209,6 +209,7 @@ const Conversation: React.FC = () => {
         request = {
           ...REQ_LATEST_MESSAGE_GROUP,
           params: {
+            groupName: currentConversation.groupName,
             groupId: currentConversation.groupId,
             limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
             cursorCreatedAt: currentConversation.cursorCreatedAt,
@@ -237,35 +238,42 @@ const Conversation: React.FC = () => {
         dataToChatState(currentConversation, inputData, messageId)
       )
     );
-    if (currentConversation.groupId === null) {
+
+    let request;
+    if (currentConversation.companionId) {
       dispatch(
         latestMessageDialogReceived(
           dataToDialogState(currentConversation, inputData, messageId)
         )
       );
-      sendSocketMessage({
+      request = {
         ...REQ_SEND_MESSAGE_DIALOG,
         params: {
           messageId,
           receiverId: currentConversation.companionId,
           content: inputData,
         },
-      });
-    } else {
+      };
+    }
+    if (currentConversation.groupId) {
       dispatch(
         latestMessageGroupReceived(
           dataToGroupState(currentConversation, inputData, messageId)
         )
       );
-      sendSocketMessage({
+      request = {
         ...REQ_SEND_MESSAGE_GROUP,
         params: {
           messageId,
+          groupName: currentConversation.groupName,
           groupId: currentConversation.groupId,
           content: inputData,
         },
-      });
+      };
     }
+    if (!request) return;
+    sendSocketMessage(request);
+
     setInputData("");
   };
 
