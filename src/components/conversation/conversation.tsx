@@ -230,7 +230,7 @@ const Conversation: React.FC = () => {
     setInputData(value);
   };
 
-  const sendMessage = () => {
+  const handlSendMessage = () => {
     const messageId = uuidv4();
     if (!currentConversation) return;
     dispatch(
@@ -277,6 +277,13 @@ const Conversation: React.FC = () => {
     setInputData("");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handlSendMessage();
+    }
+  };
+
   return (
     <div className={styles.conversationWindow}>
       <div className={styles.conversationHeader}>
@@ -306,7 +313,6 @@ const Conversation: React.FC = () => {
       </div>
       <div className={styles.messageInput}>
         <input
-          key=""
           type="text"
           name="message"
           value={inputData}
@@ -314,6 +320,8 @@ const Conversation: React.FC = () => {
           autoComplete="off"
           className={styles.inputField}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          disabled={!currentConversation}
         />
         <button
           className={`${styles.sendButton} ${
@@ -322,7 +330,7 @@ const Conversation: React.FC = () => {
               : ""
           }`}
           disabled={!inputData.trim() || !currentConversation}
-          onClick={sendMessage}
+          onClick={handlSendMessage}
         >
           Отправить
         </button>
