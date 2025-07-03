@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
@@ -48,6 +48,9 @@ const Conversation: React.FC = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const scrollOffsetRef = useRef<number | null>(null);
   const [inputData, setInputData] = useState<string>("");
+  const messages = currentConversation?.groupId
+    ? getMsgConversationGroup(currentConversation, latestMessageGroup)
+    : getMsgConversationDialog(currentConversation, latestMessageDialog);
 
   useEffect(() => {
     const isCurrentConversationChanged =
@@ -142,10 +145,6 @@ const Conversation: React.FC = () => {
     isLastPageLoadedConversation,
   ]);
 
-  const messages = currentConversation?.groupId
-    ? getMsgConversationGroup(currentConversation, latestMessageGroup)
-    : getMsgConversationDialog(currentConversation, latestMessageDialog);
-
   useEffect(() => {
     if (loadingState.isLoading) return;
     const isFirstLoaded = checkFirstLoad(
@@ -194,6 +193,7 @@ const Conversation: React.FC = () => {
         latestMessageGroup
       );
       if (!isFirstLoaded) return;
+
       let request;
       if (currentConversation.companionId) {
         request = {
@@ -225,14 +225,9 @@ const Conversation: React.FC = () => {
     }
   };
 
-  const handleChange = (element: ChangeEvent<HTMLInputElement>) => {
-    const { value } = element.target;
-    setInputData(value);
-  };
-
   const handlSendMessage = () => {
     const messageId = uuidv4();
-    if (!currentConversation) return;
+    if (!currentConversation || !inputData) return;
     dispatch(
       listLastMessageReceived(
         dataToChatState(currentConversation, inputData, messageId)
@@ -319,9 +314,10 @@ const Conversation: React.FC = () => {
           placeholder="Написать сообщение..."
           autoComplete="off"
           className={styles.inputField}
-          onChange={handleChange}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInputData(e.target.value)
+          }
           onKeyDown={handleKeyDown}
-          disabled={!currentConversation}
         />
         <button
           className={`${styles.sendButton} ${

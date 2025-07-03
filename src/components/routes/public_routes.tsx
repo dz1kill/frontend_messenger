@@ -1,24 +1,19 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 import { ROUTES } from "../../router/routes";
-import { RootState } from "../../store/store";
-import { JSX, useEffect } from "react";
-import { useAppSelector } from "../../hooks/redux_hooks";
 
-const PublicRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { isConnected } = useAppSelector((state: RootState) => state.socket);
-  const navigate = useNavigate();
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = localStorage.getItem("token");
-  const userId = localStorage.getItem("userId");
-  const email = localStorage.getItem("email");
-  const userName = localStorage.getItem("userName");
+  const location = useLocation();
+  const fromPage = location.state?.from?.pathname || ROUTES.APP.HOME;
 
   useEffect(() => {
-    if (!isConnected && token && userId && email && userName) {
-      navigate(ROUTES.APP.HOME, { replace: true });
+    if (token) {
+      window.history.pushState(null, "", fromPage);
     }
-  }, [isConnected, token, userId, email, navigate]);
+  }, [token, fromPage]);
 
-  return children;
+  return token ? <Navigate to={fromPage} replace /> : <>{children}</>;
 };
 
 export default PublicRoute;
