@@ -55,3 +55,30 @@
 .logoutButton:hover {
   background-color: #ffffff1a;
 }
+
+@media (max-width: 480px) {
+  .header {
+    padding: 0 10px;
+    height: 45px;
+    border-radius: 0;
+  }
+
+  .logo {
+    font-size: 0.9rem;
+  }
+
+  .logoutButton {
+    padding: 2px 7px;
+    font-size: 0.7rem;
+  }
+
+  .menuButton {
+    width: 22px;
+    height: 18px;
+    padding: 3px;
+  }
+
+  .leftSection {
+    gap: 8px;
+  }
+}
