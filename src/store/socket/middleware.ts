@@ -32,10 +32,7 @@ const initiateConnection = async (
         store.dispatch(socketDisconnected());
         socket?.close(4001, "Client requested disconnect");
         socket = null;
-        localStorage.removeItem("token");
-        localStorage.removeItem("userId");
-        localStorage.removeItem("email");
-        localStorage.removeItem("userName");
+        localStorage.clear();
 
         console.warn("Unauthorized: closed with code", event.code);
       }

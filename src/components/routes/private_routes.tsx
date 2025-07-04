@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { JSX, useEffect } from "react";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
@@ -18,10 +18,15 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token && userId && email) {
+    if (token && userId && email && userName) {
       dispatch({ type: "socket/connect" });
+    } else {
+      dispatch(resetSocketState());
+      dispatch(resetChatsState());
+      localStorage.clear();
+      navigate(ROUTES.APP.LOGIN, { replace: true });
     }
-  }, [dispatch, token, userId, email]);
+  }, [dispatch, token, userId, email, userName, navigate]);
 
   useEffect(() => {
     if (connectionError?.includes("4001")) {
@@ -30,16 +35,6 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
       navigate(ROUTES.APP.LOGIN, { replace: true });
     }
   }, [connectionError, navigate, dispatch]);
-
-  if (!token || !userId || !email || !userName) {
-    dispatch(resetSocketState());
-    dispatch(resetChatsState());
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("email");
-    localStorage.removeItem("userName");
-    return <Navigate to={ROUTES.APP.LOGIN} replace />;
-  }
 
   return children;
 };

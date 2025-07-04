@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
-        <h2>Chats</h2>
+        <h2>Чаты</h2>
       </div>
 
       <div
