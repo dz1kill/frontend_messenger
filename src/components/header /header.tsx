@@ -26,13 +26,11 @@ const Header: React.FC = () => {
 
   const handleChangePassword = () => {
     console.log("Открытие формы смены пароля");
-    // Здесь будет логика открытия формы смены пароля
     setShowAccountModal(false);
   };
 
   const handleEditProfile = () => {
     console.log("Открытие редактора профиля");
-    // Здесь будет логика редактирования профиля
     setShowAccountModal(false);
   };
 
