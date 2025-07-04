@@ -1,6 +1,5 @@
 import { Middleware, MiddlewareAPI } from "@reduxjs/toolkit";
 import { socketConnected, socketDisconnected, connectionError } from "./slice";
-import { RETRY_DELAY } from "../../utils/constants";
 
 let socket: WebSocket | null = null;
 
@@ -27,7 +26,7 @@ const initiateConnection = async (
     socket.onclose = (event) => {
       store.dispatch(connectionError(`Connection closed: code ${event.code}`));
       if (event.code !== 4001) {
-        setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
+        initiateConnection(store, url, token);
       } else {
         store.dispatch(socketDisconnected());
         socket?.close(4001, "Client requested disconnect");
@@ -40,7 +39,7 @@ const initiateConnection = async (
   } catch (error: any) {
     store.dispatch(connectionError(error.message));
     if (error.message.includes("connection error")) {
-      setTimeout(() => initiateConnection(store, url, token), RETRY_DELAY);
+      initiateConnection(store, url, token);
     }
   }
 };
