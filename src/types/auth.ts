@@ -13,7 +13,6 @@ export interface LoginPayload extends Pick<User, "email" | "password"> {}
 
 export interface AuthState {
   currentUser: UserResLoginData | UserResSingUpData | null;
-  isLoading: boolean;
   error: string | null;
 }
 

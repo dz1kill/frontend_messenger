@@ -16,4 +16,6 @@ export interface DeleteProfileModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   onClose: () => void;
+  isError?: boolean;
+  errorMessage?: string;
 }

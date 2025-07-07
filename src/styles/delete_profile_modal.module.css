@@ -62,3 +62,17 @@
 .confirmButton:hover {
   background-color: #f73030;
 }
+
+.errorMessage {
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ef9a9a;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

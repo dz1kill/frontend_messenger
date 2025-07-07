@@ -6,6 +6,8 @@ import { resetSocketState } from "../../store/socket/slice";
 import { resetChatsState } from "../../store/chat/slice";
 import AccountModal from "./profile_modal";
 import DeleteProfileModal from "./delete_profile_modal";
+import { destroyUser } from "../../store/profile/slice";
+import { messageErrorDestroy } from "./helper";
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +15,11 @@ const Header: React.FC = () => {
   const [showAccountModal, setShowAccountModal] = useState(false);
   const [showDeleteProfile, setShowDeleteProfile] = useState(false);
   const userName = localStorage.getItem("userName") || "User";
+  const [validatErrServer, setValidatErrServer] = useState({
+    isLoading: false,
+    isErrorServer: false,
+    errorMessageServer: "",
+  });
 
   const handleLogout = () => {
     dispatch(resetSocketState());
@@ -20,8 +27,29 @@ const Header: React.FC = () => {
     localStorage.clear();
     setShowLogoutModal(false);
   };
-  const handleDeleteProfile = () => {
-    console.log("delete редактора профиля");
+
+  const handleDeleteProfile = async () => {
+    setValidatErrServer((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
+    const resultAction = await dispatch(destroyUser());
+    if (destroyUser.fulfilled.match(resultAction)) {
+      dispatch(resetSocketState());
+      dispatch(resetChatsState());
+      localStorage.clear();
+      setShowLogoutModal(false);
+    } else {
+      const statusCode = resultAction.payload?.status || 500;
+      const errorText = messageErrorDestroy(statusCode);
+      setValidatErrServer((prev) => ({
+        ...prev,
+        isLoading: false,
+        isErrorServer: true,
+        errorMessageServer: errorText,
+      }));
+      setShowDeleteProfile(true);
+    }
   };
 
   const handleChangePassword = () => {
@@ -42,6 +70,11 @@ const Header: React.FC = () => {
   return (
     <div>
       <header className={styles.header}>
+        {validatErrServer.isLoading && (
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loadingSpinner}></div>
+          </div>
+        )}
         <div className={styles.leftSection}>
           <button
             className={styles.menuButton}
@@ -84,6 +117,8 @@ const Header: React.FC = () => {
           onClose={() => setShowDeleteProfile(false)}
           onConfirm={handleDeleteProfile}
           onCancel={() => setShowDeleteProfile(false)}
+          isError={validatErrServer.isErrorServer}
+          errorMessage={validatErrServer.errorMessageServer}
         />
       )}
     </div>

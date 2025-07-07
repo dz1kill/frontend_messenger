@@ -6,12 +6,15 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
   onConfirm,
   onCancel,
   onClose,
+  isError,
+  errorMessage,
 }) => {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Подтвердите удаление</h3>
         <p>Вы уверены, что хотите удалить аккаунт?</p>
+        {isError && <div className={styles.errorMessage}>{errorMessage}</div>}
         <div className={styles.modalButtons}>
           <button className={styles.cancelButton} onClick={onCancel}>
             Отмена

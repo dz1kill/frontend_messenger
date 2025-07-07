@@ -13,7 +13,6 @@ import { ROUTES } from "../../router/routes";
 
 const initialState: AuthState = {
   currentUser: null,
-  isLoading: false,
   error: null,
 };
 
@@ -23,7 +22,7 @@ export const createUser = createAsyncThunk<
   {
     rejectValue: ApiError;
   }
->("users/createUser", async (payload: SingUpPayload, thunkApi) => {
+>("auth/createUser", async (payload: SingUpPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResSingUpData>(
       `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.REGISTER}`,
@@ -47,7 +46,7 @@ export const loginUser = createAsyncThunk<
   {
     rejectValue: ApiError;
   }
->("login/loginUser", async (payload: LoginPayload, thunkApi) => {
+>("auth/loginUser", async (payload: LoginPayload, thunkApi) => {
   try {
     const res = await axios.post<UserResLoginData>(
       `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.LOGIN}`,
@@ -75,14 +74,12 @@ const authSlice = createSlice({
       .addCase(
         createUser.fulfilled,
         (state, action: PayloadAction<UserResSingUpData>) => {
-          state.isLoading = false;
           state.currentUser = action.payload;
         }
       )
       .addCase(
         loginUser.fulfilled,
         (state, action: PayloadAction<UserResLoginData>) => {
-          state.isLoading = false;
           state.currentUser = action.payload;
         }
       );
