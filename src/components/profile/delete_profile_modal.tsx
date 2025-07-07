@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/delete_profile_modal.module.css";
-import { DeleteProfileModalProps } from "../../types/header";
+import { DeleteProfileModalProps } from "../../types/profile";
 
 const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
   onConfirm,

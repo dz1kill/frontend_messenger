@@ -16,13 +16,15 @@
 }
 
 .conversationHeader {
-  padding: 1.3rem;
+  position: sticky;
+  top: 0;
+  padding: 0.9375rem 1.25rem;
   background-color: #cae0f7;
 }
 
 .conversationHeader h2 {
   margin: 0;
-  font-size: 1.12rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
@@ -105,6 +107,19 @@
   }
 }
 
+.emptyConversationPlaceholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6f8;
+  color: #888;
+  font-size: 1rem;
+  text-align: center;
+  padding: 20px;
+  height: calc(100% - 60px);
+}
+
 @media (max-width: 480px) {
   .sendButton {
     font-size: 0.7rem;
@@ -126,5 +141,10 @@
   .dateDivider {
     font-size: 9px;
     margin: 8px 0;
+  }
+
+  .emptyConversationPlaceholder {
+    font-size: 0.9rem;
+    padding: 10px;
   }
 }

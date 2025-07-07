@@ -10,7 +10,10 @@ const createSocketConnection = (
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(url, ["auth", token]);
     ws.onopen = () => resolve(ws);
-    ws.onerror = () => reject(new Error("WebSocket connection error"));
+    ws.onerror = (error) => {
+      console.log("🚀 ~ returnnewPromise ~ error:", error);
+      reject(new Error("WebSocket connection error"));
+    };
   });
 };
 

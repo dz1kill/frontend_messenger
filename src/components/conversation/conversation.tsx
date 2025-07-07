@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+
 import styles from "../../styles/conversation.module.css";
 import ConversationItem from "./item";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -281,56 +282,66 @@ const Conversation: React.FC = () => {
 
   return (
     <div className={styles.conversationWindow}>
-      <div className={styles.conversationHeader}>
-        <h2>{currentConversation ? currentConversation.name : ""}</h2>
-      </div>
-      <div
-        className={styles.messagesContainer}
-        ref={messagesContainerRef}
-        onScroll={handleScroll}
-      >
-        {loadingState.isLoading && (
-          <div className={styles.spinnerContainer}>
-            <div className={styles.spinner}></div>
+      {currentConversation && (
+        <div className={styles.conversationHeader}>
+          <h2>{currentConversation ? currentConversation.name : ""}</h2>
+        </div>
+      )}
+
+      {!currentConversation ? (
+        <div className={styles.emptyConversationPlaceholder}>
+          Пожалуйста, выберите кому написать...
+        </div>
+      ) : (
+        <>
+          <div
+            className={styles.messagesContainer}
+            ref={messagesContainerRef}
+            onScroll={handleScroll}
+          >
+            {loadingState.isLoading && (
+              <div className={styles.spinnerContainer}>
+                <div className={styles.spinner}></div>
+              </div>
+            )}
+            {Array.isArray(messages) &&
+              messages.map((chat, index) => (
+                <React.Fragment key={chat.messageId}>
+                  {shouldShowDate(messages, index) && (
+                    <div className={styles.dateDivider}>
+                      {formatDateLabel(new Date(chat.createdAt))}
+                    </div>
+                  )}
+                  <ConversationItem {...chat} />
+                </React.Fragment>
+              ))}
           </div>
-        )}
-        {Array.isArray(messages) &&
-          messages.map((chat, index) => (
-            <React.Fragment key={chat.messageId}>
-              {shouldShowDate(messages, index) && (
-                <div className={styles.dateDivider}>
-                  {formatDateLabel(new Date(chat.createdAt))}
-                </div>
-              )}
-              <ConversationItem {...chat} />
-            </React.Fragment>
-          ))}
-      </div>
-      <div className={styles.messageInput}>
-        <input
-          type="text"
-          name="message"
-          value={inputData}
-          placeholder="Написать сообщение..."
-          autoComplete="off"
-          className={styles.inputField}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setInputData(e.target.value)
-          }
-          onKeyDown={handleKeyDown}
-        />
-        <button
-          className={`${styles.sendButton} ${
-            !inputData.trim() || !currentConversation
-              ? styles.disabledButton
-              : ""
-          }`}
-          disabled={!inputData.trim() || !currentConversation}
-          onClick={handlSendMessage}
-        >
-          Отправить
-        </button>
-      </div>
+
+          <div className={styles.messageInput}>
+            <input
+              type="text"
+              name="message"
+              value={inputData}
+              placeholder="Написать сообщение..."
+              autoComplete="off"
+              className={styles.inputField}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputData(e.target.value)
+              }
+              onKeyDown={handleKeyDown}
+            />
+            <button
+              className={`${styles.sendButton} ${
+                !inputData.trim() ? styles.disabledButton : ""
+              }`}
+              disabled={!inputData.trim()}
+              onClick={handlSendMessage}
+            >
+              Отправить
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

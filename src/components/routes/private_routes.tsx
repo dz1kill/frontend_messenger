@@ -1,12 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import React, { JSX, useEffect } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { RootState } from "../../store/store";
 import { resetSocketState } from "../../store/socket/slice";
-import { ROUTES } from "../../router/routes";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { resetChatsState } from "../../store/chat/slice";
+import { ROUTES } from "../../router/routes";
 
-const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
+const PrivateRoute: React.FC = () => {
   const dispatch = useAppDispatch();
   const { error: connectionError } = useAppSelector(
     (state: RootState) => state.socket
@@ -24,9 +25,9 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
       dispatch(resetSocketState());
       dispatch(resetChatsState());
       localStorage.clear();
-      navigate(ROUTES.APP.LOGIN, { replace: true });
+      <Navigate to={ROUTES.APP.LOGIN} replace />;
     }
-  }, [dispatch, token, userId, email, userName, navigate]);
+  }, [dispatch, token, userId, email, userName]);
 
   useEffect(() => {
     if (connectionError?.includes("4001")) {
@@ -36,7 +37,11 @@ const PrivateRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     }
   }, [connectionError, navigate, dispatch]);
 
-  return children;
+  if (!(token && userId && email && userName)) {
+    return <Navigate to={ROUTES.APP.LOGIN} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;

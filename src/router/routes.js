@@ -8,5 +8,8 @@ export const ROUTES = {
     HOME: "/",
     LOGIN: "/login",
     REGISTER: "/sing-up",
+    PROFILE: {
+      ROOT: "/profile",
+    },
   },
 };

@@ -7,18 +7,17 @@ import Home from "../home/home";
 import { ROUTES } from "../../router/routes";
 import PrivateRoute from "./private_routes";
 import PublicRoute from "./public_routes";
+import Profile from "../profile/profile";
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route
-        index
-        element={
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        }
-      />
+      <Route element={<PrivateRoute />}>
+        <Route path={ROUTES.APP.HOME} element={<Home />}>
+          <Route path={ROUTES.APP.PROFILE.ROOT} element={<Profile />} />
+        </Route>
+      </Route>
+
       <Route
         path={ROUTES.APP.LOGIN}
         element={
