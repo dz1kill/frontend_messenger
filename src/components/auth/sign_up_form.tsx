@@ -17,7 +17,7 @@ import {
 } from "./helper";
 import {
   FormDataSignUpState,
-  ValidatErrServerState,
+  ValidationState,
   VlidateErrState,
 } from "../../types/auth";
 
@@ -34,18 +34,17 @@ const SignUpForm: React.FC = () => {
     lastName: "",
   });
 
-  const [validatErrServer, setValidatErrServer] =
-    useState<ValidatErrServerState>({
-      isEmpty: true,
-      isLoading: false,
-      isErrorServer: false,
-      errorMessageServer: "",
-    });
+  const [validation, setValidation] = useState<ValidationState>({
+    isEmpty: true,
+    isLoading: false,
+    isErrorServer: false,
+    errorMessageServer: "",
+  });
   const [vlidateErr, setvlidateErr] = useState<VlidateErrState>({});
 
   useEffect(() => {
     const checkEmpty = checkEmptyInput(optionalFields, formDataSignUp);
-    setValidatErrServer((prev) => ({
+    setValidation((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
@@ -75,7 +74,7 @@ const SignUpForm: React.FC = () => {
       resultValidate.error.errors.forEach((err) => {
         newErrors[err.path[0]] = err.message;
       });
-      setValidatErrServer((prev) => ({
+      setValidation((prev) => ({
         ...prev,
         isErrorServer: false,
       }));
@@ -84,7 +83,7 @@ const SignUpForm: React.FC = () => {
     }
     setvlidateErr({});
 
-    setValidatErrServer((prev) => ({
+    setValidation((prev) => ({
       ...prev,
       isLoading: true,
     }));
@@ -97,7 +96,7 @@ const SignUpForm: React.FC = () => {
 
       const errorText = messageErrorSignUp(statusCode);
 
-      setValidatErrServer((prev) => ({
+      setValidation((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
@@ -108,16 +107,16 @@ const SignUpForm: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      {validatErrServer.isLoading && (
+      {validation.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
       )}
       <div className={styles.board}>
         <h1 className={styles.title}>{"Регистрация"}</h1>
-        {validatErrServer.isErrorServer && (
+        {validation.isErrorServer && (
           <div className={styles.errorMessageTitle}>
-            {validatErrServer.errorMessageServer}
+            {validation.errorMessageServer}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -215,7 +214,7 @@ const SignUpForm: React.FC = () => {
 
           <button
             className={styles.loginButton}
-            disabled={validatErrServer.isEmpty}
+            disabled={validation.isEmpty}
             type="submit"
           >
             Зарегистрироваться

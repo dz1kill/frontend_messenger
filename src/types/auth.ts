@@ -53,7 +53,7 @@ export type FormDataLoginState = {
   userEmail: string;
 };
 
-export type ValidatErrServerState = {
+export type ValidationState = {
   isEmpty: boolean;
   isLoading: boolean;
   isErrorServer: boolean;

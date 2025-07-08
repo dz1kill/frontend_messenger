@@ -25,7 +25,6 @@ export const destroyUser = createAsyncThunk<
     });
   }
   try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     const res = await axios.delete<UserResDestroyData>(
       `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.DESTROY}`,
       {

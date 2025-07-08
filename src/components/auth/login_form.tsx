@@ -11,7 +11,7 @@ import { ROUTES } from "../../router/routes";
 import styles from "../../styles/auth.module.css";
 import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../hooks/redux_hooks";
-import { FormDataLoginState, ValidatErrServerState } from "../../types/auth";
+import { FormDataLoginState, ValidationState } from "../../types/auth";
 import {
   checkEmptyInput,
   checkResultAction,
@@ -28,17 +28,16 @@ const LoginForm: React.FC = () => {
     password: "",
   });
 
-  const [validatErrServer, setValidatErrServer] =
-    useState<ValidatErrServerState>({
-      isEmpty: true,
-      isLoading: false,
-      isErrorServer: false,
-      errorMessageServer: "",
-    });
+  const [validation, setValidation] = useState<ValidationState>({
+    isEmpty: true,
+    isLoading: false,
+    isErrorServer: false,
+    errorMessageServer: "",
+  });
 
   useEffect(() => {
     const checkEmpty = checkEmptyInput(optionalFields, formDataLogin);
-    setValidatErrServer((prev) => ({
+    setValidation((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
@@ -59,7 +58,7 @@ const LoginForm: React.FC = () => {
       password: formDataLogin.password,
     };
 
-    setValidatErrServer((prev) => ({
+    setValidation((prev) => ({
       ...prev,
       isLoading: true,
     }));
@@ -69,7 +68,7 @@ const LoginForm: React.FC = () => {
     if (loginUser.fulfilled.match(resultAction)) {
       const resultCheck = checkResultAction(resultAction);
       if (resultCheck) {
-        setValidatErrServer((prev) => ({
+        setValidation((prev) => ({
           ...prev,
           isLoading: false,
           isErrorServer: true,
@@ -86,7 +85,7 @@ const LoginForm: React.FC = () => {
       const statusCode = resultAction.payload?.status || 500;
       const errorText = messageErrorLogin(statusCode);
 
-      setValidatErrServer((prev) => ({
+      setValidation((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
@@ -97,16 +96,16 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      {validatErrServer.isLoading && (
+      {validation.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
       )}
       <div className={styles.board}>
         <h1 className={styles.title}>{"Вход в систему"}</h1>
-        {validatErrServer.isErrorServer && (
+        {validation.isErrorServer && (
           <div className={styles.errorMessageTitle}>
-            {validatErrServer.errorMessageServer}
+            {validation.errorMessageServer}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -141,7 +140,7 @@ const LoginForm: React.FC = () => {
           </div>
           <button
             className={styles.loginButton}
-            disabled={validatErrServer.isEmpty}
+            disabled={validation.isEmpty}
             type="submit"
           >
             Войти
