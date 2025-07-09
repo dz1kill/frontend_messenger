@@ -1,22 +1,25 @@
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import styles from "../../styles/change_password_modal.module.css";
-import { checkEmptyInput, validateInput } from "./helper";
 import {
+  checkEmptyInput,
+  messageErrorChangePassword,
+  validateInput,
+} from "./helper";
+import {
+  ChangePasswordModalProps,
   FormDataChangePassword,
   ValidateErrChagePassword,
   ValidattionChagePassword,
 } from "../../types/profile";
-
-interface ChangePasswordModalProps {
-  onClose: () => void;
-  onCancel: () => void;
-}
+import { useAppDispatch } from "../../hooks/redux_hooks";
+import { changePasswordUser } from "../../store/profile/slice";
 
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   onClose,
   onCancel,
 }) => {
   const optionalFields = useMemo(() => [], []);
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<FormDataChangePassword>({
     newPassword: "",
     confirmPassword: "",
@@ -25,6 +28,9 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   const [validation, setValidation] = useState<ValidattionChagePassword>({
     isEmpty: true,
     isLoading: false,
+    isErrorServer: false,
+    errorMessageServer: "",
+    headerMessage: "Смена пароля",
   });
   const [vlidateErr, setvlidateErr] = useState<ValidateErrChagePassword>({});
 
@@ -53,10 +59,49 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       resultValidate.error.errors.forEach((err) => {
         newErrors[err.path[0]] = err.message;
       });
+      setValidation((prev) => ({
+        ...prev,
+        isErrorServer: false,
+      }));
       setvlidateErr(newErrors);
       return;
     }
+
+    const userData = {
+      oldPassword: formData.oldPassword,
+      newPassword: formData.newPassword,
+    };
+
     setvlidateErr({});
+
+    setValidation((prev) => ({
+      ...prev,
+      isLoading: true,
+      headerMessage: "Смена пароля",
+    }));
+
+    const resultAction = await dispatch(changePasswordUser(userData));
+    if (changePasswordUser.fulfilled.match(resultAction)) {
+      setValidation((prev) => ({
+        ...prev,
+        isLoading: false,
+        isErrorServer: false,
+        headerMessage: "Пароль изменен",
+      }));
+
+      setFormData({ newPassword: "", confirmPassword: "", oldPassword: "" });
+    } else {
+      const statusCode = resultAction.payload?.status || 500;
+
+      const errorText = messageErrorChangePassword(statusCode);
+
+      setValidation((prev) => ({
+        ...prev,
+        isLoading: false,
+        isErrorServer: true,
+        errorMessageServer: errorText,
+      }));
+    }
   };
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -67,7 +112,12 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>Смена пароля</h3>
+          <h3>{validation.headerMessage}</h3>
+          {validation.isErrorServer && (
+            <div className={styles.errorMessageTitle}>
+              {validation.errorMessageServer}
+            </div>
+          )}
         </div>
         <form className={styles.passwordForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>

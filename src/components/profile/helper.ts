@@ -13,6 +13,18 @@ export const messageErrorDestroy = (statusCode: number) => {
   }
 };
 
+export const messageErrorChangePassword = (statusCode: number) => {
+  switch (statusCode) {
+    case 400:
+      return "Неверный пароль";
+    case 401:
+      return "Ошибка авторизации";
+    case 500:
+      return "Ошибка сервера";
+    default:
+      return "Неизвестная ошибка сервера";
+  }
+};
 export const checkEmptyInput = (
   optionalFields: string[],
   formData: FormDataChangePassword

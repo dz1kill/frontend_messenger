@@ -1,10 +1,20 @@
+export interface UserResDestroyData {
+  message: string;
+}
+
+export interface UserResChangePasswordData {
+  message: string;
+}
+
 export interface ProfileSatate {
   error: string | null;
   destroyUser: UserResDestroyData | null;
+  changePasswordUser: UserResChangePasswordData | null;
 }
 
-export interface UserResDestroyData {
-  message: string;
+export interface ChangePasswordPayload {
+  newPassword: string;
+  oldPassword: string;
 }
 
 export type ProfileView = "main" | "deleteProfile" | "changePassword";
@@ -18,6 +28,11 @@ export interface ProfileMainViewProps {
   onEditProfile?: () => void;
   onChangePassword?: () => void;
   onDeleteAccount: (e: React.MouseEvent) => void;
+}
+
+export interface ChangePasswordModalProps {
+  onClose: () => void;
+  onCancel: () => void;
 }
 
 export type ValidationDelete = {
@@ -35,6 +50,9 @@ export interface FormDataChangePassword {
 export interface ValidattionChagePassword {
   isEmpty: boolean;
   isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+  headerMessage: string;
 }
 
 export interface ValidateErrChagePassword {
