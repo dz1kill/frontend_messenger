@@ -22,7 +22,6 @@ import {
   REQ_SEND_MESSAGE_DIALOG,
   REQ_SEND_MESSAGE_GROUP,
 } from "../../utils/constants";
-
 import {
   latestMessageDialogReceived,
   latestMessageGroupReceived,
@@ -76,6 +75,7 @@ const Conversation: React.FC = () => {
 
     if (!isReadySocket || !userId || isFirstLoaded || !currentConversation)
       return;
+
     let request;
     if (currentConversation.companionId) {
       request = {
@@ -101,6 +101,7 @@ const Conversation: React.FC = () => {
 
     const result = sendSocketMessage(request);
     console.warn("sendSocketMessage cnversation", result);
+
     setLoadingState((prev) => ({
       ...prev,
       isLoading: true,
@@ -120,20 +121,26 @@ const Conversation: React.FC = () => {
       latestMessageDialog,
       latestMessageGroup
     );
+
     const isReadyToFetch = !!currentConversation && isFirstLoaded;
+
     if (!isReadyToFetch) return;
+
     const newCursor = getNewCursor(
       currentConversation,
       latestMessageDialog,
       latestMessageGroup
     );
+
     setLoadingState((prev) => ({
       ...prev,
       isLoading: false,
     }));
+
     if (!newCursor || currentConversation.cursorCreatedAt === newCursor) {
       return;
     }
+
     dispatch(
       targetConversation({
         ...currentConversation,
@@ -150,13 +157,17 @@ const Conversation: React.FC = () => {
 
   useEffect(() => {
     if (loadingState.isLoading) return;
+
     const isFirstLoaded = checkFirstLoad(
       currentConversation,
       latestMessageDialog,
       latestMessageGroup
     );
+
     const container = messagesContainerRef.current;
+
     if (!container) return;
+
     if (scrollOffsetRef.current !== null && isFirstLoaded) {
       container.scrollTop =
         container.scrollHeight -
@@ -195,6 +206,7 @@ const Conversation: React.FC = () => {
         latestMessageDialog,
         latestMessageGroup
       );
+
       if (!isFirstLoaded) return;
 
       let request;
@@ -220,17 +232,21 @@ const Conversation: React.FC = () => {
         };
       }
       if (!request) return;
+
       setLoadingState((prev) => ({
         ...prev,
         isLoading: true,
       }));
+
       sendSocketMessage(request);
     }
   };
 
   const handlSendMessage = () => {
     const messageId = uuidv4();
+
     if (!currentConversation || !inputData) return;
+
     dispatch(
       listLastMessageReceived(
         dataToChatState(currentConversation, inputData, messageId)
@@ -253,6 +269,7 @@ const Conversation: React.FC = () => {
         },
       };
     }
+
     if (currentConversation.groupId) {
       dispatch(
         latestMessageGroupReceived(
@@ -269,6 +286,7 @@ const Conversation: React.FC = () => {
         },
       };
     }
+    
     if (!request) return;
     sendSocketMessage(request);
 

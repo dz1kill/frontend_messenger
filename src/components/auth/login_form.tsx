@@ -11,7 +11,7 @@ import { ROUTES } from "../../router/routes";
 import styles from "../../styles/auth.module.css";
 import { loginUser } from "../../store/auth/slice";
 import { useAppDispatch } from "../../hooks/redux_hooks";
-import { FormDataLoginState, ValidationState } from "../../types/auth";
+import { FormDataLoginState, ApiStatusLoginState } from "../../types/auth";
 import {
   checkEmptyInput,
   checkResultAction,
@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
     password: "",
   });
 
-  const [validation, setValidation] = useState<ValidationState>({
+  const [apiStatus, setApiStatus] = useState<ApiStatusLoginState>({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
 
   useEffect(() => {
     const checkEmpty = checkEmptyInput(optionalFields, formDataLogin);
-    setValidation((prev) => ({
+    setApiStatus((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
@@ -50,6 +50,7 @@ const LoginForm: React.FC = () => {
       [name]: value,
     });
   };
+
   const handleSubmit = async (element: FormEvent<HTMLFormElement>) => {
     element.preventDefault();
 
@@ -58,7 +59,7 @@ const LoginForm: React.FC = () => {
       password: formDataLogin.password,
     };
 
-    setValidation((prev) => ({
+    setApiStatus((prev) => ({
       ...prev,
       isLoading: true,
     }));
@@ -68,7 +69,7 @@ const LoginForm: React.FC = () => {
     if (loginUser.fulfilled.match(resultAction)) {
       const resultCheck = checkResultAction(resultAction);
       if (resultCheck) {
-        setValidation((prev) => ({
+        setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
           isErrorServer: true,
@@ -81,11 +82,12 @@ const LoginForm: React.FC = () => {
       localStorage.setItem("email", resultAction.payload.email);
       localStorage.setItem("userId", resultAction.payload.id);
       navigate(ROUTES.APP.HOME);
+      
     } else {
       const statusCode = resultAction.payload?.status || 500;
       const errorText = messageErrorLogin(statusCode);
 
-      setValidation((prev) => ({
+      setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
@@ -96,16 +98,16 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      {validation.isLoading && (
+      {apiStatus.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
       )}
       <div className={styles.board}>
         <h1 className={styles.title}>{"Вход в систему"}</h1>
-        {validation.isErrorServer && (
+        {apiStatus.isErrorServer && (
           <div className={styles.errorMessageTitle}>
-            {validation.errorMessageServer}
+            {apiStatus.errorMessageServer}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -140,7 +142,7 @@ const LoginForm: React.FC = () => {
           </div>
           <button
             className={styles.loginButton}
-            disabled={validation.isEmpty}
+            disabled={apiStatus.isEmpty}
             type="submit"
           >
             Войти

@@ -53,7 +53,14 @@ export type FormDataLoginState = {
   userEmail: string;
 };
 
-export type ValidationState = {
+export type ApiStatusLoginState = {
+  isEmpty: boolean;
+  isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+};
+
+export type ApiStatusSignUpState = {
   isEmpty: boolean;
   isLoading: boolean;
   isErrorServer: boolean;

@@ -28,6 +28,7 @@ const chatSlice = createSlice({
     targetConversation: (state, action: PayloadAction<Conversation>) => {
       state.currentConversation = action.payload;
     },
+
     setIsLastPageLoadedConversation(state, action: PayloadAction<boolean>) {
       state.isLastPageLoadedConversation = action.payload;
     },
@@ -130,17 +131,6 @@ const chatSlice = createSlice({
       state.currentConversation = null;
       state.hasFetchedOnceChat = false;
     },
-
-    // privateMessage: (state, action: PayloadAction<ChatResponse>) => {
-    //   state.chats.push(action.payload);
-    // },
-    // latestDialogMessageReceived: (
-    //   state,
-    //   action: PayloadAction<{ dialogId: string; message: Message }>
-    // ) => {
-    //   const { dialogId, message } = action.payload;
-    //   state.dialogMessages[dialogId] = message; // Апд по ключу
-    // },
   },
 });
 

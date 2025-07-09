@@ -1,4 +1,5 @@
 import React, { FormEvent, useEffect, useMemo, useState } from "react";
+
 import styles from "../../styles/change_password_modal.module.css";
 import {
   checkEmptyInput,
@@ -9,7 +10,7 @@ import {
   ChangePasswordModalProps,
   FormDataChangePassword,
   ValidateErrChagePassword,
-  ValidattionChagePassword,
+  ApiStatusChagePassword,
 } from "../../types/profile";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { changePasswordUser } from "../../store/profile/slice";
@@ -25,7 +26,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     confirmPassword: "",
     oldPassword: "",
   });
-  const [validation, setValidation] = useState<ValidattionChagePassword>({
+  const [apiStatus, setApiStatus] = useState<ApiStatusChagePassword>({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
@@ -44,7 +45,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
   useEffect(() => {
     const checkEmpty = checkEmptyInput(optionalFields, formData);
-    setValidation((prev) => ({
+    setApiStatus((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
     }));
@@ -59,7 +60,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       resultValidate.error.errors.forEach((err) => {
         newErrors[err.path[0]] = err.message;
       });
-      setValidation((prev) => ({
+      setApiStatus((prev) => ({
         ...prev,
         isErrorServer: false,
       }));
@@ -74,15 +75,16 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
     setvlidateErr({});
 
-    setValidation((prev) => ({
+    setApiStatus((prev) => ({
       ...prev,
       isLoading: true,
       headerMessage: "",
     }));
 
     const resultAction = await dispatch(changePasswordUser(userData));
+    
     if (changePasswordUser.fulfilled.match(resultAction)) {
-      setValidation((prev) => ({
+      setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: false,
@@ -95,7 +97,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
       const errorText = messageErrorChangePassword(statusCode);
 
-      setValidation((prev) => ({
+      setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
@@ -105,7 +107,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   };
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
-      {validation.isLoading && (
+      {apiStatus.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
@@ -113,13 +115,13 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h3>
-            {validation?.headerMessage?.trim()
-              ? validation?.headerMessage
+            {apiStatus?.headerMessage?.trim()
+              ? apiStatus?.headerMessage
               : "Смена пароля"}
           </h3>
-          {validation.isErrorServer && (
+          {apiStatus.isErrorServer && (
             <div className={styles.errorMessageTitle}>
-              {validation.errorMessageServer}
+              {apiStatus.errorMessageServer}
             </div>
           )}
         </div>
@@ -187,7 +189,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             </button>
             <button
               className={styles.submitButton}
-              disabled={validation.isEmpty}
+              disabled={apiStatus.isEmpty}
               type="submit"
             >
               Сохранить

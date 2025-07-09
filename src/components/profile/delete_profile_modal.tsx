@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+
 import styles from "../../styles/delete_profile_modal.module.css";
-import { DeleteProfileModalProps, ValidationDelete } from "../../types/profile";
+import {
+  DeleteProfileModalProps,
+  ApiStatusDeleteUser,
+} from "../../types/profile";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { resetSocketState } from "../../store/socket/slice";
 import { destroyUser } from "../../store/profile/slice";
@@ -13,16 +17,18 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
 }) => {
   const dispatch = useAppDispatch();
 
-  const [validation, setValidation] = useState<ValidationDelete>({
+  const [apiStatus, setApiStatus] = useState<ApiStatusDeleteUser>({
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
   });
+
   const handleDeleteProfile = async () => {
-    setValidation((prev) => ({
+    setApiStatus((prev) => ({
       ...prev,
       isLoading: true,
     }));
+
     const resultAction = await dispatch(destroyUser());
     if (destroyUser.fulfilled.match(resultAction)) {
       dispatch(resetSocketState());
@@ -31,7 +37,7 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
     } else {
       const statusCode = resultAction.payload?.status || 500;
       const errorText = messageErrorDestroy(statusCode);
-      setValidation((prev) => ({
+      setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
@@ -39,9 +45,10 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
       }));
     }
   };
+
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
-      {validation.isLoading && (
+      {apiStatus.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
@@ -49,9 +56,9 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h3>Подтвердите удаление</h3>
         <p>Вы уверены, что хотите удалить аккаунт?</p>
-        {validation.isErrorServer && (
+        {apiStatus.isErrorServer && (
           <div className={styles.errorMessage}>
-            {validation.errorMessageServer}
+            {apiStatus.errorMessageServer}
           </div>
         )}
         <div className={styles.modalButtons}>

@@ -7,9 +7,7 @@ import ChangePasswordModal from "./change_password_modal";
 const Profile: React.FC = () => {
   const [currentView, setCurrentView] = useState<ProfileView>("main");
 
-  const handleEditProfile = () => {
-    // Логика для редактирования профиля
-  };
+  const handleEditProfile = () => {};
 
   const renderView = () => {
     switch (currentView) {

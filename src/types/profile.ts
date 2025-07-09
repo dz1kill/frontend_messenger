@@ -35,7 +35,7 @@ export interface ChangePasswordModalProps {
   onCancel: () => void;
 }
 
-export type ValidationDelete = {
+export type ApiStatusDeleteUser = {
   isLoading: boolean;
   isErrorServer: boolean;
   errorMessageServer: string;
@@ -47,7 +47,7 @@ export interface FormDataChangePassword {
   oldPassword: string;
 }
 
-export interface ValidattionChagePassword {
+export interface ApiStatusChagePassword {
   isEmpty: boolean;
   isLoading: boolean;
   isErrorServer: boolean;

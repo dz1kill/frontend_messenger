@@ -33,11 +33,13 @@ export const MessageProcessor = () => {
   const { latestMessageDialog, latestMessageGroup } = useAppSelector(
     (state: RootState) => state.chats
   );
+
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         switch (data.type) {
+          
           case TYPE_LIST_LAST_MESSAGE:
             if (data.success) {
               const resultFormat = formatDataListLastMessage(data);
