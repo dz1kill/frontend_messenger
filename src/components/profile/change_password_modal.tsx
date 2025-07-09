@@ -30,7 +30,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
-    headerMessage: "Смена пароля",
+    headerMessage: "",
   });
   const [vlidateErr, setvlidateErr] = useState<ValidateErrChagePassword>({});
 
@@ -77,7 +77,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     setValidation((prev) => ({
       ...prev,
       isLoading: true,
-      headerMessage: "Смена пароля",
+      headerMessage: "",
     }));
 
     const resultAction = await dispatch(changePasswordUser(userData));
@@ -112,7 +112,11 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>{validation.headerMessage}</h3>
+          <h3>
+            {validation?.headerMessage?.trim()
+              ? validation?.headerMessage
+              : "Смена пароля"}
+          </h3>
           {validation.isErrorServer && (
             <div className={styles.errorMessageTitle}>
               {validation.errorMessageServer}
