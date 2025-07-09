@@ -186,7 +186,7 @@ const SignUpForm: React.FC = () => {
             <input
               type="password"
               name="password"
-              placeholder={"Ведите пароль"}
+              placeholder={"Введите пароль"}
               value={formDataSignUp.password}
               onChange={handleChange}
               autoComplete="new-password"

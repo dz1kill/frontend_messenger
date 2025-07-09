@@ -7,25 +7,38 @@ export interface UserResDestroyData {
   message: string;
 }
 
-export type ProfileView = "main" | "deleteProfile";
+export type ProfileView = "main" | "deleteProfile" | "changePassword";
 
 export interface DeleteProfileModalProps {
-  onConfirm: () => void;
   onCancel: () => void;
   onClose: () => void;
-  isError?: boolean;
-  errorMessage?: string;
 }
 
 export interface ProfileMainViewProps {
-  userName: string;
   onEditProfile?: () => void;
   onChangePassword?: () => void;
   onDeleteAccount: (e: React.MouseEvent) => void;
 }
 
-export type ValidationState = {
+export type ValidationDelete = {
   isLoading: boolean;
   isErrorServer: boolean;
   errorMessageServer: string;
 };
+
+export interface FormDataChangePassword {
+  newPassword: string;
+  confirmPassword: string;
+  oldPassword: string;
+}
+
+export interface ValidattionChagePassword {
+  isEmpty: boolean;
+  isLoading: boolean;
+}
+
+export interface ValidateErrChagePassword {
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+}

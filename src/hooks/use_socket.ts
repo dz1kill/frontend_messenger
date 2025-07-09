@@ -18,7 +18,12 @@ export const useSocket = () => {
       }
 
       try {
-        socket!.send(JSON.stringify(request));
+        if (!socket) {
+          console.warn("Socket is not ready to send sendSocketMessage");
+          return;
+        }
+
+        socket.send(JSON.stringify(request));
         return true;
       } catch (error) {
         console.error("Failed to send socket message:", error);
