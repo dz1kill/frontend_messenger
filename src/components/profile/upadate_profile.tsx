@@ -1,38 +1,38 @@
 import React, { FormEvent, useEffect, useState } from "react";
 
-import styles from "../../styles/change_password_modal.module.css";
+import styles from "../../styles/update_profile.module.css";
 import {
-  checkEmptyInput,
-  messageErrorChangePassword,
-  validateInputChangePassword,
+  cleanUserData,
+  hasNonEmptyInput,
+  messageErrorUpdateProfile,
+  validateInputUpdatePrifile,
 } from "./helper";
 import {
-  ChangePasswordModalProps,
-  FormDataChangePassword,
-  ValidateErrChagePassword,
-  ApiStatusChagePassword,
+  UpdateProfileModalProps,
+  FormDataUpdateProfile,
+  ValidateErrUpdateProfile,
+  ApiStatusUpdateProfile,
 } from "../../types/profile";
 import { useAppDispatch } from "../../hooks/redux_hooks";
-import { changePasswordUser } from "../../store/profile/slice";
+import { updateProfileUser } from "../../store/profile/slice";
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
+const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
   onClose,
   onCancel,
 }) => {
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState<FormDataChangePassword>({
-    newPassword: "",
-    confirmPassword: "",
-    oldPassword: "",
+  const [formData, setFormData] = useState<FormDataUpdateProfile>({
+    firstName: "",
+    lastName: "",
   });
-  const [apiStatus, setApiStatus] = useState<ApiStatusChagePassword>({
+  const [apiStatus, setApiStatus] = useState<ApiStatusUpdateProfile>({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
     headerMessage: "",
   });
-  const [vlidateErr, setvlidateErr] = useState<ValidateErrChagePassword>({});
+  const [vlidateErr, setvlidateErr] = useState<ValidateErrUpdateProfile>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,7 +43,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   };
 
   useEffect(() => {
-    const checkEmpty = checkEmptyInput(formData);
+    const checkEmpty = hasNonEmptyInput(formData);
     setApiStatus((prev) => ({
       ...prev,
       isEmpty: checkEmpty,
@@ -53,7 +53,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   const handleSubmit = async (element: FormEvent<HTMLFormElement>) => {
     element.preventDefault();
 
-    const resultValidate = validateInputChangePassword(formData);
+    const resultValidate = validateInputUpdatePrifile(formData);
     if (!resultValidate.success) {
       const newErrors: Record<string, string> = {};
       resultValidate.error.errors.forEach((err) => {
@@ -68,8 +68,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     }
 
     const userData = {
-      oldPassword: formData.oldPassword,
-      newPassword: formData.newPassword,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
     };
 
     setvlidateErr({});
@@ -79,22 +79,22 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       isLoading: true,
       headerMessage: "",
     }));
+    const resulClean = cleanUserData(userData);
+    const resultAction = await dispatch(updateProfileUser(resulClean));
 
-    const resultAction = await dispatch(changePasswordUser(userData));
-
-    if (changePasswordUser.fulfilled.match(resultAction)) {
+    if (updateProfileUser.fulfilled.match(resultAction)) {
       setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: false,
-        headerMessage: "Пароль изменен",
+        headerMessage: "Данные изменены",
       }));
-
-      setFormData({ newPassword: "", confirmPassword: "", oldPassword: "" });
+      localStorage.setItem("userName", formData.firstName);
+      setFormData({ firstName: "", lastName: "" });
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
-      const errorText = messageErrorChangePassword(statusCode);
+      const errorText = messageErrorUpdateProfile(statusCode);
 
       setApiStatus((prev) => ({
         ...prev,
@@ -116,7 +116,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           <h3>
             {apiStatus?.headerMessage?.trim()
               ? apiStatus?.headerMessage
-              : "Смена пароля"}
+              : "Редактирование профиля"}
           </h3>
           {apiStatus.isErrorServer && (
             <div className={styles.errorMessageTitle}>
@@ -124,57 +124,41 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             </div>
           )}
         </div>
-        <form className={styles.passwordForm} onSubmit={handleSubmit}>
-          <div className={styles.formGroup}>
-            <label>Старый пароль</label>
-            <input
-              type="password"
-              name="oldPassword"
-              placeholder={"Введите старый пароль"}
-              autoComplete="new-password"
-              onChange={handleChange}
-              value={formData.oldPassword}
-            />
-          </div>
+        <form className={styles.updateForm} onSubmit={handleSubmit}>
           <div
             className={
-              vlidateErr.newPassword ? styles.errInput : styles.formGroup
+              vlidateErr.firstName ? styles.errInput : styles.formGroup
             }
           >
-            <label>Новый пароль</label>
-            {vlidateErr.newPassword && (
+            <label>Новое имя</label>
+            {vlidateErr.firstName && (
               <span className={styles.errorInputMessage}>
-                {vlidateErr.newPassword}
+                {vlidateErr.firstName}
               </span>
             )}
             <input
-              type="password"
-              name="newPassword"
-              placeholder={"Введите новый пароль"}
-              autoComplete="new-password"
+              type="text"
+              name="firstName"
+              autoComplete="off"
               onChange={handleChange}
-              value={formData.newPassword}
+              value={formData.firstName}
             />
           </div>
-
           <div
-            className={
-              vlidateErr.confirmPassword ? styles.errInput : styles.formGroup
-            }
+            className={vlidateErr.lastName ? styles.errInput : styles.formGroup}
           >
-            <label>Повторите новый пароль</label>
-            {vlidateErr.confirmPassword && (
+            <label>Новая фамилия</label>
+            {vlidateErr.lastName && (
               <span className={styles.errorInputMessage}>
-                {vlidateErr.confirmPassword}
+                {vlidateErr.lastName}
               </span>
             )}
             <input
-              type="password"
-              name="confirmPassword"
-              placeholder={"Подтвердите пароль"}
-              autoComplete="new-password"
+              type="test"
+              name="lastName"
+              autoComplete="off"
               onChange={handleChange}
-              value={formData.confirmPassword}
+              value={formData.lastName}
             />
           </div>
 
@@ -200,4 +184,4 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   );
 };
 
-export default ChangePasswordModal;
+export default UpdateProfileModal;

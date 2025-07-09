@@ -40,11 +40,13 @@ export const validateInputSignUp = (formData: FormDataSignUpState) => {
         .nonempty("Поле обязательно"),
       firstName: z
         .string()
+        .regex(/^[A-Za-zА-Яа-я]*$/, "Только буквы")
         .regex(/^\S*$/, "Пробелы не допускаются")
         .min(3, "Имя должно быть от 3 символов")
         .nonempty("Поле обязательно"),
       lastName: z
         .string()
+        .regex(/^[A-Za-zА-Яа-я]*$/, "Только буквы")
         .regex(/^\S*$/, "Пробелы не допускаются")
         .optional()
         .refine((val) => !val || val.trim().length >= 3, {

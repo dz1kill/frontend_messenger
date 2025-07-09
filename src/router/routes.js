@@ -4,6 +4,7 @@ export const ROUTES = {
     REGISTER: "/auth/sing-up",
     DESTROY: "/profile/destroy",
     CHANGE_PASSWORD: "/profile/change-password",
+    UPDATE_PROFILE: "/profile/update",
   },
   APP: {
     HOME: "/",

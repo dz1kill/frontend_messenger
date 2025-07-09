@@ -3,17 +3,23 @@ import DeleteProfileModal from "./delete_profile_modal";
 import ProfileMainView from "./profile_main_modal";
 import { ProfileView } from "../../types/profile";
 import ChangePasswordModal from "./change_password_modal";
+import UpdateProfileModal from "./upadate_profile";
 
 const Profile: React.FC = () => {
   const [currentView, setCurrentView] = useState<ProfileView>("main");
-
-  const handleEditProfile = () => {};
 
   const renderView = () => {
     switch (currentView) {
       case "changePassword":
         return (
           <ChangePasswordModal
+            onClose={() => setCurrentView("main")}
+            onCancel={() => setCurrentView("main")}
+          />
+        );
+      case "updateProfile":
+        return (
+          <UpdateProfileModal
             onClose={() => setCurrentView("main")}
             onCancel={() => setCurrentView("main")}
           />
@@ -31,7 +37,7 @@ const Profile: React.FC = () => {
       default:
         return (
           <ProfileMainView
-            onEditProfile={handleEditProfile}
+            onEditProfile={() => setCurrentView("updateProfile")}
             onChangePassword={() => setCurrentView("changePassword")}
             onDeleteAccount={() => setCurrentView("deleteProfile")}
           />
