@@ -1,0 +1,66 @@
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 150px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  background-color: #f0f6ffbe;
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1),
+    inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+}
+
+.searchModal {
+  position: absolute;
+  top: calc(100% + 4px); /* отступ чуть ниже input */
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  z-index: 30;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.searchModalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchResultItem {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #111827;
+  transition: background-color 0.2s ease;
+}
+
+.searchResultItem:hover {
+  background-color: #f3f4f6;
+}
+
+.noResults {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
