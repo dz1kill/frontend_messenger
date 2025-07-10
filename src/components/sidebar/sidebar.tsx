@@ -41,6 +41,7 @@ const Sidebar: React.FC = () => {
   }, [isReadySocket, hasFetchedOnceChat, sendSocketMessage]);
 
   const handleScroll = () => {
+    if (isSearchModalOpen) return;
     if (!chatListRef.current || loadingState.isLoading || lastPageLoadedChat)
       return;
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
@@ -128,6 +129,12 @@ const Sidebar: React.FC = () => {
               </>
             )}
           </>
+        )}
+
+        {loadingState.isLoading && (
+          <div className={styles.spinnerContainer}>
+            <div className={styles.spinner}></div>
+          </div>
         )}
       </div>
     </div>
