@@ -12,8 +12,9 @@ import SearchItem from "./search_list";
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [loadingState, setLoadingState] = useState({
     cursor: null as string | null,
     isLoading: false,
@@ -81,6 +82,7 @@ const Sidebar: React.FC = () => {
 
   const groupChats = mockChats.filter((chat) => chat.isGroup);
   const personalChats = mockChats.filter((chat) => !chat.isGroup);
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
@@ -108,7 +110,12 @@ const Sidebar: React.FC = () => {
       >
         {!isSearchModalOpen &&
           lastMessagesChat.map((chat) => (
-            <ChatItem key={chat.messageId} {...chat} />
+            <ChatItem
+              key={chat.messageId}
+              {...chat}
+              selected={selectedChatId === chat.messageId}
+              onSelect={() => setSelectedChatId(chat.messageId)}
+            />
           ))}
         {isSearchModalOpen && (
           <>

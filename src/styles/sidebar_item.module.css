@@ -8,13 +8,18 @@
 
 .chatItem:hover {
   background-color: #e5e5e5;
+  transform: translateY(-1px);
 }
 
 .chatItem:active {
-  background-color: #eaf4ff;
+  background-color: #b3d4e6;
   transform: scale(0.98);
 }
-
+.chatItem.selected {
+  background-color: #e2eaf3;
+  border-left: 4px solid #83aae98c;
+  padding-left: calc(0.75rem - 4px);
+}
 .avatar {
   width: 3.125rem;
   height: 3.125rem;

@@ -6,7 +6,12 @@ import { targetConversation } from "../../store/chat/slice";
 import { FormatDataListLastMessage } from "../../types/chat";
 import { formatDate } from "./helper";
 
-const ChatItem: React.FC<FormatDataListLastMessage> = ({
+const ChatItem: React.FC<
+  FormatDataListLastMessage & {
+    selected: boolean;
+    onSelect: () => void;
+  }
+> = ({
   messageId,
   name,
   content,
@@ -20,6 +25,8 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   groupId,
   groupName,
   createdAt,
+  selected,
+  onSelect,
 }) => {
   const dispatch = useAppDispatch();
   const handleClick = () => {
@@ -41,10 +48,14 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
         isFirstLoaded: false,
       })
     );
+    onSelect();
   };
 
   return (
-    <div className={styles.chatItem} onClick={handleClick}>
+    <div
+      className={`${styles.chatItem} ${selected ? styles.selected : ""}`}
+      onClick={handleClick}
+    >
       <div className={styles.avatar}>👤</div>
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>
