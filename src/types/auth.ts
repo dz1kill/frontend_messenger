@@ -22,6 +22,7 @@ export interface UserResLoginData {
   token: string;
   message: string;
   firstName: string;
+  lastName?: string;
 }
 
 export interface UserResSingUpData {

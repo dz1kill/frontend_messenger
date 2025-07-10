@@ -26,22 +26,33 @@ export const formatDataListLastMessage = (
         ? item.receiverName
         : item.senderName;
 
+    const companionLastName =
+      item.groupId != null
+        ? null
+        : item.senderId === userId
+        ? item.receiverLastName
+        : item.senderLastName;
+
     const companionId =
       item.groupId != null
         ? null
         : item.senderId === userId
         ? item.receiverId
         : item.senderId;
+
     return {
       companionName,
+      companionLastName,
       companionId,
       name: nameConversation,
       messageId: item.messageId,
       content: item.content,
       senderId: item.senderId,
       senderName: item.senderName,
+      senderLastName: item.senderLastName,
       receiverId: item.receiverId,
       receiverName: item.receiverName,
+      receiverLastName: item.receiverLastName,
       groupId: item.groupId,
       groupName: item.groupName,
       createdAt: item.createdAt,
@@ -80,6 +91,7 @@ export const formatDatalatestMessageGroup = (
       sender: item.senderId === userId ? "user" : "contact",
       senderId: item.senderId,
       senderName: item.senderName,
+      senderLastName: item.senderLastName,
       groupId: item.groupId,
       groupName: item.groupName,
       createdAt: item.createdAt,
@@ -114,6 +126,7 @@ export const formatPrivateMessageChat = (message: ItemPrivateMessage) => {
   return [
     {
       companionName: message.senderName,
+      companionLastName: message.senderLastName,
       companionId: message.senderId,
       name: message.senderName,
       messageId: message.messageId,
@@ -149,6 +162,7 @@ export const formatGroupMessageChat = (message: ItemGroupMessage) => {
       messageId: message.messageId,
       companionName: null,
       companionId: null,
+      companionLastName: null,
       name: message.groupName,
       content: message.message,
       senderId: message.senderId,

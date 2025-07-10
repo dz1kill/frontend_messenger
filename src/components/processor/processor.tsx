@@ -39,7 +39,6 @@ export const MessageProcessor = () => {
       socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
         switch (data.type) {
-          
           case TYPE_LIST_LAST_MESSAGE:
             if (data.success) {
               const resultFormat = formatDataListLastMessage(data);
@@ -85,6 +84,7 @@ export const MessageProcessor = () => {
               const resultFormatChat = formatPrivateMessageChat(
                 data.params.item
               );
+
               dispatch(listLastMessageReceived(resultFormatChat));
               if (!isFirstLoaded) return;
               dispatch(latestMessageDialogReceived(resultFormatConversation));
@@ -104,6 +104,7 @@ export const MessageProcessor = () => {
               );
               const resultFormat = formatGroupMessage(data.params.item);
               const resultFormatChat = formatGroupMessageChat(data.params.item);
+
               dispatch(listLastMessageReceived(resultFormatChat));
               if (!isFirstLoaded) return;
               dispatch(latestMessageGroupReceived(resultFormat));

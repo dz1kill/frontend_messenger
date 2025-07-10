@@ -81,8 +81,8 @@ const LoginForm: React.FC = () => {
       localStorage.setItem("token", resultAction.payload.token);
       localStorage.setItem("email", resultAction.payload.email);
       localStorage.setItem("userId", resultAction.payload.id);
+      localStorage.setItem("userLastName", resultAction.payload.lastName ?? "");
       navigate(ROUTES.APP.HOME);
-      
     } else {
       const statusCode = resultAction.payload?.status || 500;
       const errorText = messageErrorLogin(statusCode);

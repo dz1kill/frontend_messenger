@@ -286,7 +286,7 @@ const Conversation: React.FC = () => {
         },
       };
     }
-    
+
     if (!request) return;
     sendSocketMessage(request);
 
@@ -304,7 +304,11 @@ const Conversation: React.FC = () => {
     <div className={styles.conversationWindow}>
       {currentConversation && (
         <div className={styles.conversationHeader}>
-          <h2>{currentConversation ? currentConversation.name : ""}</h2>
+          <h2>
+            {currentConversation.companionLastName
+              ? `${currentConversation.name} ${currentConversation.companionLastName}`
+              : currentConversation.name}
+          </h2>
         </div>
       )}
 

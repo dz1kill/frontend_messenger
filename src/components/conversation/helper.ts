@@ -145,6 +145,7 @@ export const dataToChatState = (
   const dataSendChatMessage = [
     {
       messageId,
+      companionLastName: currentConversation.companionLastName,
       companionName: currentConversation.companionName,
       companionId: currentConversation.companionId,
       name:

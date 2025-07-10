@@ -89,7 +89,14 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
         isErrorServer: false,
         headerMessage: "Данные изменены",
       }));
-      localStorage.setItem("userName", formData.firstName);
+
+      if (formData.firstName.trim() !== "") {
+        localStorage.setItem("userName", formData.firstName);
+      }
+      if (formData.lastName.trim() !== "") {
+        localStorage.setItem("userLastName", formData.lastName);
+      }
+
       setFormData({ firstName: "", lastName: "" });
     } else {
       const statusCode = resultAction.payload?.status || 500;

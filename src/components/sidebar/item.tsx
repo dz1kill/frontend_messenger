@@ -11,6 +11,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   name,
   content,
   companionName,
+  companionLastName,
   companionId,
   senderId,
   senderName,
@@ -28,6 +29,7 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
         name,
         companionName,
         companionId,
+        companionLastName,
         senderId,
         senderName,
         receiverId,
@@ -46,7 +48,9 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
       <div className={styles.avatar}>👤</div>
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>
-          <span className={styles.name}>{name}</span>
+          <span className={styles.name}>
+            {companionLastName ? `${name} ${companionLastName}` : name}
+          </span>
           <span className={styles.time}>{formatDate(createdAt)}</span>
         </div>
         <div className={styles.bottomRow}>

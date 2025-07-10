@@ -10,6 +10,8 @@ export interface DataListLastMessage {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  receiverLastName?: string;
+  senderLastName?: string;
 }
 
 export interface ResListLastMessageChat {
@@ -26,6 +28,7 @@ export interface FormatDataListLastMessage
   name: string;
   companionName: string | null;
   companionId: string | null;
+  companionLastName: string | null | undefined;
 }
 
 export interface DatalatestMessageDialog {
@@ -59,6 +62,7 @@ export interface DataLatestMessageGroup {
   messageId: string;
   senderId: string;
   senderName: string;
+  senderLastName?: string;
   groupId: string;
   groupName: string;
   content: string;
@@ -79,6 +83,7 @@ export interface ItemPrivateMessage {
   messageId: string;
   message: string;
   senderName: string;
+  senderLastName?: string;
   senderId: string;
   createdAt: string;
 }

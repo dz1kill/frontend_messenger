@@ -9,6 +9,7 @@ const ConversationItem: React.FC<
   FormatLatestMessageDialog | FormatLatestMessageGroup
 > = ({ sender, content, createdAt, senderName, ...props }) => {
   const isGroup = "groupId" in props;
+  const senderLastName = "senderLastName" in props ? props.senderLastName : "";
   return (
     <div
       className={`${styles.message} ${
@@ -16,7 +17,9 @@ const ConversationItem: React.FC<
       }`}
     >
       {sender !== "user" && isGroup && (
-        <div className={styles.senderName}>{senderName}</div>
+        <div
+          className={styles.senderName}
+        >{`${senderName} ${senderLastName}`}</div>
       )}
       <div className={styles.messageContent}>{content}</div>
       <div className={styles.time}>{formatTime(createdAt)}</div>

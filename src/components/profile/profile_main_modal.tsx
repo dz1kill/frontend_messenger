@@ -11,6 +11,7 @@ const ProfileMainView: React.FC<ProfileMainViewProps> = ({
 }) => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName") || "Пользователь";
+  const userLastName = localStorage.getItem("userLastName") || "";
 
   return (
     <div
@@ -20,7 +21,7 @@ const ProfileMainView: React.FC<ProfileMainViewProps> = ({
       <div className={styles.account} onClick={(e) => e.stopPropagation()}>
         <div className={styles.accountHeader}>
           <div className={styles.avatarPlaceholder}>👤</div>
-          <h3>{`${userName}`}</h3>
+          <h3>{`${userName} ${userLastName}`}</h3>
         </div>
         <div className={styles.accountMenu}>
           <button className={styles.menuItem} onClick={onEditProfile}>
