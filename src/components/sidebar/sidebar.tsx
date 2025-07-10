@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "../../styles/sidebar.module.css";
-
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
 import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
 import { useAppSelector } from "../../hooks/redux_hooks";
 import { useSocket } from "../../hooks/use_socket";
-import SearchModal from "./search_modal";
+import { mockChats } from "./data";
+import SearchItem from "./search_list";
 
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [loadingState, setLoadingState] = useState({
     cursor: null as string | null,
     isLoading: false,
@@ -76,11 +78,26 @@ const Sidebar: React.FC = () => {
     prevLengthRef.current = lastMessagesChat.length;
   }, [lastMessagesChat, hasFetchedOnceChat]);
 
+  const groupChats = mockChats.filter((chat) => chat.isGroup);
+  const personalChats = mockChats.filter((chat) => !chat.isGroup);
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
-        <h2>Чаты</h2>
-        <SearchModal />
+        <h2>{!isSearchModalOpen && "Чаты"}</h2>
+        <input
+          className={styles.searchInput}
+          type="text"
+          placeholder="Поиск..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setIsSearchModalOpen(e.target.value.length > 0);
+          }}
+          onBlur={() => {
+            setIsSearchModalOpen(false);
+            setSearchQuery("");
+          }}
+        />
       </div>
 
       <div
@@ -88,13 +105,29 @@ const Sidebar: React.FC = () => {
         onScroll={handleScroll}
         ref={chatListRef}
       >
-        {lastMessagesChat.map((chat) => (
-          <ChatItem key={chat.messageId} {...chat} />
-        ))}
-        {loadingState.isLoading && (
-          <div className={styles.spinnerContainer}>
-            <div className={styles.spinner}></div>
-          </div>
+        {!isSearchModalOpen &&
+          lastMessagesChat.map((chat) => (
+            <ChatItem key={chat.messageId} {...chat} />
+          ))}
+        {isSearchModalOpen && (
+          <>
+            {personalChats.length > 0 && (
+              <>
+                <div className={styles.sectionTitle}>Личные чаты</div>
+                {personalChats.map((chat) => (
+                  <SearchItem key={chat.id} {...chat} />
+                ))}
+              </>
+            )}
+            {groupChats.length > 0 && (
+              <>
+                <div className={styles.sectionTitle}>Группы</div>
+                {groupChats.map((chat) => (
+                  <SearchItem key={chat.id} {...chat} />
+                ))}
+              </>
+            )}
+          </>
         )}
       </div>
     </div>

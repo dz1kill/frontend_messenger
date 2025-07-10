@@ -1,29 +1,86 @@
-.searchContainer {
-  position: relative;
+.chatItem {
   display: flex;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.1s, transform 0.1s;
+  gap: 15px;
 }
 
-.searchInput {
-  flex: 1;
-  min-width: 0px;
-  max-width: 55%;
-  padding: 6px 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 9px;
-  font-size: 0.9rem;
-  background-color: #f0f6ffbe;
-  transition: all 0.2s ease;
+.chatItem:hover {
+  background-color: #e5e5e5;
 }
 
-.searchInput:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1),
-    inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  min-width: 160px;
+.chatItem:active {
+  background-color: #eaf4ff;
+  transform: scale(0.98);
 }
 
-.searchInput::placeholder {
-  color: #9ca3af;
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.chatInfo {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  gap: 10px;
+}
+
+.name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.email {
+  color: #666;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 480px) {
+  .chatItem {
+    padding: 0.5rem 0.75rem;
+    gap: 10px;
+  }
+
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .name {
+    font-size: 0.8rem;
+  }
+
+  .lastMessage {
+    font-size: 0.7rem;
+  }
 }
