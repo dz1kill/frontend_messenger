@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import styles from "../../styles/sidebar.module.css";
-import styless from "../../styles/sidebar_search_modal.module.css";
+
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
 import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
 import { useAppSelector } from "../../hooks/redux_hooks";
 import { useSocket } from "../../hooks/use_socket";
-import { searchResults } from "./data";
+import SearchModal from "./search_modal";
 
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
@@ -76,19 +76,11 @@ const Sidebar: React.FC = () => {
     prevLengthRef.current = lastMessagesChat.length;
   }, [lastMessagesChat, hasFetchedOnceChat]);
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
         <h2>Чаты</h2>
-        <input
-          type="text"
-          placeholder="Поиск..."
-          className={styles.searchInput}
-          onFocus={() => setIsSearchModalOpen(true)}
-        />
+        <SearchModal />
       </div>
 
       <div
