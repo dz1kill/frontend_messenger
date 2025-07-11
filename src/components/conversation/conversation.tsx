@@ -129,6 +129,10 @@ const Conversation: React.FC = () => {
       latestMessageDialog,
       latestMessageGroup
     );
+    setLoadingState((prev) => ({
+      ...prev,
+      isLoading: false,
+    }));
 
     const isReadyToFetch = !!currentConversation && isFirstLoaded;
 
@@ -139,11 +143,6 @@ const Conversation: React.FC = () => {
       latestMessageDialog,
       latestMessageGroup
     );
-
-    setLoadingState((prev) => ({
-      ...prev,
-      isLoading: false,
-    }));
 
     if (!newCursor || currentConversation.cursorCreatedAt === newCursor) {
       return;
