@@ -127,7 +127,15 @@ export interface LatestMessageGroupState {
 }
 
 export interface Conversation
-  extends Omit<FormatDataListLastMessage, "lastMessage" | "createdAt"> {
+  extends Omit<
+    FormatDataListLastMessage,
+    | "lastMessage"
+    | "createdAt"
+    | "senderId"
+    | "senderName"
+    | "receiverId"
+    | "receiverName"
+  > {
   cursorCreatedAt: string | null;
   isFirstLoaded: boolean;
 }

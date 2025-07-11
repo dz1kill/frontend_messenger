@@ -150,9 +150,7 @@ export const dataToChatState = (
       companionId: currentConversation.companionId,
       name:
         currentConversation.groupName ??
-        (currentConversation.senderId === userId
-          ? currentConversation.receiverName
-          : currentConversation.senderName) ??
+        currentConversation.companionName ??
         "Без имени",
       content: inputData,
       senderId: userId,
