@@ -135,6 +135,7 @@ export interface Conversation
     | "senderName"
     | "receiverId"
     | "receiverName"
+    | "messageId"
   > {
   cursorCreatedAt: string | null;
   isFirstLoaded: boolean;

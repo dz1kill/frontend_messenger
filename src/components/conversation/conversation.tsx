@@ -43,7 +43,7 @@ const Conversation: React.FC = () => {
   });
   const dispatch = useAppDispatch();
   const userId = localStorage.getItem("userId");
-  const prevMessageIdRef = useRef(currentConversation?.messageId);
+  const prevChatKeyRef = useRef<string | undefined>("");
   const { sendSocketMessage, isReadySocket } = useSocket();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const scrollOffsetRef = useRef<number | null>(null);
@@ -53,20 +53,28 @@ const Conversation: React.FC = () => {
     : getMsgConversationDialog(currentConversation, latestMessageDialog);
 
   useEffect(() => {
-    const isCurrentConversationChanged =
-      currentConversation?.messageId !== prevMessageIdRef.current;
-    if (isCurrentConversationChanged) {
+    const currentChatKey = currentConversation?.groupId
+      ? `group_${currentConversation.groupId}`
+      : currentConversation?.companionId
+      ? `dialog_${currentConversation.companionId}`
+      : undefined;
+
+    if (currentChatKey !== prevChatKeyRef.current) {
       dispatch(setIsLastPageLoadedConversation(false));
     }
   }, [latestMessageDialog, latestMessageGroup, dispatch, currentConversation]);
 
   useEffect(() => {
-    const isCurrentConversationChanged =
-      currentConversation?.messageId !== prevMessageIdRef.current;
+    const currentChatKey = currentConversation?.groupId
+      ? `group_${currentConversation.groupId}`
+      : currentConversation?.companionId
+      ? `dialog_${currentConversation.companionId}`
+      : undefined;
 
-    if (!isCurrentConversationChanged) return;
-
-    prevMessageIdRef.current = currentConversation?.messageId;
+    if (currentChatKey === prevChatKeyRef.current) {
+      return;
+    }
+    prevChatKeyRef.current = currentChatKey;
     const isFirstLoaded = checkFirstLoad(
       currentConversation,
       latestMessageDialog,

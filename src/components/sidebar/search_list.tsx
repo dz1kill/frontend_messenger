@@ -3,7 +3,6 @@ import styles from "../../styles/sidebar_search.module.css";
 import { SearchData } from "../../types/use_cases";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { targetConversation } from "../../store/chat/slice";
-import { v4 as uuidv4 } from "uuid";
 
 const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
   userId,
@@ -19,7 +18,6 @@ const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
   const handleClick = () => {
     dispatch(
       targetConversation({
-        messageId: uuidv4(),
         name: (groupId ? groupName : firstName) || "Имя",
         companionName: firstName,
         companionId: userId,

@@ -7,7 +7,6 @@ import { FormatDataListLastMessage } from "../../types/chat";
 import { formatDate } from "./helper";
 
 const ChatItem: React.FC<FormatDataListLastMessage> = ({
-  messageId,
   name,
   content,
   companionName,
@@ -21,7 +20,6 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   const handleClick = () => {
     dispatch(
       targetConversation({
-        messageId,
         name,
         companionName,
         companionId,
