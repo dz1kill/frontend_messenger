@@ -111,6 +111,7 @@ export const formatPrivateMessage = (message: ItemPrivateMessage) => {
       sender: "contact",
       senderId: message.senderId,
       senderName: message.senderName,
+      senderLastName: message.senderLastName,
       receiverId: userId,
       receiverName: userName,
       createdAt: message.createdAt,
