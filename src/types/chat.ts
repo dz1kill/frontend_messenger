@@ -24,7 +24,15 @@ export interface ResListLastMessageChat {
   };
 }
 export interface FormatDataListLastMessage
-  extends Omit<DataListLastMessage, "updatedAt" | "deletedAt"> {
+  extends Omit<
+    DataListLastMessage,
+    | "updatedAt"
+    | "deletedAt"
+    | "senderId"
+    | "senderName"
+    | "receiverId"
+    | "receiverName"
+  > {
   name: string;
   companionName: string | null;
   companionId: string | null;

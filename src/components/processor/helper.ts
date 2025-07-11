@@ -41,18 +41,12 @@ export const formatDataListLastMessage = (
         : item.senderId;
 
     return {
+      messageId: item.messageId,
+      name: nameConversation,
+      content: item.content,
       companionName,
       companionLastName,
       companionId,
-      name: nameConversation,
-      messageId: item.messageId,
-      content: item.content,
-      senderId: item.senderId,
-      senderName: item.senderName,
-      senderLastName: item.senderLastName,
-      receiverId: item.receiverId,
-      receiverName: item.receiverName,
-      receiverLastName: item.receiverLastName,
       groupId: item.groupId,
       groupName: item.groupName,
       createdAt: item.createdAt,
