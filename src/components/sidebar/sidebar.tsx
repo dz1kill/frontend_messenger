@@ -14,7 +14,6 @@ const Sidebar: React.FC = () => {
   const prevLengthRef = useRef(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [loadingState, setLoadingState] = useState({
     cursor: null as string | null,
     isLoading: false,
@@ -92,6 +91,11 @@ const Sidebar: React.FC = () => {
   const groupChats = searchResult.filter((chat) => chat.groupId);
   const personalChats = searchResult.filter((chat) => !chat.groupId);
 
+  const handleBlur = () => {
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
@@ -105,10 +109,6 @@ const Sidebar: React.FC = () => {
             setSearchQuery(e.target.value);
             setIsSearchOpen(e.target.value.length > 0);
           }}
-          onBlur={() => {
-            setIsSearchOpen(false);
-            setSearchQuery("");
-          }}
         />
       </div>
 
@@ -119,12 +119,7 @@ const Sidebar: React.FC = () => {
       >
         {!isSearchOpen &&
           lastMessagesChat.map((chat) => (
-            <ChatItem
-              key={chat.messageId}
-              {...chat}
-              selected={selectedChatId === chat.messageId}
-              onSelect={() => setSelectedChatId(chat.messageId)}
-            />
+            <ChatItem key={chat.messageId} {...chat} />
           ))}
         {isSearchOpen && (
           <>
@@ -132,7 +127,7 @@ const Sidebar: React.FC = () => {
               <>
                 <div className={styles.sectionTitle}>Личные чаты</div>
                 {personalChats.map((chat) => (
-                  <SearchItem key={chat.userId} {...chat} />
+                  <SearchItem key={chat.userId} {...chat} onBlur={handleBlur} />
                 ))}
               </>
             )}
@@ -140,7 +135,11 @@ const Sidebar: React.FC = () => {
               <>
                 <div className={styles.sectionTitle}>Группы</div>
                 {groupChats.map((chat) => (
-                  <SearchItem key={chat.groupId} {...chat} />
+                  <SearchItem
+                    key={chat.groupId}
+                    {...chat}
+                    onBlur={handleBlur}
+                  />
                 ))}
               </>
             )}
