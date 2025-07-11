@@ -1,12 +1,8 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import styles from "../../styles/sidebar_search.module.css";
 import { SearchData } from "../../types/use_cases";
 import { useAppDispatch } from "../../hooks/redux_hooks";
-import {
-  listLastMessageReceived,
-  targetConversation,
-} from "../../store/chat/slice";
+import { targetConversation } from "../../store/chat/slice";
 
 const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
   userId,
@@ -20,21 +16,6 @@ const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
   const dispatch = useAppDispatch();
 
   const handleClick = () => {
-    dispatch(
-      listLastMessageReceived([
-        {
-          messageId: uuidv4(),
-          name: (groupId ? groupName : firstName) || "Имя",
-          content: "",
-          companionName: firstName,
-          companionLastName: lastName,
-          companionId: userId,
-          groupId,
-          groupName,
-          createdAt: new Date().toISOString(),
-        },
-      ])
-    );
     dispatch(
       targetConversation({
         name: (groupId ? groupName : firstName) || "Имя",
