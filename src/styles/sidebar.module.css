@@ -90,6 +90,19 @@
   border-bottom: 1px solid #ddd;
 }
 
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+  color: #555;
+  font-size: 0.9rem;
+  min-height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 @media (max-width: 480px) {
   .sidebarHeader h2 {
     font-size: 0.8rem;
@@ -103,5 +116,10 @@
   .sectionTitle {
     font-size: 0.65rem;
     padding: 0.4rem 0.5rem;
+  }
+
+  .emptyState {
+    font-size: 0.7rem;
+    padding: 15px;
   }
 }

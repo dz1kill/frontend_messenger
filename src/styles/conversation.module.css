@@ -108,17 +108,15 @@
   }
 }
 
-.emptyConversationPlaceholder {
-  flex: 1;
+.emptyChat {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f6f8;
-  color: #888;
-  font-size: 1rem;
-  text-align: center;
+  height: 100%;
+  color: #555;
+  font-size: 0.9rem;
   padding: 20px;
-  height: calc(100% - 60px);
+  text-align: center;
 }
 
 @media (max-width: 480px) {

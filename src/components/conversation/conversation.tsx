@@ -327,7 +327,7 @@ const Conversation: React.FC = () => {
       )}
 
       {!currentConversation ? (
-        <div className={styles.emptyConversationPlaceholder}>
+        <div className={styles.emptyChat}>
           Пожалуйста, выберите кому написать...
         </div>
       ) : (
@@ -340,6 +340,11 @@ const Conversation: React.FC = () => {
             {loadingState.isLoading && (
               <div className={styles.spinnerContainer}>
                 <div className={styles.spinner}></div>
+              </div>
+            )}
+            {messages.length === 0 && (
+              <div className={styles.emptyChat}>
+                <p>Напишите сообщение, чтобы начать диалог</p>
               </div>
             )}
             {Array.isArray(messages) &&

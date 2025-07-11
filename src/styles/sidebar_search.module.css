@@ -18,11 +18,6 @@
   transform: scale(0.98);
 }
 
-.chatItem.selected {
-  background-color: #e2eaf3;
-  border-left: 4px solid #83aae98c;
-  padding-left: calc(0.75rem - 4px);
-}
 .avatar {
   width: 2.75rem;
   height: 2.75rem;
