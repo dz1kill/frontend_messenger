@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "../../styles/sidebar_search.module.css";
+import { SearchData } from "../../types/use_cases";
 
-const SearchItem: React.FC<any> = ({
-  isGroup,
-  companionEmail,
-  name,
-  companionLastName,
+const SearchItem: React.FC<SearchData> = ({
+  groupName,
+  firstName,
+  lastName,
+  email,
 }) => {
   return (
     <div className={styles.chatItem}>
@@ -13,11 +14,11 @@ const SearchItem: React.FC<any> = ({
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>
           <span className={styles.name}>
-            {isGroup ? name : `${name} ${companionLastName}`}
+            {groupName ? groupName : `${firstName} ${lastName}`}
           </span>
         </div>
         <div className={styles.bottomRow}>
-          <p className={styles.email}>{isGroup ? "" : companionEmail}</p>
+          <p className={styles.email}>{groupName ? "" : email}</p>
         </div>
       </div>
     </div>

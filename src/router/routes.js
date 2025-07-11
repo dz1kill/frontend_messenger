@@ -5,6 +5,7 @@ export const ROUTES = {
     DESTROY: "/profile/destroy",
     CHANGE_PASSWORD: "/profile/change-password",
     UPDATE_PROFILE: "/profile/update",
+    SEARCH_USER_AND_GROUP: "/use-cases/search",
   },
   APP: {
     HOME: "/",

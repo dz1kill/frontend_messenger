@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useDeferredValue, useEffect, useRef, useState } from "react";
 
 import styles from "../../styles/sidebar.module.css";
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
 import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
-import { useAppSelector } from "../../hooks/redux_hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { useSocket } from "../../hooks/use_socket";
-import { mockChats } from "./data";
 import SearchItem from "./search_list";
+import { searchUserAndGroup } from "../../store/use_cases/slice";
 
 const Sidebar: React.FC = () => {
   const chatListRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [loadingState, setLoadingState] = useState({
     cursor: null as string | null,
@@ -21,7 +21,10 @@ const Sidebar: React.FC = () => {
   });
   const { lastMessagesChat, lastPageLoadedChat, hasFetchedOnceChat } =
     useAppSelector((state: RootState) => state.chats);
+  const { searchResult } = useAppSelector((state: RootState) => state.useCases);
   const { sendSocketMessage, isReadySocket } = useSocket();
+  const deferredQuery = useDeferredValue(searchQuery);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (isReadySocket && !hasFetchedOnceChat) {
@@ -42,7 +45,7 @@ const Sidebar: React.FC = () => {
   }, [isReadySocket, hasFetchedOnceChat, sendSocketMessage]);
 
   const handleScroll = () => {
-    if (isSearchModalOpen) return;
+    if (isSearchOpen) return;
     if (!chatListRef.current || loadingState.isLoading || lastPageLoadedChat)
       return;
     const { scrollTop, scrollHeight, clientHeight } = chatListRef.current;
@@ -80,13 +83,19 @@ const Sidebar: React.FC = () => {
     prevLengthRef.current = lastMessagesChat.length;
   }, [lastMessagesChat, hasFetchedOnceChat]);
 
-  const groupChats = mockChats.filter((chat) => chat.isGroup);
-  const personalChats = mockChats.filter((chat) => !chat.isGroup);
+  useEffect(() => {
+    if (deferredQuery.trim()) {
+      dispatch(searchUserAndGroup({ searchText: deferredQuery }));
+    }
+  }, [deferredQuery, dispatch]);
+
+  const groupChats = searchResult.filter((chat) => chat.groupId);
+  const personalChats = searchResult.filter((chat) => !chat.groupId);
 
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
-        <h2>{!isSearchModalOpen && "Чаты"}</h2>
+        <h2>{!isSearchOpen && "Чаты"}</h2>
         <input
           className={styles.searchInput}
           type="text"
@@ -94,10 +103,10 @@ const Sidebar: React.FC = () => {
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
-            setIsSearchModalOpen(e.target.value.length > 0);
+            setIsSearchOpen(e.target.value.length > 0);
           }}
           onBlur={() => {
-            setIsSearchModalOpen(false);
+            setIsSearchOpen(false);
             setSearchQuery("");
           }}
         />
@@ -108,7 +117,7 @@ const Sidebar: React.FC = () => {
         onScroll={handleScroll}
         ref={chatListRef}
       >
-        {!isSearchModalOpen &&
+        {!isSearchOpen &&
           lastMessagesChat.map((chat) => (
             <ChatItem
               key={chat.messageId}
@@ -117,13 +126,13 @@ const Sidebar: React.FC = () => {
               onSelect={() => setSelectedChatId(chat.messageId)}
             />
           ))}
-        {isSearchModalOpen && (
+        {isSearchOpen && (
           <>
             {personalChats.length > 0 && (
               <>
                 <div className={styles.sectionTitle}>Личные чаты</div>
                 {personalChats.map((chat) => (
-                  <SearchItem key={chat.id} {...chat} />
+                  <SearchItem key={chat.userId} {...chat} />
                 ))}
               </>
             )}
@@ -131,7 +140,7 @@ const Sidebar: React.FC = () => {
               <>
                 <div className={styles.sectionTitle}>Группы</div>
                 {groupChats.map((chat) => (
-                  <SearchItem key={chat.id} {...chat} />
+                  <SearchItem key={chat.groupId} {...chat} />
                 ))}
               </>
             )}

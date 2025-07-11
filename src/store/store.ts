@@ -5,6 +5,7 @@ import socketSlice from "./socket/slice";
 import { socketMiddleware } from "./socket/middleware";
 import chatSlice from "./chat/slice";
 import profileSlice from "./profile/slice";
+import useCasesSlice from "./use_cases/slice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     socket: socketSlice,
     chats: chatSlice,
     profile: profileSlice,
+    useCases: useCasesSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
