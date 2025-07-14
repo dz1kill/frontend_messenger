@@ -40,6 +40,14 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               onClose();
             }}
           >
+            Добавить участника
+          </div>
+          <div
+            className={styles.menuItem}
+            onClick={() => {
+              onClose();
+            }}
+          >
             Покинуть группу
           </div>
           <div
@@ -48,7 +56,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               onClose();
             }}
           >
-            Изменить название
+            Удалить группу
           </div>
         </>
       ) : (
