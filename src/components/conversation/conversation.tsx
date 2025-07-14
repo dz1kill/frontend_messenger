@@ -30,6 +30,8 @@ import {
   targetConversation,
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
+import DropdownMenu from "./dropdown";
+import DeleteProfileModal from "./delete_chat_modal";
 
 const Conversation: React.FC = () => {
   const {
@@ -48,6 +50,9 @@ const Conversation: React.FC = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const scrollOffsetRef = useRef<number | null>(null);
   const [inputData, setInputData] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [currentView, setCurrentView] = useState<"" | "deleteChat">("");
+
   const messages = currentConversation?.groupId
     ? getMsgConversationGroup(currentConversation, latestMessageGroup)
     : getMsgConversationDialog(currentConversation, latestMessageDialog);
@@ -322,6 +327,30 @@ const Conversation: React.FC = () => {
               ? `${currentConversation.name} ${currentConversation.companionLastName}`
               : currentConversation.name}
           </h2>
+          <div className={styles.menuContainer}>
+            <button
+              className={styles.menuButton}
+              onClick={() => setIsDropdownOpen(true)}
+            >
+              <span className={styles.menuIcon}></span>
+              <span className={styles.menuIcon}></span>
+              <span className={styles.menuIcon}></span>
+            </button>
+
+            {isDropdownOpen && (
+              <DropdownMenu
+                isGroup={!!currentConversation.groupId}
+                onClose={() => setIsDropdownOpen(false)}
+                onDeleteChat={() => setCurrentView("deleteChat")}
+              />
+            )}
+            {currentView === "deleteChat" && (
+              <DeleteProfileModal
+                onClose={() => setCurrentView("")}
+                onCancel={() => setCurrentView("")}
+              />
+            )}
+          </div>
         </div>
       )}
 
