@@ -107,8 +107,7 @@ const Conversation: React.FC = () => {
     }
     if (!request) return;
 
-    const result = sendSocketMessage(request);
-    console.warn("sendSocketMessage cnversation", result);
+    sendSocketMessage(request);
 
     setLoadingState((prev) => ({
       ...prev,

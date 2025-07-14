@@ -19,7 +19,6 @@ const initialState: ChatState = {
   currentConversation: null,
   hasFetchedOnceChat: false,
 };
-const userId = localStorage.getItem("userId");
 
 const chatSlice = createSlice({
   name: "chat",
@@ -66,23 +65,29 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<FormatLatestMessageDialog[]>
     ) => {
+      const userId = localStorage.getItem("userId");
+
       if (action.payload.length === 0) {
         state.isLastPageLoadedConversation = true;
         return;
       }
+
       const companionId =
         action.payload[0].senderId === userId
           ? action.payload[0].receiverId
           : action.payload[0].senderId;
+
+      const sortedMessages = [...action.payload].sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+
       if (!state.latestMessageDialog[companionId]) {
-        state.latestMessageDialog[companionId] = action.payload.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
+        state.latestMessageDialog[companionId] = sortedMessages;
       } else {
         state.latestMessageDialog[companionId] = [
           ...state.latestMessageDialog[companionId],
-          ...action.payload,
+          ...sortedMessages,
         ].sort(
           (a, b) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -100,15 +105,18 @@ const chatSlice = createSlice({
       }
       state.isLastPageLoadedConversation = !action.payload.length;
       const groupId = action.payload[0].groupId;
+
+      const sortedNewMessages = [...action.payload].sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+
       if (!state.latestMessageGroup[groupId]) {
-        state.latestMessageGroup[groupId] = action.payload.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
+        state.latestMessageGroup[groupId] = sortedNewMessages;
       } else {
         state.latestMessageGroup[groupId] = [
           ...state.latestMessageGroup[groupId],
-          ...action.payload,
+          ...sortedNewMessages,
         ].sort(
           (a, b) =>
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()

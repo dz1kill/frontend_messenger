@@ -113,6 +113,7 @@ export interface ItemGroupMessage {
   message: string;
   senderName: string;
   senderId: string;
+  senderLastName: string;
   createdAt: string;
 }
 

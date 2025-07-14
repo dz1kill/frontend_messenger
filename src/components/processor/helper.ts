@@ -145,6 +145,7 @@ export const formatGroupMessage = (message: ItemGroupMessage) => {
       sender: "contact",
       senderId: message.senderId,
       senderName: message.senderName,
+      senderLastName: message.senderLastName,
       groupId: message.groupId,
       groupName: message.groupName,
       createdAt: message.createdAt,
