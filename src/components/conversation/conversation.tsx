@@ -373,7 +373,7 @@ const Conversation: React.FC = () => {
                 <div className={styles.spinner}></div>
               </div>
             )}
-            {messages.length === 0 && (
+            {messages.length === 0 && !loadingState.isLoading && (
               <div className={styles.emptyChat}>
                 <p>Напишите сообщение, чтобы начать диалог</p>
               </div>

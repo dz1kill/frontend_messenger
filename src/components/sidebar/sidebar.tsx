@@ -117,11 +117,13 @@ const Sidebar: React.FC = () => {
         onScroll={handleScroll}
         ref={chatListRef}
       >
-        {lastMessagesChat.length === 0 && !isSearchOpen && (
-          <div className={styles.emptyState}>
-            <p>У вас пока нет диалогов</p>
-          </div>
-        )}
+        {lastMessagesChat.length === 0 &&
+          !isSearchOpen &&
+          !loadingState.isLoading && (
+            <div className={styles.emptyState}>
+              <p>У вас пока нет диалогов</p>
+            </div>
+          )}
         {!isSearchOpen &&
           lastMessagesChat.map((chat) => (
             <ChatItem key={chat.messageId} {...chat} />
