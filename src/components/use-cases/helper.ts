@@ -40,6 +40,17 @@ export const messageErrorUpdateProfile = (statusCode: number) => {
       return "Неизвестная ошибка сервера";
   }
 };
+
+export const messageErrorCreateGroup = (statusCode: number) => {
+  switch (statusCode) {
+    case 401:
+      return "Ошибка авторизации";
+    case 500:
+      return "Ошибка сервера";
+    default:
+      return "Неизвестная ошибка сервера";
+  }
+};
 export const checkEmptyInput = (
   formData: FormDataChangePassword | FormDataCreateGroup
 ) => {
@@ -131,4 +142,25 @@ export const cleanUserData = (userData: FormDataUpdateProfile) => {
     }
   });
   return result;
+};
+
+export const generateObjListLastMessageState = (
+  formData: FormDataCreateGroup,
+  newUuidMessage: string,
+  newUuidGroup: string,
+  notificationMessage: string
+) => {
+  return [
+    {
+      messageId: newUuidMessage,
+      name: formData.groupName,
+      content: notificationMessage,
+      companionName: null,
+      companionLastName: null,
+      companionId: null,
+      groupId: newUuidGroup,
+      groupName: formData.groupName,
+      createdAt: new Date().toISOString(),
+    },
+  ];
 };

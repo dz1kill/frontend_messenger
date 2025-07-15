@@ -67,6 +67,13 @@ export interface ApiStatusUpdateProfile {
   errorMessageServer: string;
   headerMessage: string;
 }
+
+export interface ApiStatusCreateGropModal {
+  isEmpty: boolean;
+  isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+}
 export interface ValidateErrChagePassword {
   oldPassword?: string;
   newPassword?: string;

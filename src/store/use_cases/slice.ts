@@ -5,12 +5,14 @@ import { ApiError } from "../../types/auth";
 import { ROUTES } from "../../router/routes";
 
 import {
+  CreateNewGroupPayload,
+  CreateNewGroupResData,
   DeleteMessagesDialogPayload,
   DeleteMessagesDialogResData,
   SearchPayload,
   SearchResData,
   UseCasesState,
-} from "../../types/use_cases_state";
+} from "../../types/use_cases_store";
 
 const initialState: UseCasesState = {
   searchResult: [],
@@ -95,6 +97,48 @@ export const deleteMessagesDialog = createAsyncThunk<
     }
   }
 );
+
+export const createNewGroup = createAsyncThunk<
+  CreateNewGroupResData,
+  CreateNewGroupPayload,
+  {
+    rejectValue: ApiError;
+  }
+>("useCases/createGroup", async (payload: CreateNewGroupPayload, thunkApi) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return thunkApi.rejectWithValue({
+      status: 401,
+      message: "Authentication token is missing",
+    });
+  }
+  try {
+    const res = await axios.post<CreateNewGroupResData>(
+      `${process.env.REACT_APP_API_BASE_URL}${ROUTES.SERVER.CREATE_GROUP}`,
+      {
+        groupId: payload.groupId,
+        groupName: payload.groupName,
+        content: payload.content,
+        messageId: payload.messageId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      return thunkApi.rejectWithValue({
+        status: err.status || 500,
+        message: err.response?.data || "useCases/createNewGroup",
+      });
+    }
+    throw err;
+  }
+});
 
 const useCasesSlice = createSlice({
   name: "useCases",

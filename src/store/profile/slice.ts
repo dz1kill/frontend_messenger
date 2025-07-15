@@ -10,7 +10,7 @@ import {
   UserResChangePasswordData,
   UserResDestroyData,
   UserResUpdateProfileData,
-} from "../../types/profile_state";
+} from "../../types/profile_store";
 
 export const destroyUser = createAsyncThunk<
   UserResDestroyData,

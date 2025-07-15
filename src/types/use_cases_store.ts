@@ -26,3 +26,13 @@ export interface DeleteMessagesDialogResData {
 export interface DeleteMessagesDialogPayload {
   companionId: string;
 }
+
+export interface CreateNewGroupResData {
+  message: string;
+}
+export interface CreateNewGroupPayload {
+  groupId: string;
+  groupName: string;
+  content: string;
+  messageId: string;
+}

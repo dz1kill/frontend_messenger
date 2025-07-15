@@ -1,29 +1,40 @@
 import React, { FormEvent, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import styles from "../../styles/update_profile.module.css";
-import { checkEmptyInput, validateInputCreateGroup } from "./helper";
 import {
-  ApiStatusUpdateProfile,
+  checkEmptyInput,
+  generateObjListLastMessageState,
+  messageErrorCreateGroup,
+  validateInputCreateGroup,
+} from "./helper";
+import {
+  ApiStatusCreateGropModal,
   CreateGroupModalProps,
   FormDataCreateGroup,
   ValidateErrCreateGroup,
 } from "../../types/use-cases_component";
 import { useAppDispatch } from "../../hooks/redux_hooks";
+import { createNewGroup } from "../../store/use_cases/slice";
+import { listLastMessageReceived } from "../../store/chat/slice";
+import { ROUTES } from "../../router/routes";
+import { useNavigate } from "react-router-dom";
 
 const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
   onClose,
   onCancel,
 }) => {
+  const notificationMessage = "Группа создана";
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<FormDataCreateGroup>({
     groupName: "",
   });
-  const [apiStatus, setApiStatus] = useState<ApiStatusUpdateProfile>({
+  const [apiStatus, setApiStatus] = useState<ApiStatusCreateGropModal>({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
-    headerMessage: "",
   });
   const [vlidateErr, setValidateErr] = useState<ValidateErrCreateGroup>({
     groupName: "",
@@ -61,7 +72,48 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
       setValidateErr(newErrors);
       return;
     }
+    const newUuidMessage = uuidv4();
+    const newUuidGroup = uuidv4();
+
+    const resultAction = await dispatch(
+      createNewGroup({
+        groupName: formData.groupName,
+        groupId: newUuidGroup,
+        messageId: newUuidMessage,
+        content: notificationMessage,
+      })
+    );
+
+    if (createNewGroup.fulfilled.match(resultAction)) {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: false,
+        isErrorServer: false,
+      }));
+
+      const resultGenerate = generateObjListLastMessageState(
+        formData,
+        newUuidMessage,
+        newUuidGroup,
+        notificationMessage
+      );
+      dispatch(listLastMessageReceived(resultGenerate));
+      setFormData({ groupName: "" });
+      navigate(ROUTES.APP.HOME);
+    } else {
+      const statusCode = resultAction.payload?.status || 500;
+
+      const errorText = messageErrorCreateGroup(statusCode);
+
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: false,
+        isErrorServer: true,
+        errorMessageServer: errorText,
+      }));
+    }
   };
+
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       {apiStatus.isLoading && (
@@ -71,11 +123,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>
-            {apiStatus?.headerMessage?.trim()
-              ? apiStatus?.headerMessage
-              : "Создание новой группы"}
-          </h3>
+          <h3>Создание новой группы</h3>
           {apiStatus.isErrorServer && (
             <div className={styles.errorMessageTitle}>
               {apiStatus.errorMessageServer}

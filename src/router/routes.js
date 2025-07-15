@@ -7,6 +7,7 @@ export const ROUTES = {
     UPDATE_PROFILE: "/profile/update",
     SEARCH_USER_AND_GROUP: "/use-cases/search",
     DELETE_MESSAGES_FROM_USER: "/use-cases/mark-as-deleted",
+    CREATE_GROUP: "/use-cases/create-group",
   },
   APP: {
     HOME: "/",
