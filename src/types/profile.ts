@@ -12,14 +12,6 @@ export interface UserResUpdateProfileData {
   message: string;
   status: number;
 }
-
-export interface ProfileSatate {
-  error: string | null;
-  destroyUser: UserResDestroyData | null;
-  changePasswordUser: UserResChangePasswordData | null;
-  updateProfileUser: UserResUpdateProfileData | null;
-}
-
 export interface ChangePasswordPayload {
   newPassword: string;
   oldPassword: string;

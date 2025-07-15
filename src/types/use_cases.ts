@@ -18,3 +18,11 @@ export interface SearchResData {
 export interface SearchPayload {
   searchText: string;
 }
+
+export interface DeleteMessagesDialogResData {
+  message: string;
+}
+
+export interface DeleteMessagesDialogPayload {
+  companionId: string;
+}

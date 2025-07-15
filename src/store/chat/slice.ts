@@ -27,6 +27,9 @@ const chatSlice = createSlice({
     targetConversation: (state, action: PayloadAction<Conversation>) => {
       state.currentConversation = action.payload;
     },
+    clearCurrentConversation: (state) => {
+      state.currentConversation = null;
+    },
 
     setIsLastPageLoadedConversation(state, action: PayloadAction<boolean>) {
       state.isLastPageLoadedConversation = action.payload;
@@ -61,6 +64,12 @@ const chatSlice = createSlice({
       state.lastPageLoadedChat = !action.payload.length;
     },
 
+    removeLastMessageByCompanionId: (state, action: PayloadAction<string>) => {
+      state.lastMessagesChat = state.lastMessagesChat.filter(
+        (message) => message.companionId !== action.payload
+      );
+    },
+
     latestMessageDialogReceived: (
       state,
       action: PayloadAction<FormatLatestMessageDialog[]>
@@ -93,6 +102,11 @@ const chatSlice = createSlice({
             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
         );
       }
+    },
+
+    removeDialogMessages: (state, action: PayloadAction<string>) => {
+      const companionId = action.payload;
+      delete state.latestMessageDialog[companionId];
     },
 
     latestMessageGroupReceived: (
@@ -150,5 +164,8 @@ export const {
   latestMessageDialogReceived,
   latestMessageGroupReceived,
   setIsLastPageLoadedConversation,
+  removeLastMessageByCompanionId,
+  removeDialogMessages,
+  clearCurrentConversation,
 } = chatSlice.actions;
 export default chatSlice.reducer;

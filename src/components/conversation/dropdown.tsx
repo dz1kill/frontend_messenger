@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import styles from "../../styles/conversation_dropdown.module.css"; // Путь к вашим стилям
+import styles from "../../styles/conversation_dropdown.module.css";
 
 interface DropdownMenuProps {
   isGroup: boolean;

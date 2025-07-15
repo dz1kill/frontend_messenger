@@ -70,19 +70,12 @@ const authSlice = createSlice({
   reducers: {},
 
   extraReducers: (builder) => {
-    builder
-      .addCase(
-        createUser.fulfilled,
-        (state, action: PayloadAction<UserResSingUpData>) => {
-          state.currentUser = action.payload;
-        }
-      )
-      .addCase(
-        loginUser.fulfilled,
-        (state, action: PayloadAction<UserResLoginData>) => {
-          state.currentUser = action.payload;
-        }
-      );
+    builder.addCase(
+      loginUser.fulfilled,
+      (state, action: PayloadAction<UserResLoginData>) => {
+        state.currentUser = action.payload;
+      }
+    );
   },
 });
 

@@ -1,23 +1,15 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { ApiError } from "../../types/auth";
 import { ROUTES } from "../../router/routes";
 import {
   ChangePasswordPayload,
-  ProfileSatate,
   UpdateProfilePayload,
   UserResChangePasswordData,
   UserResDestroyData,
   UserResUpdateProfileData,
 } from "../../types/profile";
-
-const initialState: ProfileSatate = {
-  destroyUser: null,
-  changePasswordUser: null,
-  updateProfileUser: null,
-  error: null,
-};
 
 export const destroyUser = createAsyncThunk<
   UserResDestroyData,
@@ -135,32 +127,3 @@ export const updateProfileUser = createAsyncThunk<
     throw err;
   }
 });
-
-const profileSlice = createSlice({
-  name: "profile",
-  initialState,
-  reducers: {},
-
-  extraReducers: (builder) => {
-    builder.addCase(
-      destroyUser.fulfilled,
-      (state, action: PayloadAction<UserResDestroyData>) => {
-        state.destroyUser = action.payload;
-      }
-    );
-    builder.addCase(
-      changePasswordUser.fulfilled,
-      (state, action: PayloadAction<UserResChangePasswordData>) => {
-        state.changePasswordUser = action.payload;
-      }
-    );
-    builder.addCase(
-      updateProfileUser.fulfilled,
-      (state, action: PayloadAction<UserResUpdateProfileData>) => {
-        state.updateProfileUser = action.payload;
-      }
-    );
-  },
-});
-
-export default profileSlice.reducer;
