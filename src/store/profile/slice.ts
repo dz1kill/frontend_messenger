@@ -9,7 +9,7 @@ import {
   UserResChangePasswordData,
   UserResDestroyData,
   UserResUpdateProfileData,
-} from "../../types/profile";
+} from "../../types/use-cases";
 
 export const destroyUser = createAsyncThunk<
   UserResDestroyData,

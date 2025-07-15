@@ -4,7 +4,7 @@ import styles from "../../styles/delete_profile_modal.module.css";
 import {
   DeleteProfileModalProps,
   ApiStatusDeleteUser,
-} from "../../types/profile";
+} from "../../types/use-cases";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { resetSocketState } from "../../store/socket/slice";
 import { destroyUser } from "../../store/profile/slice";

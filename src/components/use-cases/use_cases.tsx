@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DeleteProfileModal from "./delete_profile_modal";
 import ProfileMainView from "./use_cases_main_modal";
-import { ProfileView } from "../../types/profile";
+import { ProfileView } from "../../types/use-cases";
 import ChangePasswordModal from "./change_password_modal";
 import UpdateProfileModal from "./upadate_profile";
 import CreateGroupModal from "./create_group_modal";

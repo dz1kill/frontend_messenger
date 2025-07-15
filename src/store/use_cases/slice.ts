@@ -10,7 +10,7 @@ import {
   SearchPayload,
   SearchResData,
   UseCasesState,
-} from "../../types/use_cases";
+} from "../../types/use_cases_state";
 
 const initialState: UseCasesState = {
   searchResult: [],

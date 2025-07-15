@@ -11,7 +11,7 @@ import {
   FormDataChangePassword,
   ValidateErrChagePassword,
   ApiStatusChagePassword,
-} from "../../types/profile";
+} from "../../types/use-cases";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { changePasswordUser } from "../../store/profile/slice";
 

@@ -12,7 +12,7 @@ import {
   FormDataUpdateProfile,
   ValidateErrUpdateProfile,
   ApiStatusUpdateProfile,
-} from "../../types/profile";
+} from "../../types/use-cases";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { updateProfileUser } from "../../store/profile/slice";
 
