@@ -80,6 +80,7 @@ export const formatDatalatestMessageGroup = (
 
   return messages.map((item) => {
     return {
+      notification: item.notification,
       messageId: item.messageId,
       content: item.content,
       sender: item.senderId === userId ? "user" : "contact",
@@ -140,6 +141,7 @@ export const formatPrivateMessageChat = (message: ItemPrivateMessage) => {
 export const formatGroupMessage = (message: ItemGroupMessage) => {
   return [
     {
+      notification: message.notification,
       messageId: message.messageId,
       content: message.message,
       sender: "contact",

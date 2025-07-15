@@ -44,6 +44,26 @@
   margin-bottom: 0.4rem;
 }
 
+.systemMessage {
+  align-self: center;
+  max-width: 80%;
+  margin: 0.5rem auto;
+  text-align: center;
+  background-color: transparent;
+}
+
+.notificationContent {
+  display: inline-block;
+  font-size: 0.7rem;
+  color: #666;
+  opacity: 0.8;
+  padding: 0.25rem 6rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  font-style: italic;
+  font-weight: 600;
+}
+
 @media (max-width: 480px) {
   .message {
     max-width: 85%;
@@ -60,5 +80,14 @@
   .senderName {
     font-size: 0.65rem;
     margin-bottom: 0.2rem;
+  }
+
+  .systemMessage {
+    max-width: 90%;
+  }
+
+  .notificationContent {
+    font-size: 0.5rem;
+    padding: 0.15rem 0.5rem;
   }
 }

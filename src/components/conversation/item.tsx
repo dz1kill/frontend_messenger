@@ -10,6 +10,17 @@ const ConversationItem: React.FC<
 > = ({ sender, content, createdAt, senderName, ...props }) => {
   const isGroup = "groupId" in props;
   const senderLastName = "senderLastName" in props ? props.senderLastName : "";
+  const notification =
+    isGroup && "notification" in props ? props.notification : false;
+
+  if (notification) {
+    return (
+      <div className={styles.systemMessage}>
+        <div className={styles.notificationContent}>{content}</div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${styles.message} ${
@@ -17,9 +28,9 @@ const ConversationItem: React.FC<
       }`}
     >
       {sender !== "user" && isGroup && (
-        <div
-          className={styles.senderName}
-        >{`${senderName} ${senderLastName}`}</div>
+        <div className={styles.senderName}>
+          {`${senderName} ${senderLastName}`}
+        </div>
       )}
       <div className={styles.messageContent}>{content}</div>
       <div className={styles.time}>{formatTime(createdAt)}</div>

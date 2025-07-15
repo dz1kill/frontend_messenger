@@ -67,6 +67,7 @@ export interface LatestMessageDialogState {
 }
 
 export interface DataLatestMessageGroup {
+  notification: boolean;
   messageId: string;
   senderId: string;
   senderName: string;
@@ -115,6 +116,7 @@ export interface ItemGroupMessage {
   senderId: string;
   senderLastName: string;
   createdAt: string;
+  notification: boolean;
 }
 
 export interface ResItemGroupMessage {

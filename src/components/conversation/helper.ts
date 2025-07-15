@@ -216,6 +216,7 @@ export const dataToGroupState = (
     return [];
   const dataSendGroupMessage = [
     {
+      notification: false,
       messageId,
       content: inputData,
       sender: "user",
