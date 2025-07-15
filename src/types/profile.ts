@@ -26,7 +26,8 @@ export type ProfileView =
   | "main"
   | "deleteProfile"
   | "changePassword"
-  | "updateProfile";
+  | "updateProfile"
+  | "createGroup";
 
 export interface DeleteProfileModalProps {
   onCancel: () => void;
@@ -37,6 +38,7 @@ export interface ProfileMainViewProps {
   onEditProfile?: () => void;
   onChangePassword?: () => void;
   onDeleteAccount: (e: React.MouseEvent) => void;
+  onCreateGroup: () => void;
 }
 
 export interface ChangePasswordModalProps {
@@ -45,6 +47,11 @@ export interface ChangePasswordModalProps {
 }
 
 export interface UpdateProfileModalProps {
+  onClose: () => void;
+  onCancel: () => void;
+}
+
+export interface CreateGroupModalProps {
   onClose: () => void;
   onCancel: () => void;
 }
@@ -64,6 +71,10 @@ export interface FormDataChangePassword {
 export interface FormDataUpdateProfile {
   firstName: string;
   lastName: string;
+}
+
+export interface FormDataCreateGroup {
+  groupName: string;
 }
 export interface ApiStatusChagePassword {
   isEmpty: boolean;
@@ -89,4 +100,8 @@ export interface ValidateErrChagePassword {
 export interface ValidateErrUpdateProfile {
   firstName?: string;
   lastName?: string;
+}
+
+export interface ValidateErrCreateGroup {
+  groupName?: string;
 }

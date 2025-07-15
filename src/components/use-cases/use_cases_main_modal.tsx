@@ -8,6 +8,7 @@ const ProfileMainView: React.FC<ProfileMainViewProps> = ({
   onEditProfile,
   onChangePassword,
   onDeleteAccount,
+  onCreateGroup,
 }) => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName") || "Пользователь";
@@ -24,7 +25,7 @@ const ProfileMainView: React.FC<ProfileMainViewProps> = ({
           <h3>{`${userName} ${userLastName}`}</h3>
         </div>
         <div className={styles.accountMenu}>
-          <button className={styles.menuItem}>
+          <button className={styles.menuItem} onClick={onCreateGroup}>
             <span>Создать группу</span>
           </button>
           <button className={styles.menuItem} onClick={onEditProfile}>

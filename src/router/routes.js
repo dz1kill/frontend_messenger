@@ -13,7 +13,7 @@ export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/sing-up",
     PROFILE: {
-      ROOT: "/profile",
+      ROOT: "/use-cases",
     },
   },
 };

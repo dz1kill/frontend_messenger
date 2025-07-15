@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import DeleteProfileModal from "./delete_profile_modal";
-import ProfileMainView from "./profile_main_modal";
+import ProfileMainView from "./use_cases_main_modal";
 import { ProfileView } from "../../types/profile";
 import ChangePasswordModal from "./change_password_modal";
 import UpdateProfileModal from "./upadate_profile";
+import CreateGroupModal from "./create_group_modal";
 
 const Profile: React.FC = () => {
   const [currentView, setCurrentView] = useState<ProfileView>("main");
@@ -13,6 +14,14 @@ const Profile: React.FC = () => {
       case "changePassword":
         return (
           <ChangePasswordModal
+            onClose={() => setCurrentView("main")}
+            onCancel={() => setCurrentView("main")}
+          />
+        );
+
+      case "createGroup":
+        return (
+          <CreateGroupModal
             onClose={() => setCurrentView("main")}
             onCancel={() => setCurrentView("main")}
           />
@@ -40,6 +49,7 @@ const Profile: React.FC = () => {
             onEditProfile={() => setCurrentView("updateProfile")}
             onChangePassword={() => setCurrentView("changePassword")}
             onDeleteAccount={() => setCurrentView("deleteProfile")}
+            onCreateGroup={() => setCurrentView("createGroup")}
           />
         );
     }

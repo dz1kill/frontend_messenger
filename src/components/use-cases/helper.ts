@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   FormDataChangePassword,
+  FormDataCreateGroup,
   FormDataUpdateProfile,
 } from "../../types/profile";
 
@@ -39,7 +40,9 @@ export const messageErrorUpdateProfile = (statusCode: number) => {
       return "Неизвестная ошибка сервера";
   }
 };
-export const checkEmptyInput = (formData: FormDataChangePassword) => {
+export const checkEmptyInput = (
+  formData: FormDataChangePassword | FormDataCreateGroup
+) => {
   return Object.values(formData).some((val) => !val);
 };
 
@@ -96,6 +99,24 @@ export const validateInputUpdatePrifile = (formData: FormDataUpdateProfile) => {
   });
 
   return UserValidate.safeParse(formData);
+};
+
+export const validateInputCreateGroup = (formData: FormDataCreateGroup) => {
+  const createGroupValidate = z.object({
+    groupName: z
+      .string()
+      .nonempty("Поле обязательно для заполнения")
+      .regex(/^[A-Za-zА-Яа-я]+(?: [A-Za-zА-Яа-я]+)*$/, {
+        message:
+          "Только буквы (пробелы разрешены, но не в начале/конце и не подряд)",
+      })
+      .refine((val) => val.trim().length >= 3, {
+        message: "Минимум 3 символа без учета пробелов",
+      })
+      .transform((val) => val.trim()),
+  });
+
+  return createGroupValidate.safeParse(formData);
 };
 
 export const cleanUserData = (userData: FormDataUpdateProfile) => {
