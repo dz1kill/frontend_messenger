@@ -80,7 +80,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
         groupName: formData.groupName,
         groupId: newUuidGroup,
         messageId: newUuidMessage,
-        content: notificationMessage,
+        notificationMessage,
       })
     );
 

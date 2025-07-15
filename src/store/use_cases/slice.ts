@@ -118,7 +118,7 @@ export const createNewGroup = createAsyncThunk<
       {
         groupId: payload.groupId,
         groupName: payload.groupName,
-        content: payload.content,
+        notificationMessage: payload.notificationMessage,
         messageId: payload.messageId,
       },
       {

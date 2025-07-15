@@ -33,6 +33,6 @@ export interface CreateNewGroupResData {
 export interface CreateNewGroupPayload {
   groupId: string;
   groupName: string;
-  content: string;
+  notificationMessage: string;
   messageId: string;
 }
