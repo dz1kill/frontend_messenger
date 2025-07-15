@@ -7,7 +7,7 @@ import Home from "../home/home";
 import { ROUTES } from "../../router/routes";
 import PrivateRoute from "./private_routes";
 import PublicRoute from "./public_routes";
-import Profile from "../profile/profile";
+import Profile from "../use-cases/profile";
 
 const AppRoutes: React.FC = () => {
   return (

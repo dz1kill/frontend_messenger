@@ -24,6 +24,9 @@ const ProfileMainView: React.FC<ProfileMainViewProps> = ({
           <h3>{`${userName} ${userLastName}`}</h3>
         </div>
         <div className={styles.accountMenu}>
+          <button className={styles.menuItem}>
+            <span>Создать группу</span>
+          </button>
           <button className={styles.menuItem} onClick={onEditProfile}>
             <span>Редактировать профиль</span>
           </button>
