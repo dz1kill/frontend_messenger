@@ -4,7 +4,7 @@ import {
   FormDataChangePassword,
   FormDataCreateGroup,
   FormDataUpdateProfile,
-} from "../../types/use-cases";
+} from "../../types/use-cases_component";
 
 export const messageErrorDestroy = (statusCode: number) => {
   switch (statusCode) {

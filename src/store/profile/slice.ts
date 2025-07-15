@@ -3,13 +3,14 @@ import axios from "axios";
 
 import { ApiError } from "../../types/auth";
 import { ROUTES } from "../../router/routes";
+import {} from "../../types/use-cases_component";
 import {
   ChangePasswordPayload,
   UpdateProfilePayload,
   UserResChangePasswordData,
   UserResDestroyData,
   UserResUpdateProfileData,
-} from "../../types/use-cases";
+} from "../../types/profile_state";
 
 export const destroyUser = createAsyncThunk<
   UserResDestroyData,

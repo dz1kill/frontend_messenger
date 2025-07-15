@@ -7,7 +7,7 @@ import {
   CreateGroupModalProps,
   FormDataCreateGroup,
   ValidateErrCreateGroup,
-} from "../../types/use-cases";
+} from "../../types/use-cases_component";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 
 const CreateGroupModal: React.FC<CreateGroupModalProps> = ({

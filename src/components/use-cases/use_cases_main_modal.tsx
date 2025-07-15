@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../../styles/use_cases_main_view.module.css";
-import { ProfileMainViewProps } from "../../types/use-cases";
+import { ProfileMainViewProps } from "../../types/use-cases_component";
 import { ROUTES } from "../../router/routes";
 import { useNavigate } from "react-router-dom";
 
