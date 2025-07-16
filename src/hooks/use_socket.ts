@@ -1,10 +1,7 @@
 import { useCallback } from "react";
 import { useAppSelector } from "./redux_hooks";
+import { SocketRequest } from "../types/req_ws";
 
-type SocketRequest = {
-  type: string;
-  params?: Record<string, any>;
-};
 export const useSocket = () => {
   const { socket, isConnected } = useAppSelector((state) => state.socket);
 

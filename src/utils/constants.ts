@@ -9,11 +9,11 @@ export const REQ_LEAVE_GROUP = {
   type: "leaveGroup",
   params: {
     groupId: null,
-    notificationMessage: null,
+    message: null,
     messageId: null,
     groupName: null,
   },
-};
+} as const;
 
 export const REQ_LIST_LAST_MESSAGE = {
   type: "listLastMessage",
@@ -21,7 +21,7 @@ export const REQ_LIST_LAST_MESSAGE = {
     limit: 13,
     cursorCreatedAt: null,
   },
-};
+} as const;
 
 export const REQ_LATEST_MESSAGE_DIALOG = {
   type: "getlatestMessageDialog",
@@ -30,7 +30,7 @@ export const REQ_LATEST_MESSAGE_DIALOG = {
     limit: 12,
     cursorCreatedAt: null,
   },
-};
+} as const;
 
 export const REQ_LATEST_MESSAGE_GROUP = {
   type: "getlatestMessageGroup",
@@ -40,7 +40,7 @@ export const REQ_LATEST_MESSAGE_GROUP = {
     limit: 12,
     cursorCreatedAt: null,
   },
-};
+} as const;
 
 export const REQ_SEND_MESSAGE_GROUP = {
   type: "messageInGroup",
@@ -48,8 +48,9 @@ export const REQ_SEND_MESSAGE_GROUP = {
     messageId: null,
     groupId: null,
     content: null,
+    groupName: null,
   },
-};
+} as const;
 
 export const REQ_SEND_MESSAGE_DIALOG = {
   type: "privateMessage",
@@ -58,4 +59,4 @@ export const REQ_SEND_MESSAGE_DIALOG = {
     receiverId: null,
     content: null,
   },
-};
+} as const;

@@ -106,6 +106,7 @@ const Conversation: React.FC = () => {
       request = {
         ...REQ_LATEST_MESSAGE_GROUP,
         params: {
+          groupName: currentConversation.groupName,
           groupId: currentConversation.groupId,
           limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
           cursorCreatedAt: null,
