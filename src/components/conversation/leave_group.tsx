@@ -11,7 +11,7 @@ import {
   removeLastMessageByGroupId,
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
-import { REQ_LEAVE_GROUP } from "../../utils/constants";
+import { REQ_LEAVE_GROUP, TYPE_LEAVE_GROUP } from "../../utils/constants";
 
 const LeaveGroup: React.FC<LeaveGroupProps> = ({
   onCancel,
@@ -35,7 +35,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
     if (!socket || !isConnected) return;
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.success) {
+      if (data.success && data.type === TYPE_LEAVE_GROUP) {
         setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
@@ -55,7 +55,13 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
         }));
       }
     };
-  });
+  }, [
+    socket,
+    isConnected,
+    currentConversation?.groupId,
+    dispatch,
+    onFulfilled,
+  ]);
 
   const handleOnLeaveGroup = async () => {
     const userFirstName = localStorage.getItem("userName");
@@ -96,7 +102,11 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
           <button className={styles.cancelButton} onClick={onCancel}>
             Отмена
           </button>
-          <button className={styles.confirmButton} onClick={handleOnLeaveGroup}>
+          <button
+            className={styles.confirmButton}
+            onClick={handleOnLeaveGroup}
+            disabled={apiStatus.isLoading}
+          >
             Покинуть
           </button>
         </div>
