@@ -31,8 +31,9 @@ import {
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
 import DropdownMenu from "./dropdown";
-import DeleteDialogModal from "./delete_chat_modal";
+import DeleteDialog from "./delete_chat";
 import { CurrentViewState } from "../../types/conversation";
+import LeaveGroup from "./leave_group";
 
 const Conversation: React.FC = () => {
   const {
@@ -344,10 +345,18 @@ const Conversation: React.FC = () => {
                 isGroup={!!currentConversation.groupId}
                 onClose={() => setIsDropdownOpen(false)}
                 onDeleteChat={() => setCurrentView("deleteDialog")}
+                onLeaveGroup={() => setCurrentView("leaveGroup")}
               />
             )}
             {currentView === "deleteDialog" && (
-              <DeleteDialogModal
+              <DeleteDialog
+                onClose={() => setCurrentView("")}
+                onCancel={() => setCurrentView("")}
+                onFulfilled={() => setCurrentView("")}
+              />
+            )}
+            {currentView === "leaveGroup" && (
+              <LeaveGroup
                 onClose={() => setCurrentView("")}
                 onCancel={() => setCurrentView("")}
                 onFulfilled={() => setCurrentView("")}

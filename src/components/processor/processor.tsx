@@ -11,6 +11,7 @@ import {
   TYPE_GROUP_MESSAGE,
   TYPE_LATEST_MESSAGE_DIALOG,
   TYPE_LATEST_MESSAGE_GROUP,
+  TYPE_LEAVE_GROUP,
   TYPE_LIST_LAST_MESSAGE,
   TYPE_PRIVATE_MESSAGE,
 } from "../../utils/constants";
@@ -78,16 +79,15 @@ export const MessageProcessor = () => {
                 latestMessageDialog,
                 latestMessageGroup
               );
-              const resultFormatConversation = formatPrivateMessage(
+              const resultFormatMesssage = formatPrivateMessage(
                 data.params.item
               );
               const resultFormatChat = formatPrivateMessageChat(
                 data.params.item
               );
-
               dispatch(listLastMessageReceived(resultFormatChat));
               if (!isFirstLoaded) return;
-              dispatch(latestMessageDialogReceived(resultFormatConversation));
+              dispatch(latestMessageDialogReceived(resultFormatMesssage));
             } else {
               dispatch(isErrorReceived(data));
             }
@@ -102,16 +102,34 @@ export const MessageProcessor = () => {
                 latestMessageDialog,
                 latestMessageGroup
               );
-              const resultFormat = formatGroupMessage(data.params.item);
+              const resultFormatMesssage = formatGroupMessage(data.params.item);
               const resultFormatChat = formatGroupMessageChat(data.params.item);
 
               dispatch(listLastMessageReceived(resultFormatChat));
               if (!isFirstLoaded) return;
-              dispatch(latestMessageGroupReceived(resultFormat));
+              dispatch(latestMessageGroupReceived(resultFormatMesssage));
             } else {
               dispatch(isErrorReceived(data));
             }
 
+            break;
+
+          case TYPE_LEAVE_GROUP:
+            if (data.success) {
+              if (!data.params.isBroadcast) return;
+              const isFirstLoaded = checkFirstLoad(
+                data.params.item,
+                latestMessageDialog,
+                latestMessageGroup
+              );
+              const resultFormatMesssage = formatGroupMessage(data.params.item);
+              const resultFormatChat = formatGroupMessageChat(data.params.item);
+              dispatch(listLastMessageReceived(resultFormatChat));
+              if (!isFirstLoaded) return;
+              dispatch(latestMessageGroupReceived(resultFormatMesssage));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
             break;
           default:
             dispatch(isErrorReceived(data));

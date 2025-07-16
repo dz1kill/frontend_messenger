@@ -3,6 +3,16 @@ export const TYPE_LATEST_MESSAGE_DIALOG = "getlatestMessageDialog";
 export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup";
 export const TYPE_PRIVATE_MESSAGE = "privateMessage";
 export const TYPE_GROUP_MESSAGE = "messageInGroup";
+export const TYPE_LEAVE_GROUP = "leaveGroup";
+
+export const REQ_LEAVE_GROUP = {
+  type: "leaveGroup",
+  params: {
+    groupId: null,
+    notificationMessage: null,
+    messageId: null,
+  },
+};
 
 export const REQ_LIST_LAST_MESSAGE = {
   type: "listLastMessage",

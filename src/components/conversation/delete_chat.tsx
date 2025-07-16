@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
-import styles from "../../styles/delete_chat_modal.module.css";
+import styles from "../../styles/delete_chat.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { deleteMessagesDialog } from "../../store/use_cases/slice";
 import { messageErrorDeleteDialog } from "./helper";
 import { RootState } from "../../store/store";
-import { DeleteDialogModalProps } from "../../types/conversation";
+import { DeleteDialogProps } from "../../types/conversation";
 import {
   clearCurrentConversation,
   removeDialogMessages,
   removeLastMessageByCompanionId,
 } from "../../store/chat/slice";
 
-const DeleteDialogModal: React.FC<DeleteDialogModalProps> = ({
+const DeleteDialog: React.FC<DeleteDialogProps> = ({
   onCancel,
   onClose,
   onFulfilled,
@@ -93,4 +93,4 @@ const DeleteDialogModal: React.FC<DeleteDialogModalProps> = ({
   );
 };
 
-export default DeleteDialogModal;
+export default DeleteDialog;

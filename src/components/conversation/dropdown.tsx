@@ -5,12 +5,14 @@ interface DropdownMenuProps {
   isGroup: boolean;
   onClose: () => void;
   onDeleteChat: () => void;
+  onLeaveGroup: () => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
   isGroup,
   onClose,
   onDeleteChat,
+  onLeaveGroup,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -46,6 +48,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             className={styles.menuItem}
             onClick={() => {
               onClose();
+              onLeaveGroup();
             }}
           >
             Покинуть группу

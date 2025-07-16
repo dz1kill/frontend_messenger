@@ -70,6 +70,12 @@ const chatSlice = createSlice({
       );
     },
 
+    removeLastMessageByGroupId: (state, action: PayloadAction<string>) => {
+      state.lastMessagesChat = state.lastMessagesChat.filter(
+        (message) => message.groupId !== action.payload
+      );
+    },
+
     latestMessageDialogReceived: (
       state,
       action: PayloadAction<FormatLatestMessageDialog[]>
@@ -138,6 +144,11 @@ const chatSlice = createSlice({
       }
     },
 
+    removeGroupMessages: (state, action: PayloadAction<string>) => {
+      const groupId = action.payload;
+      delete state.latestMessageGroup[groupId];
+    },
+
     isErrorReceived: (state, action: PayloadAction<ChatErrror>) => {
       state.isErrorMessage.push(action.payload);
       state.isError = false;
@@ -167,5 +178,7 @@ export const {
   removeLastMessageByCompanionId,
   removeDialogMessages,
   clearCurrentConversation,
+  removeLastMessageByGroupId,
+  removeGroupMessages,
 } = chatSlice.actions;
 export default chatSlice.reducer;
