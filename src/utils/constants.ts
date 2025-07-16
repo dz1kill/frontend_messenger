@@ -11,6 +11,7 @@ export const REQ_LEAVE_GROUP = {
     groupId: null,
     notificationMessage: null,
     messageId: null,
+    groupName: null,
   },
 };
 
