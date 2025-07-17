@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-import styles from "../../styles/leave.group.module.css";
+import styles from "../../styles/delete_group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { RootState } from "../../store/store";
-import { LeaveGroupProps } from "../../types/conversation";
+import { DeleteGroupProps } from "../../types/conversation";
 import {
   clearCurrentConversation,
   isErrorReceived,
@@ -12,15 +11,14 @@ import {
   removeLastMessageByGroupId,
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
-import { REQ_LEAVE_GROUP, TYPE_LEAVE_GROUP } from "../../utils/constants";
+import { REQ_DROP_GROUP, TYPE_DROP_GROUP } from "../../utils/constants";
 
-const LeaveGroup: React.FC<LeaveGroupProps> = ({
+const DropGroup: React.FC<DeleteGroupProps> = ({
   onCancel,
   onClose,
   onFulfilled,
 }) => {
   const dispatch = useAppDispatch();
-  const notificationMessage = "Покинул(a) группу";
   const { sendSocketMessage, isReadySocket } = useSocket();
   const { socket, isConnected } = useAppSelector((state) => state.socket);
   const { currentConversation } = useAppSelector(
@@ -36,7 +34,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
     if (!socket || !isConnected) return;
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.success && data.type === TYPE_LEAVE_GROUP) {
+      if (data.success && data.type === TYPE_DROP_GROUP) {
         setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
@@ -56,20 +54,20 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
         }));
       }
     };
-  }, [socket, isConnected, dispatch, onFulfilled]);
+  }, [
+    socket,
+    isConnected,
+    currentConversation?.groupId,
+    dispatch,
+    onFulfilled,
+  ]);
 
   const handleOnLeaveGroup = async () => {
-    const userFirstName = localStorage.getItem("userName");
-    const userLastName = localStorage.getItem("userLastName");
-    const messageId = uuidv4();
     if (!currentConversation?.groupId || !isReadySocket) return;
     sendSocketMessage({
-      ...REQ_LEAVE_GROUP,
+      ...REQ_DROP_GROUP,
       params: {
         groupId: currentConversation.groupId,
-        message: `${userFirstName} ${userLastName} ${notificationMessage}`,
-        messageId: messageId,
-        groupName: currentConversation.groupName,
       },
     });
     setApiStatus((prev) => ({
@@ -86,8 +84,8 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
         </div>
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <h3>Подтвердите действие</h3>
-        <p>Вы уверены, что хотите покинуть группу?</p>
+        <h3>Подтвердите удаление группы</h3>
+        <p>Вы уверены, что хотите удалить группу?</p>
         {apiStatus.isErrorServer && (
           <div className={styles.errorMessage}>
             {apiStatus.errorMessageServer}
@@ -102,7 +100,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
             onClick={handleOnLeaveGroup}
             disabled={apiStatus.isLoading}
           >
-            Покинуть
+            Удалить
           </button>
         </div>
       </div>
@@ -110,4 +108,4 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
   );
 };
 
-export default LeaveGroup;
+export default DropGroup;

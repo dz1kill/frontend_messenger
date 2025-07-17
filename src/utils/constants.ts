@@ -4,6 +4,14 @@ export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup";
 export const TYPE_PRIVATE_MESSAGE = "privateMessage";
 export const TYPE_GROUP_MESSAGE = "messageInGroup";
 export const TYPE_LEAVE_GROUP = "leaveGroup";
+export const TYPE_DROP_GROUP = "dropGroup";
+
+export const REQ_DROP_GROUP = {
+  type: "dropGroup",
+  params: {
+    groupId: null,
+  },
+} as const;
 
 export const REQ_LEAVE_GROUP = {
   type: "leaveGroup",

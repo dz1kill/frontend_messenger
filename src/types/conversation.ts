@@ -9,4 +9,14 @@ export interface LeaveGroupProps {
   onClose: () => void;
   onFulfilled: () => void;
 }
-export type CurrentViewState = "" | "deleteDialog" | "leaveGroup";
+
+export interface DeleteGroupProps {
+  onCancel: () => void;
+  onClose: () => void;
+  onFulfilled: () => void;
+}
+export type CurrentViewState =
+  | ""
+  | "deleteDialog"
+  | "leaveGroup"
+  | "deleteGroup";

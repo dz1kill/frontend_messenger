@@ -6,8 +6,12 @@ import {
   latestMessageDialogReceived,
   latestMessageGroupReceived,
   listLastMessageReceived,
+  removeGroupMessages,
+  removeLastMessageByGroupId,
+  targetConversation,
 } from "../../store/chat/slice";
 import {
+  TYPE_DROP_GROUP,
   TYPE_GROUP_MESSAGE,
   TYPE_LATEST_MESSAGE_DIALOG,
   TYPE_LATEST_MESSAGE_GROUP,
@@ -31,9 +35,8 @@ import { checkFirstLoad } from "./helper";
 export const MessageProcessor = () => {
   const { socket } = useAppSelector((state: RootState) => state.socket);
   const dispatch = useAppDispatch();
-  const { latestMessageDialog, latestMessageGroup } = useAppSelector(
-    (state: RootState) => state.chats
-  );
+  const { latestMessageDialog, latestMessageGroup, currentConversation } =
+    useAppSelector((state: RootState) => state.chats);
 
   useEffect(() => {
     if (socket) {
@@ -131,12 +134,35 @@ export const MessageProcessor = () => {
               dispatch(isErrorReceived(data));
             }
             break;
+
+          case TYPE_DROP_GROUP:
+            if (data.success) {
+              if (!data.params.isBroadcast || !data.params.item.groupId) return;
+              dispatch(removeLastMessageByGroupId(data.params.item.groupId));
+              dispatch(removeGroupMessages(data.params.item.groupId));
+              if (!currentConversation) return;
+              dispatch(
+                targetConversation({
+                  ...currentConversation,
+                  name: "Группа удалена",
+                })
+              );
+            } else {
+              dispatch(isErrorReceived(data));
+            }
+            break;
           default:
             dispatch(isErrorReceived(data));
             break;
         }
       };
     }
-  }, [dispatch, socket, latestMessageDialog, latestMessageGroup]);
+  }, [
+    dispatch,
+    socket,
+    latestMessageDialog,
+    latestMessageGroup,
+    currentConversation,
+  ]);
   return null;
 };

@@ -34,6 +34,7 @@ import DropdownMenu from "./dropdown";
 import DeleteDialog from "./delete_chat";
 import { CurrentViewState } from "../../types/conversation";
 import LeaveGroup from "./leave_group";
+import DropGroup from "./delete_group";
 
 const Conversation: React.FC = () => {
   const {
@@ -347,6 +348,7 @@ const Conversation: React.FC = () => {
                 onClose={() => setIsDropdownOpen(false)}
                 onDeleteChat={() => setCurrentView("deleteDialog")}
                 onLeaveGroup={() => setCurrentView("leaveGroup")}
+                onDeleteGroup={() => setCurrentView("deleteGroup")}
               />
             )}
             {currentView === "deleteDialog" && (
@@ -358,6 +360,13 @@ const Conversation: React.FC = () => {
             )}
             {currentView === "leaveGroup" && (
               <LeaveGroup
+                onClose={() => setCurrentView("")}
+                onCancel={() => setCurrentView("")}
+                onFulfilled={() => setCurrentView("")}
+              />
+            )}
+            {currentView === "deleteGroup" && (
+              <DropGroup
                 onClose={() => setCurrentView("")}
                 onCancel={() => setCurrentView("")}
                 onFulfilled={() => setCurrentView("")}

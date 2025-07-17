@@ -6,6 +6,7 @@ interface DropdownMenuProps {
   onClose: () => void;
   onDeleteChat: () => void;
   onLeaveGroup: () => void;
+  onDeleteGroup: () => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -13,6 +14,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   onClose,
   onDeleteChat,
   onLeaveGroup,
+  onDeleteGroup,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -57,6 +59,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             className={styles.menuItem}
             onClick={() => {
               onClose();
+              onDeleteGroup();
             }}
           >
             Удалить группу

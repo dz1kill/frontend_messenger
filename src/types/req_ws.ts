@@ -36,8 +36,13 @@ type SendMessageDialogParams = {
   content: string | null;
 };
 
+type DropGroupParams = {
+  groupId: string;
+};
+
 export type SocketRequest =
   | { type: "leaveGroup"; params: LeaveGroupParams }
+  | { type: "dropGroup"; params: DropGroupParams }
   | { type: "listLastMessage"; params: ListLastMessageParams }
   | { type: "getlatestMessageDialog"; params: LatestMessageDialogParams }
   | { type: "getlatestMessageGroup"; params: LatestMessageGroupParams }
