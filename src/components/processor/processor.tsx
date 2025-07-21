@@ -2,13 +2,13 @@ import { useEffect } from "react";
 
 import { RootState } from "../../store/store";
 import {
+  clearCurrentConversation,
   isErrorReceived,
   latestMessageDialogReceived,
   latestMessageGroupReceived,
   listLastMessageReceived,
   removeGroupMessages,
   removeLastMessageByGroupId,
-  targetConversation,
 } from "../../store/chat/slice";
 import {
   TYPE_DROP_GROUP,
@@ -140,13 +140,7 @@ export const MessageProcessor = () => {
               if (!data.params.isBroadcast || !data.params.item.groupId) return;
               dispatch(removeLastMessageByGroupId(data.params.item.groupId));
               dispatch(removeGroupMessages(data.params.item.groupId));
-              if (!currentConversation) return;
-              dispatch(
-                targetConversation({
-                  ...currentConversation,
-                  name: "Группа удалена",
-                })
-              );
+              dispatch(clearCurrentConversation());
             } else {
               dispatch(isErrorReceived(data));
             }

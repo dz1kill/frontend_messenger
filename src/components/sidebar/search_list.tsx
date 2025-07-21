@@ -34,7 +34,7 @@ const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
 
   return (
     <div className={styles.chatItem} onClick={handleClick}>
-      <div className={styles.avatar}>👤</div>
+      <div className={styles.avatar}>{groupId ? "👥" : "👤"}</div>
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>
           <span className={styles.name}>
