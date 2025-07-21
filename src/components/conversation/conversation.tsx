@@ -35,6 +35,7 @@ import DeleteDialog from "./delete_chat";
 import { CurrentViewState } from "../../types/conversation";
 import LeaveGroup from "./leave_group";
 import DropGroup from "./delete_group";
+import AddMemberGroup from "./аdd_member_group";
 
 const Conversation: React.FC = () => {
   const {
@@ -349,6 +350,14 @@ const Conversation: React.FC = () => {
                 onDeleteChat={() => setCurrentView("deleteDialog")}
                 onLeaveGroup={() => setCurrentView("leaveGroup")}
                 onDeleteGroup={() => setCurrentView("deleteGroup")}
+                onAddMemberGroup={() => setCurrentView("addMemberGroup")}
+              />
+            )}
+            {currentView === "addMemberGroup" && (
+              <AddMemberGroup
+                onClose={() => setCurrentView("")}
+                onCancel={() => setCurrentView("")}
+                onFulfilled={() => setCurrentView("")}
               />
             )}
             {currentView === "deleteDialog" && (

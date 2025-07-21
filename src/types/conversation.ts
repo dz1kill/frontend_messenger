@@ -19,4 +19,5 @@ export type CurrentViewState =
   | ""
   | "deleteDialog"
   | "leaveGroup"
-  | "deleteGroup";
+  | "deleteGroup"
+  | "addMemberGroup";
