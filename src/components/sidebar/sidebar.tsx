@@ -150,6 +150,10 @@ const Sidebar: React.FC = () => {
                 ))}
               </>
             )}
+
+            {!groupChats?.length && !personalChats?.length && (
+              <div className={styles.noResults}>Ничего не найдено</div>
+            )}
           </>
         )}
 

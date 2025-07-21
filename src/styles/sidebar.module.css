@@ -103,6 +103,13 @@
   box-sizing: border-box;
 }
 
+.noResults {
+  font-size: 0.8rem;
+  padding: 20px;
+  text-align: center;
+  color: #888;
+}
+
 @media (max-width: 480px) {
   .sidebarHeader h2 {
     font-size: 0.8rem;
