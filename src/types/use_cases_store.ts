@@ -1,8 +1,9 @@
 export interface UseCasesState {
-  searchResult: SearchData[] | [];
+  searchUsersAndGroupResult: ItemSearchUsersAndGroup[] | [];
   error: string | null;
+  searchUsersResult: ItemSearchUsers[] | [];
 }
-export interface SearchData {
+export interface ItemSearchUsersAndGroup {
   userId: string | null;
   firstName: string | null;
   lastName: string | null;
@@ -11,8 +12,19 @@ export interface SearchData {
   groupName: string | null;
 }
 
+export interface ItemSearchUsers {
+  email: string;
+  firstName: string;
+  lastName: string;
+  userId: string;
+}
+
 export interface SearchResData {
-  data: SearchData[] | [];
+  data: ItemSearchUsersAndGroup[] | [];
+}
+
+export interface SearchByNameOrEmailResData {
+  data: ItemSearchUsers[] | [];
 }
 
 export interface SearchPayload {

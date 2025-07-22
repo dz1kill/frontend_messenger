@@ -1,101 +1,149 @@
-import React, { useState } from "react";
+import React, { useDeferredValue, useEffect, useState } from "react";
 import styles from "../../styles/add_member_group.module.css";
-import { mockUsers } from "./mockUsers";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
+import { RootState } from "../../store/store";
+import {
+  searchUsersByNameOrEmail,
+  clearSearchResults,
+} from "../../store/use_cases/slice";
+import { ItemSearchUsers } from "../../types/use_cases_store";
 
 interface AddMemberGroupProps {
   onClose: () => void;
   onCancel: () => void;
-  onFulfilled: () => void;
 }
+
+type ApiStatusAddMemberGroupProps = {
+  isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+};
 
 const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   onClose,
   onCancel,
-  onFulfilled,
 }) => {
-  const [apiStatus, setApiStatus] = useState({
+  const dispatch = useAppDispatch();
+  const { searchUsersResult } = useAppSelector(
+    (state: RootState) => state.useCases
+  );
+
+  const [apiStatus, setApiStatus] = useState<ApiStatusAddMemberGroupProps>({
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
   });
+  const [searchQuery, setSearchQuery] = useState("");
+  const deferredQuery = useDeferredValue(searchQuery);
+  const [selectedUser, setSelectedUser] = useState<ItemSearchUsers | null>(
+    null
+  );
 
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSelectUser = (userId: string) => {
-    setSelectedUser((prev) => (prev === userId ? null : userId));
+  const handleSelectUser = (user: ItemSearchUsers) => {
+    setSelectedUser((prev) => (prev?.userId === user.userId ? null : user));
   };
 
   const handleAddUser = () => {
     if (selectedUser) {
-      setApiStatus({ ...apiStatus, isLoading: true });
-      onFulfilled();
+      setApiStatus((prev) => ({ ...prev, isLoading: true }));
+      console.log("Adding user:", selectedUser);
+    }
+  };
+
+  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+      dispatch(clearSearchResults());
+    }
+  };
+
+  useEffect(() => {
+    if (deferredQuery.trim()) {
+      dispatch(searchUsersByNameOrEmail({ searchText: deferredQuery }));
+    } else {
+      dispatch(clearSearchResults());
+    }
+  }, [deferredQuery, dispatch]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    if (e.target.value.length === 0) {
+      dispatch(clearSearchResults());
     }
   };
 
   return (
-    <div
-      className={styles.groupOverlay}
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-    >
+    <div className={styles.groupOverlay} onClick={handleClose}>
       {apiStatus.isLoading && (
         <div className={styles.loadingOverlay}>
           <div className={styles.loadingSpinner}></div>
         </div>
       )}
+
       <div className={styles.groupContent}>
-        <div className={styles.groupHeader}>
+        <header className={styles.groupHeader}>
           <h3>Добавить участника</h3>
-        </div>
+        </header>
 
         <div className={styles.searchContainer}>
           <input
             type="text"
             placeholder="Поиск пользователей..."
             className={styles.searchInput}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
         </div>
 
         <div className={styles.usersList}>
-          {mockUsers.length > 0 ? (
-            mockUsers.map((user) => (
+          {searchUsersResult.length > 0 ? (
+            searchUsersResult.map((user) => (
               <div
-                key={user.id}
+                key={user.userId}
                 className={`${styles.userItem} ${
-                  selectedUser === user.id ? styles.selected : ""
+                  selectedUser?.userId === user.userId ? styles.selected : ""
                 }`}
-                onClick={() => handleSelectUser(user.id)}
+                onClick={() => handleSelectUser(user)}
               >
                 <div className={styles.avatar}>👤</div>
                 <div className={styles.userInfo}>
                   <span className={styles.userName}>
                     {user.firstName} {user.lastName}
                   </span>
+                  <span className={styles.email}>{user.email}</span>
                 </div>
-                {selectedUser === user.id && (
+                {selectedUser?.userId === user.userId && (
                   <div className={styles.checkmark}>✓</div>
                 )}
               </div>
             ))
           ) : (
-            <div className={styles.noResults}>Пользователи не найдены</div>
+            <div className={styles.noResults}>
+              {searchQuery
+                ? "Пользователи не найдены"
+                : "Введите имя или email для поиска"}
+            </div>
           )}
         </div>
 
-        <div className={styles.groupFooter}>
-          <button className={styles.cancelButton} onClick={onCancel}>
+        <footer className={styles.groupFooter}>
+          <button
+            className={styles.cancelButton}
+            onClick={() => {
+              onCancel();
+              dispatch(clearSearchResults());
+            }}
+          >
             Отмена
           </button>
           <button
             className={styles.addButton}
             onClick={handleAddUser}
-            disabled={!selectedUser}
+            disabled={!selectedUser || apiStatus.isLoading}
           >
             Добавить
           </button>
-        </div>
+        </footer>
       </div>
     </div>
   );

@@ -20,7 +20,9 @@ const Sidebar: React.FC = () => {
   });
   const { lastMessagesChat, lastPageLoadedChat, hasFetchedOnceChat } =
     useAppSelector((state: RootState) => state.chats);
-  const { searchResult } = useAppSelector((state: RootState) => state.useCases);
+  const { searchUsersAndGroupResult } = useAppSelector(
+    (state: RootState) => state.useCases
+  );
   const { sendSocketMessage, isReadySocket } = useSocket();
   const deferredQuery = useDeferredValue(searchQuery);
   const dispatch = useAppDispatch();
@@ -88,8 +90,10 @@ const Sidebar: React.FC = () => {
     }
   }, [deferredQuery, dispatch]);
 
-  const groupChats = searchResult.filter((chat) => chat.groupId);
-  const personalChats = searchResult.filter((chat) => !chat.groupId);
+  const groupChats = searchUsersAndGroupResult.filter((chat) => chat.groupId);
+  const personalChats = searchUsersAndGroupResult.filter(
+    (chat) => !chat.groupId
+  );
 
   const handleBlur = () => {
     setIsSearchOpen(false);

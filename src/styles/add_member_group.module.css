@@ -39,7 +39,6 @@
 .groupContent {
   background-color: white;
   border-radius: 8px;
-  width: 90%;
   width: 400px;
   height: 500px;
   display: flex;
@@ -208,6 +207,15 @@
   }
 }
 
+.email {
+  color: #6b7280;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
 @media (max-width: 480px) {
   .addButton,
   .cancelButton {
@@ -233,5 +241,13 @@
   .onlineIndicator {
     width: 8px;
     height: 8px;
+  }
+
+  .groupContent {
+    width: 350px;
+    height: 500px;
+  }
+  .email {
+    font-size: 0.7rem;
   }
 }

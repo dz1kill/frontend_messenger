@@ -1,18 +1,12 @@
 import React from "react";
 import styles from "../../styles/sidebar_search.module.css";
-import { SearchData } from "../../types/use_cases_store";
+import { ItemSearchUsersAndGroup } from "../../types/use_cases_store";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { targetConversation } from "../../store/chat/slice";
 
-const SearchItem: React.FC<SearchData & { onBlur: () => void }> = ({
-  userId,
-  firstName,
-  lastName,
-  email,
-  groupId,
-  groupName,
-  onBlur,
-}) => {
+const SearchItem: React.FC<
+  ItemSearchUsersAndGroup & { onBlur: () => void }
+> = ({ userId, firstName, lastName, email, groupId, groupName, onBlur }) => {
   const dispatch = useAppDispatch();
 
   const handleClick = () => {

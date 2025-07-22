@@ -357,7 +357,6 @@ const Conversation: React.FC = () => {
               <AddMemberGroup
                 onClose={() => setCurrentView("")}
                 onCancel={() => setCurrentView("")}
-                onFulfilled={() => setCurrentView("")}
               />
             )}
             {currentView === "deleteDialog" && (
