@@ -1,6 +1,7 @@
 body {
   background: linear-gradient(135deg, #08c, #34b7f1) fixed;
   font-family: Montserrat;
+  margin-bottom: 0px;
 }
 ::-webkit-scrollbar {
   width: 10px;

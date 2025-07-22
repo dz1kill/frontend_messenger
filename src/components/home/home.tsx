@@ -6,6 +6,7 @@ import { MessageProcessor } from "../processor/processor";
 import ConversationWindow from "../conversation/conversation";
 import styles from "../../styles/home.module.css";
 import { Outlet } from "react-router-dom";
+import Footer from "../footer/footer";
 
 const Home: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const Home: React.FC = () => {
         <ConversationWindow />
       </div>
       <MessageProcessor />
+      <Footer />
     </>
   );
 };
