@@ -12,7 +12,7 @@ import {
   removeLastMessageByGroupId,
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
-import { REQ_LEAVE_GROUP, TYPE_LEAVE_GROUP } from "../../utils/constants";
+import { TYPE_LEAVE_GROUP } from "../../utils/constants";
 
 const LeaveGroup: React.FC<LeaveGroupProps> = ({
   onCancel,
@@ -62,9 +62,14 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
     const userFirstName = localStorage.getItem("userName");
     const userLastName = localStorage.getItem("userLastName");
     const messageId = uuidv4();
-    if (!currentConversation?.groupId || !isReadySocket) return;
+    if (
+      !currentConversation?.groupId ||
+      !currentConversation.groupName ||
+      !isReadySocket
+    )
+      return;
     sendSocketMessage({
-      ...REQ_LEAVE_GROUP,
+      type: TYPE_LEAVE_GROUP,
       params: {
         groupId: currentConversation.groupId,
         message: `${userFirstName} ${userLastName} ${notificationMessage}`,

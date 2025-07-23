@@ -3,7 +3,10 @@ import React, { useDeferredValue, useEffect, useRef, useState } from "react";
 import styles from "../../styles/sidebar.module.css";
 import ChatItem from "./item";
 import { RootState } from "../../store/store";
-import { REQ_LIST_LAST_MESSAGE } from "../../utils/constants";
+import {
+  LIST_LAST_MESSAGE_PAGE,
+  TYPE_LIST_LAST_MESSAGE,
+} from "../../utils/constants";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { useSocket } from "../../hooks/use_socket";
 import SearchItem from "./search_list";
@@ -31,9 +34,9 @@ const Sidebar: React.FC = () => {
     if (isReadySocket && !hasFetchedOnceChat) {
       setLoadingState((prev) => {
         sendSocketMessage({
-          ...REQ_LIST_LAST_MESSAGE,
+          type: TYPE_LIST_LAST_MESSAGE,
           params: {
-            limit: REQ_LIST_LAST_MESSAGE.params.limit,
+            limit: LIST_LAST_MESSAGE_PAGE,
             cursorCreatedAt: null,
           },
         });
@@ -57,9 +60,9 @@ const Sidebar: React.FC = () => {
         isLoading: true,
       }));
       sendSocketMessage({
-        ...REQ_LIST_LAST_MESSAGE,
+        type: TYPE_LIST_LAST_MESSAGE,
         params: {
-          limit: REQ_LIST_LAST_MESSAGE.params.limit,
+          limit: LIST_LAST_MESSAGE_PAGE,
           cursorCreatedAt: loadingState.cursor,
         },
       });

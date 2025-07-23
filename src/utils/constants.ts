@@ -1,70 +1,10 @@
-export const TYPE_LIST_LAST_MESSAGE = "listLastMessage";
-export const TYPE_LATEST_MESSAGE_DIALOG = "getlatestMessageDialog";
-export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup";
-export const TYPE_PRIVATE_MESSAGE = "privateMessage";
-export const TYPE_GROUP_MESSAGE = "messageInGroup";
-export const TYPE_LEAVE_GROUP = "leaveGroup";
-export const TYPE_DROP_GROUP = "dropGroup";
-
-export const REQ_DROP_GROUP = {
-  type: "dropGroup",
-  params: {
-    groupId: null,
-  },
-} as const;
-
-export const REQ_LEAVE_GROUP = {
-  type: "leaveGroup",
-  params: {
-    groupId: null,
-    message: null,
-    messageId: null,
-    groupName: null,
-  },
-} as const;
-
-export const REQ_LIST_LAST_MESSAGE = {
-  type: "listLastMessage",
-  params: {
-    limit: 13,
-    cursorCreatedAt: null,
-  },
-} as const;
-
-export const REQ_LATEST_MESSAGE_DIALOG = {
-  type: "getlatestMessageDialog",
-  params: {
-    receiverId: null,
-    limit: 12,
-    cursorCreatedAt: null,
-  },
-} as const;
-
-export const REQ_LATEST_MESSAGE_GROUP = {
-  type: "getlatestMessageGroup",
-  params: {
-    groupName: null,
-    groupId: null,
-    limit: 12,
-    cursorCreatedAt: null,
-  },
-} as const;
-
-export const REQ_SEND_MESSAGE_GROUP = {
-  type: "messageInGroup",
-  params: {
-    messageId: null,
-    groupId: null,
-    content: null,
-    groupName: null,
-  },
-} as const;
-
-export const REQ_SEND_MESSAGE_DIALOG = {
-  type: "privateMessage",
-  params: {
-    messageId: null,
-    receiverId: null,
-    content: null,
-  },
-} as const;
+export const TYPE_LIST_LAST_MESSAGE = "listLastMessage" as const;
+export const TYPE_LATEST_MESSAGE_DIALOG = "getlatestMessageDialog" as const;
+export const TYPE_LATEST_MESSAGE_GROUP = "getlatestMessageGroup" as const;
+export const TYPE_PRIVATE_MESSAGE = "privateMessage" as const;
+export const TYPE_GROUP_MESSAGE = "messageInGroup" as const;
+export const TYPE_LEAVE_GROUP = "leaveGroup" as const;
+export const TYPE_DROP_GROUP = "dropGroup" as const;
+export const LIST_LAST_MESSAGE_PAGE = 13 as const;
+export const LATEST_MESSAGE_DIALOG_PAGE = 12 as const;
+export const LATEST_MESSAGE_GROUP_PAGE = 12 as const;

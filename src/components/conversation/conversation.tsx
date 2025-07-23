@@ -17,10 +17,12 @@ import {
   dataToGroupState,
 } from "./helper";
 import {
-  REQ_LATEST_MESSAGE_DIALOG,
-  REQ_LATEST_MESSAGE_GROUP,
-  REQ_SEND_MESSAGE_DIALOG,
-  REQ_SEND_MESSAGE_GROUP,
+  LATEST_MESSAGE_DIALOG_PAGE,
+  LATEST_MESSAGE_GROUP_PAGE,
+  TYPE_GROUP_MESSAGE,
+  TYPE_LATEST_MESSAGE_DIALOG,
+  TYPE_LATEST_MESSAGE_GROUP,
+  TYPE_PRIVATE_MESSAGE,
 } from "../../utils/constants";
 import {
   latestMessageDialogReceived,
@@ -96,21 +98,21 @@ const Conversation: React.FC = () => {
     let request;
     if (currentConversation.companionId) {
       request = {
-        ...REQ_LATEST_MESSAGE_DIALOG,
+        type: TYPE_LATEST_MESSAGE_DIALOG,
         params: {
           receiverId: currentConversation.companionId,
-          limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
+          limit: LATEST_MESSAGE_DIALOG_PAGE,
           cursorCreatedAt: null,
         },
       };
     }
-    if (currentConversation.groupId) {
+    if (currentConversation.groupId && currentConversation.groupName) {
       request = {
-        ...REQ_LATEST_MESSAGE_GROUP,
+        type: TYPE_LATEST_MESSAGE_GROUP,
         params: {
           groupName: currentConversation.groupName,
           groupId: currentConversation.groupId,
-          limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
+          limit: LATEST_MESSAGE_GROUP_PAGE,
           cursorCreatedAt: null,
         },
       };
@@ -235,21 +237,21 @@ const Conversation: React.FC = () => {
       let request;
       if (currentConversation.companionId) {
         request = {
-          ...REQ_LATEST_MESSAGE_DIALOG,
+          type: TYPE_LATEST_MESSAGE_DIALOG,
           params: {
             receiverId: currentConversation.companionId,
-            limit: REQ_LATEST_MESSAGE_DIALOG.params.limit,
+            limit: LATEST_MESSAGE_DIALOG_PAGE,
             cursorCreatedAt: currentConversation.cursorCreatedAt,
           },
         };
       }
-      if (currentConversation.groupId) {
+      if (currentConversation.groupId && currentConversation.groupName) {
         request = {
-          ...REQ_LATEST_MESSAGE_GROUP,
+          type: TYPE_LATEST_MESSAGE_GROUP,
           params: {
             groupName: currentConversation.groupName,
             groupId: currentConversation.groupId,
-            limit: REQ_LATEST_MESSAGE_GROUP.params.limit,
+            limit: LATEST_MESSAGE_GROUP_PAGE,
             cursorCreatedAt: currentConversation.cursorCreatedAt,
           },
         };
@@ -284,7 +286,7 @@ const Conversation: React.FC = () => {
         )
       );
       request = {
-        ...REQ_SEND_MESSAGE_DIALOG,
+        type: TYPE_PRIVATE_MESSAGE,
         params: {
           messageId,
           receiverId: currentConversation.companionId,
@@ -293,14 +295,14 @@ const Conversation: React.FC = () => {
       };
     }
 
-    if (currentConversation.groupId) {
+    if (currentConversation.groupId && currentConversation.groupName) {
       dispatch(
         latestMessageGroupReceived(
           dataToGroupState(currentConversation, inputData, messageId)
         )
       );
       request = {
-        ...REQ_SEND_MESSAGE_GROUP,
+        type: TYPE_GROUP_MESSAGE,
         params: {
           messageId,
           groupName: currentConversation.groupName,

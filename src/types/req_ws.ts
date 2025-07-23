@@ -1,8 +1,8 @@
 type LeaveGroupParams = {
-  groupId: string | null;
-  message: string | null;
-  messageId: string | null;
-  groupName: string | null;
+  groupId: string;
+  message: string;
+  messageId: string;
+  groupName: string;
 };
 
 type ListLastMessageParams = {
@@ -11,29 +11,29 @@ type ListLastMessageParams = {
 };
 
 type LatestMessageDialogParams = {
-  receiverId: string | null;
+  receiverId: string;
   limit: number;
   cursorCreatedAt: string | null;
 };
 
 type LatestMessageGroupParams = {
-  groupName: string | null;
-  groupId: string | null;
+  groupName: string;
+  groupId: string;
   limit: number;
   cursorCreatedAt: string | null;
 };
 
 type SendMessageGroupParams = {
-  messageId: string | null;
-  groupId: string | null;
-  content: string | null;
-  groupName: string | null;
+  messageId: string;
+  groupId: string;
+  content: string;
+  groupName: string;
 };
 
 type SendMessageDialogParams = {
-  messageId: string | null;
-  receiverId: string | null;
-  content: string | null;
+  messageId: string;
+  receiverId: string;
+  content: string;
 };
 
 type DropGroupParams = {

@@ -11,7 +11,7 @@ import {
   removeLastMessageByGroupId,
 } from "../../store/chat/slice";
 import { useSocket } from "../../hooks/use_socket";
-import { REQ_DROP_GROUP, TYPE_DROP_GROUP } from "../../utils/constants";
+import { TYPE_DROP_GROUP } from "../../utils/constants";
 
 const DropGroup: React.FC<DeleteGroupProps> = ({
   onCancel,
@@ -65,7 +65,7 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
   const handleOnLeaveGroup = async () => {
     if (!currentConversation?.groupId || !isReadySocket) return;
     sendSocketMessage({
-      ...REQ_DROP_GROUP,
+      type: TYPE_DROP_GROUP,
       params: {
         groupId: currentConversation.groupId,
       },
