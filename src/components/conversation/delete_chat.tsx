@@ -29,15 +29,19 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   });
 
   const handleOnClickDeleteMessages = async () => {
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+    const loaderTimer = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
+
     if (!currentConversation?.companionId) return;
 
     const resultAction = await dispatch(
       deleteMessagesDialog({ companionId: currentConversation?.companionId })
     );
+    clearTimeout(loaderTimer);
 
     if (deleteMessagesDialog.fulfilled.match(resultAction)) {
       setApiStatus((prev) => ({

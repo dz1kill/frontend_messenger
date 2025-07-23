@@ -1,5 +1,6 @@
-import React, { useDeferredValue, useEffect, useState } from "react";
+import React, { useDeferredValue, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/add_member_group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -39,12 +40,11 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   const { socket, isConnected } = useAppSelector((state) => state.socket);
   const { sendSocketMessage, isReadySocket } = useSocket();
 
-  const [headerMessage, setheaderMessage] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<ApiStatusAddMemberGroupProps>({
     isLoading: false,
     isErrorServer: false,
-    errorMessageServer: "",
   });
+  const loaderTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<ItemSearchUsers | null>(
     null
@@ -71,7 +71,6 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
       ...prev,
       isErrorServer: false,
     }));
-    setheaderMessage(null);
     setSearchQuery(e.target.value);
     if (e.target.value.length === 0) {
       dispatch(clearSearchResults());
@@ -105,12 +104,12 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
       },
     });
 
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-      isErrorServer: false,
-    }));
-    setheaderMessage(null);
+    loaderTimerRef.current = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
   };
 
   useEffect(() => {
@@ -132,6 +131,11 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
 
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
+
       if (data.success && data.type === TYPE_ADD_MEMBER_TO_GROUP) {
         if (data.params.isBroadcast || !data.params.item.groupId) return;
 
@@ -143,20 +147,27 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
 
         setSelectedUser(null);
         setApiStatus((prev) => ({ ...prev, isLoading: false }));
-        setheaderMessage("Пользователь добавлен");
+        toast.success("Пользователь добавлен");
+        setSearchQuery("");
       } else {
         dispatch(isErrorReceived(data));
         setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
           isErrorServer: true,
-          errorMessageServer: "Ошибка сервера",
         }));
+        toast.error("Ошибка сервера");
       }
     };
 
     socket.addEventListener("message", handleMessage);
-    return () => socket.removeEventListener("message", handleMessage);
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
+    };
   }, [socket, isConnected, dispatch]);
 
   return (
@@ -169,13 +180,7 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
 
       <div className={styles.groupContent}>
         <header className={styles.groupHeader}>
-          {apiStatus.isErrorServer ? (
-            <div className={styles.errorMessage}>
-              {apiStatus.errorMessageServer}
-            </div>
-          ) : (
-            <h3>{headerMessage || "Добавить участника"}</h3>
-          )}
+          <h3>Добавить участника</h3>
         </header>
 
         <div className={styles.searchContainer}>

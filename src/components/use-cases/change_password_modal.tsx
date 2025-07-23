@@ -14,11 +14,15 @@ import {
 } from "../../types/use-cases_component";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { changePasswordUser } from "../../store/profile/slice";
+import { toast } from "react-toastify";
+import { ROUTES } from "../../router/routes";
+import { useNavigate } from "react-router-dom";
 
 const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   onClose,
   onCancel,
 }) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<FormDataChangePassword>({
     newPassword: "",
@@ -29,8 +33,6 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
-    errorMessageServer: "",
-    headerMessage: "",
   });
   const [vlidateErr, setvlidateErr] = useState<ValidateErrChagePassword>({});
 
@@ -74,23 +76,25 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
     setvlidateErr({});
 
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-      headerMessage: "",
-    }));
+    const loaderTimer = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
 
     const resultAction = await dispatch(changePasswordUser(userData));
+    clearTimeout(loaderTimer);
 
     if (changePasswordUser.fulfilled.match(resultAction)) {
       setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: false,
-        headerMessage: "Пароль изменен",
       }));
-
+      toast.success("Пароль изменен");
       setFormData({ newPassword: "", confirmPassword: "", oldPassword: "" });
+      navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
@@ -100,8 +104,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
-        errorMessageServer: errorText,
       }));
+      toast.error(errorText);
     }
   };
   return (
@@ -113,16 +117,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>
-            {apiStatus?.headerMessage?.trim()
-              ? apiStatus?.headerMessage
-              : "Смена пароля"}
-          </h3>
-          {apiStatus.isErrorServer && (
-            <div className={styles.errorMessageTitle}>
-              {apiStatus.errorMessageServer}
-            </div>
-          )}
+          <h3> Смена пароля</h3>
         </div>
         <form className={styles.passwordForm} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>

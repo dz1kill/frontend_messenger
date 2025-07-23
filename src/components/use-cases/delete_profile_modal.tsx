@@ -24,12 +24,16 @@ const DeleteProfileModal: React.FC<DeleteProfileModalProps> = ({
   });
 
   const handleDeleteProfile = async () => {
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+    const loaderTimer = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
 
     const resultAction = await dispatch(destroyUser());
+    clearTimeout(loaderTimer);
+
     if (destroyUser.fulfilled.match(resultAction)) {
       dispatch(resetSocketState());
       dispatch(resetChatsState());

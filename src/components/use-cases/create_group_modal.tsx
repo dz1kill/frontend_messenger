@@ -1,5 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/update_profile.module.css";
 import {
@@ -34,7 +35,6 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
-    errorMessageServer: "",
   });
   const [vlidateErr, setValidateErr] = useState<ValidateErrCreateGroup>({
     groupName: "",
@@ -72,6 +72,14 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
       setValidateErr(newErrors);
       return;
     }
+
+    const loaderTimer = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
+
     const newUuidMessage = uuidv4();
     const newUuidGroup = uuidv4();
 
@@ -83,6 +91,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
         notificationMessage,
       })
     );
+    clearTimeout(loaderTimer);
 
     if (createNewGroup.fulfilled.match(resultAction)) {
       setApiStatus((prev) => ({
@@ -99,6 +108,7 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
       );
       dispatch(listLastMessageReceived(resultGenerate));
       setFormData({ groupName: "" });
+      toast.success("Группа создана");
       navigate(ROUTES.APP.HOME);
     } else {
       const statusCode = resultAction.payload?.status || 500;
@@ -109,8 +119,8 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
-        errorMessageServer: errorText,
       }));
+      toast.error(errorText);
     }
   };
 
@@ -124,11 +134,6 @@ const CreateGroupModal: React.FC<CreateGroupModalProps> = ({
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h3>Создание новой группы</h3>
-          {apiStatus.isErrorServer && (
-            <div className={styles.errorMessageTitle}>
-              {apiStatus.errorMessageServer}
-            </div>
-          )}
         </div>
         <form className={styles.updateForm} onSubmit={handleSubmit}>
           <div

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import styles from "../../styles/delete_group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -19,6 +19,7 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
   onFulfilled,
 }) => {
   const dispatch = useAppDispatch();
+  const loaderTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { sendSocketMessage, isReadySocket } = useSocket();
   const { socket, isConnected } = useAppSelector((state) => state.socket);
   const { currentConversation } = useAppSelector(
@@ -35,6 +36,10 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
 
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
 
       if (data.success && data.type === TYPE_DROP_GROUP) {
         setApiStatus((prev) => ({
@@ -63,6 +68,10 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
 
     return () => {
       socket.removeEventListener("message", handleMessage);
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
     };
   }, [
     socket,
@@ -80,10 +89,12 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
         groupId: currentConversation.groupId,
       },
     });
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+    loaderTimerRef.current = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
   };
 
   return (

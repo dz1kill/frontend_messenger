@@ -15,12 +15,16 @@ import {
 } from "../../types/use-cases_component";
 import { useAppDispatch } from "../../hooks/redux_hooks";
 import { updateProfileUser } from "../../store/profile/slice";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../router/routes";
+import { toast } from "react-toastify";
 
 const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
   onClose,
   onCancel,
 }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormDataUpdateProfile>({
     firstName: "",
     lastName: "",
@@ -29,8 +33,6 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
     isEmpty: true,
     isLoading: false,
     isErrorServer: false,
-    errorMessageServer: "",
-    headerMessage: "",
   });
   const [vlidateErr, setvlidateErr] = useState<ValidateErrUpdateProfile>({});
 
@@ -74,20 +76,22 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
 
     setvlidateErr({});
 
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-      headerMessage: "",
-    }));
+    const loaderTimer = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
+
     const resulClean = cleanUserData(userData);
     const resultAction = await dispatch(updateProfileUser(resulClean));
+    clearTimeout(loaderTimer);
 
     if (updateProfileUser.fulfilled.match(resultAction)) {
       setApiStatus((prev) => ({
         ...prev,
         isLoading: false,
         isErrorServer: false,
-        headerMessage: "Данные изменены",
       }));
 
       if (formData.firstName.trim() !== "") {
@@ -98,6 +102,8 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
       }
 
       setFormData({ firstName: "", lastName: "" });
+      navigate(ROUTES.APP.HOME);
+      toast.success("Данные изменены");
     } else {
       const statusCode = resultAction.payload?.status || 500;
 
@@ -107,8 +113,8 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
         ...prev,
         isLoading: false,
         isErrorServer: true,
-        errorMessageServer: errorText,
       }));
+      toast.error(errorText);
     }
   };
   return (
@@ -120,16 +126,7 @@ const UpdateProfileModal: React.FC<UpdateProfileModalProps> = ({
       )}
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h3>
-            {apiStatus?.headerMessage?.trim()
-              ? apiStatus?.headerMessage
-              : "Редактирование профиля"}
-          </h3>
-          {apiStatus.isErrorServer && (
-            <div className={styles.errorMessageTitle}>
-              {apiStatus.errorMessageServer}
-            </div>
-          )}
+          <h3>Редактирование профиля</h3>
         </div>
         <form className={styles.updateForm} onSubmit={handleSubmit}>
           <div

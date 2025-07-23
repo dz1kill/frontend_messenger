@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import styles from "../../styles/leave.group.module.css";
@@ -19,6 +19,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
   onClose,
   onFulfilled,
 }) => {
+  const loaderTimerRef = useRef<NodeJS.Timeout | null>(null);
   const dispatch = useAppDispatch();
   const notificationMessage = "покинул(a) группу";
   const { sendSocketMessage, isReadySocket } = useSocket();
@@ -37,6 +38,11 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
 
     const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
 
       if (data.success && data.type === TYPE_LEAVE_GROUP) {
         setApiStatus((prev) => ({
@@ -62,9 +68,12 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
     };
 
     socket.addEventListener("message", handleMessage);
-
     return () => {
       socket.removeEventListener("message", handleMessage);
+      if (loaderTimerRef.current) {
+        clearTimeout(loaderTimerRef.current);
+        loaderTimerRef.current = null;
+      }
     };
   }, [socket, isConnected, dispatch, onFulfilled]);
 
@@ -89,10 +98,12 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
         groupName: currentConversation.groupName,
       },
     });
-    setApiStatus((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+    loaderTimerRef.current = setTimeout(() => {
+      setApiStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
+    }, 300);
   };
 
   return (

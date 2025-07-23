@@ -30,5 +30,4 @@ export interface AddMemberGroupProps {
 export type ApiStatusAddMemberGroupProps = {
   isLoading: boolean;
   isErrorServer: boolean;
-  errorMessageServer: string;
 };
