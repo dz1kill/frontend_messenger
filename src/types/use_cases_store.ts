@@ -29,6 +29,7 @@ export interface SearchByNameOrEmailResData {
 
 export interface SearchPayload {
   searchText: string;
+  groupId?: string;
 }
 
 export interface DeleteMessagesDialogResData {

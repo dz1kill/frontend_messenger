@@ -11,6 +11,7 @@ import {
   removeLastMessageByGroupId,
 } from "../../store/chat/slice";
 import {
+  TYPE_ADD_MEMBER_TO_GROUP,
   TYPE_DROP_GROUP,
   TYPE_GROUP_MESSAGE,
   TYPE_LATEST_MESSAGE_DIALOG,
@@ -147,6 +148,24 @@ export const MessageProcessor = () => {
             break;
           default:
             dispatch(isErrorReceived(data));
+            break;
+
+          case TYPE_ADD_MEMBER_TO_GROUP:
+            if (data.success) {
+              if (!data.params.isBroadcast) return;
+              const isFirstLoaded = checkFirstLoad(
+                data.params.item,
+                latestMessageDialog,
+                latestMessageGroup
+              );
+              const resultFormatMesssage = formatGroupMessage(data.params.item);
+              const resultFormatChat = formatGroupMessageChat(data.params.item);
+              dispatch(listLastMessageReceived(resultFormatChat));
+              if (!isFirstLoaded) return;
+              dispatch(latestMessageGroupReceived(resultFormatMesssage));
+            } else {
+              dispatch(isErrorReceived(data));
+            }
             break;
         }
       };

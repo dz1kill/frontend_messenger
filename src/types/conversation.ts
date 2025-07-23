@@ -21,3 +21,14 @@ export type CurrentViewState =
   | "leaveGroup"
   | "deleteGroup"
   | "addMemberGroup";
+
+export interface AddMemberGroupProps {
+  onClose: () => void;
+  onCancel: () => void;
+}
+
+export type ApiStatusAddMemberGroupProps = {
+  isLoading: boolean;
+  isErrorServer: boolean;
+  errorMessageServer: string;
+};

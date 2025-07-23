@@ -40,6 +40,13 @@ type DropGroupParams = {
   groupId: string;
 };
 
+type AddMemberToGroupParams = {
+  userId: string;
+  groupId: string;
+  message: string;
+  messageId: string;
+  groupName: string;
+};
 export type SocketRequest =
   | { type: "leaveGroup"; params: LeaveGroupParams }
   | { type: "dropGroup"; params: DropGroupParams }
@@ -47,4 +54,5 @@ export type SocketRequest =
   | { type: "getlatestMessageDialog"; params: LatestMessageDialogParams }
   | { type: "getlatestMessageGroup"; params: LatestMessageGroupParams }
   | { type: "messageInGroup"; params: SendMessageGroupParams }
-  | { type: "privateMessage"; params: SendMessageDialogParams };
+  | { type: "privateMessage"; params: SendMessageDialogParams }
+  | { type: "addUserInGroup"; params: AddMemberToGroupParams };

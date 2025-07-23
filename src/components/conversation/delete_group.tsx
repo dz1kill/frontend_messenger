@@ -32,14 +32,18 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
 
   useEffect(() => {
     if (!socket || !isConnected) return;
-    socket.onmessage = (event) => {
+
+    const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+
       if (data.success && data.type === TYPE_DROP_GROUP) {
         setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
         }));
+
         if (data.params.isBroadcast || !data.params.item.groupId) return;
+
         dispatch(removeLastMessageByGroupId(data.params.item.groupId));
         dispatch(removeGroupMessages(data.params.item.groupId));
         dispatch(clearCurrentConversation());
@@ -53,6 +57,12 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
           errorMessageServer: "Ошибка сервера",
         }));
       }
+    };
+
+    socket.addEventListener("message", handleMessage);
+
+    return () => {
+      socket.removeEventListener("message", handleMessage);
     };
   }, [
     socket,

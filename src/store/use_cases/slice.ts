@@ -167,6 +167,7 @@ export const searchUsersByNameOrEmail = createAsyncThunk<
             "Content-Type": "application/json",
           },
           params: {
+            groupId: payload.groupId,
             searchText: payload.searchText,
           },
         }

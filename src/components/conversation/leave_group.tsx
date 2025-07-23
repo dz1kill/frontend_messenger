@@ -20,7 +20,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
   onFulfilled,
 }) => {
   const dispatch = useAppDispatch();
-  const notificationMessage = "Покинул(a) группу";
+  const notificationMessage = "покинул(a) группу";
   const { sendSocketMessage, isReadySocket } = useSocket();
   const { socket, isConnected } = useAppSelector((state) => state.socket);
   const { currentConversation } = useAppSelector(
@@ -34,14 +34,18 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
 
   useEffect(() => {
     if (!socket || !isConnected) return;
-    socket.onmessage = (event) => {
+
+    const handleMessage = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+
       if (data.success && data.type === TYPE_LEAVE_GROUP) {
         setApiStatus((prev) => ({
           ...prev,
           isLoading: false,
         }));
+
         if (data.params.isBroadcast || !data.params.item.groupId) return;
+
         dispatch(removeLastMessageByGroupId(data.params.item.groupId));
         dispatch(removeGroupMessages(data.params.item.groupId));
         dispatch(clearCurrentConversation());
@@ -55,6 +59,12 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
           errorMessageServer: "Ошибка сервера",
         }));
       }
+    };
+
+    socket.addEventListener("message", handleMessage);
+
+    return () => {
+      socket.removeEventListener("message", handleMessage);
     };
   }, [socket, isConnected, dispatch, onFulfilled]);
 
@@ -72,7 +82,9 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
       type: TYPE_LEAVE_GROUP,
       params: {
         groupId: currentConversation.groupId,
-        message: `${userFirstName} ${userLastName} ${notificationMessage}`,
+        message: `${userFirstName} ${
+          userLastName ?? ""
+        } ${notificationMessage}`,
         messageId: messageId,
         groupName: currentConversation.groupName,
       },

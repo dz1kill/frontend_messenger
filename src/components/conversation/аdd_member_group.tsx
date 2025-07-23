@@ -1,4 +1,6 @@
 import React, { useDeferredValue, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import styles from "../../styles/add_member_group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { RootState } from "../../store/store";
@@ -7,17 +9,21 @@ import {
   clearSearchResults,
 } from "../../store/use_cases/slice";
 import { ItemSearchUsers } from "../../types/use_cases_store";
-
-interface AddMemberGroupProps {
-  onClose: () => void;
-  onCancel: () => void;
-}
-
-type ApiStatusAddMemberGroupProps = {
-  isLoading: boolean;
-  isErrorServer: boolean;
-  errorMessageServer: string;
-};
+import { TYPE_ADD_MEMBER_TO_GROUP } from "../../utils/constants";
+import { useSocket } from "../../hooks/use_socket";
+import {
+  isErrorReceived,
+  latestMessageGroupReceived,
+  listLastMessageReceived,
+} from "../../store/chat/slice";
+import {
+  formatGroupMessage,
+  formatGroupMessageChat,
+} from "../processor/helper";
+import {
+  AddMemberGroupProps,
+  ApiStatusAddMemberGroupProps,
+} from "../../types/conversation";
 
 const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   onClose,
@@ -27,27 +33,30 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   const { searchUsersResult } = useAppSelector(
     (state: RootState) => state.useCases
   );
+  const { currentConversation } = useAppSelector(
+    (state: RootState) => state.chats
+  );
+  const { socket, isConnected } = useAppSelector((state) => state.socket);
+  const { sendSocketMessage, isReadySocket } = useSocket();
 
+  const [headerMessage, setheaderMessage] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<ApiStatusAddMemberGroupProps>({
     isLoading: false,
     isErrorServer: false,
     errorMessageServer: "",
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const deferredQuery = useDeferredValue(searchQuery);
   const [selectedUser, setSelectedUser] = useState<ItemSearchUsers | null>(
     null
   );
+  const deferredQuery = useDeferredValue(searchQuery);
 
   const handleSelectUser = (user: ItemSearchUsers) => {
+    setApiStatus((prev) => ({
+      ...prev,
+      isErrorServer: false,
+    }));
     setSelectedUser((prev) => (prev?.userId === user.userId ? null : user));
-  };
-
-  const handleAddUser = () => {
-    if (selectedUser) {
-      setApiStatus((prev) => ({ ...prev, isLoading: true }));
-      console.log("Adding user:", selectedUser);
-    }
   };
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -57,20 +66,98 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (deferredQuery.trim()) {
-      dispatch(searchUsersByNameOrEmail({ searchText: deferredQuery }));
-    } else {
-      dispatch(clearSearchResults());
-    }
-  }, [deferredQuery, dispatch]);
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setApiStatus((prev) => ({
+      ...prev,
+      isErrorServer: false,
+    }));
+    setheaderMessage(null);
     setSearchQuery(e.target.value);
     if (e.target.value.length === 0) {
       dispatch(clearSearchResults());
     }
   };
+
+  const handleAddUser = () => {
+    if (!selectedUser) return;
+
+    const userFirstName = localStorage.getItem("userName");
+    const userLastName = localStorage.getItem("userLastName");
+    const messageId = uuidv4();
+
+    if (
+      !currentConversation?.groupId ||
+      !currentConversation.groupName ||
+      !isReadySocket
+    )
+      return;
+
+    sendSocketMessage({
+      type: TYPE_ADD_MEMBER_TO_GROUP,
+      params: {
+        groupId: currentConversation.groupId,
+        groupName: currentConversation.groupName,
+        userId: selectedUser.userId,
+        messageId: messageId,
+        message: `${userFirstName} ${userLastName ?? ""} добавил(a) в группу ${
+          selectedUser.firstName
+        } ${selectedUser.lastName ?? ""}`,
+      },
+    });
+
+    setApiStatus((prev) => ({
+      ...prev,
+      isLoading: true,
+      isErrorServer: false,
+    }));
+    setheaderMessage(null);
+  };
+
+  useEffect(() => {
+    if (deferredQuery.trim() && currentConversation?.groupId) {
+      dispatch(
+        searchUsersByNameOrEmail({
+          searchText: deferredQuery,
+          groupId: currentConversation.groupId,
+        })
+      );
+    } else {
+      dispatch(clearSearchResults());
+    }
+  }, [deferredQuery, dispatch, currentConversation]);
+
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      const data = JSON.parse(event.data);
+
+      if (data.success && data.type === TYPE_ADD_MEMBER_TO_GROUP) {
+        if (data.params.isBroadcast || !data.params.item.groupId) return;
+
+        const resultFormatMessage = formatGroupMessage(data.params.item);
+        const resultFormatChat = formatGroupMessageChat(data.params.item);
+
+        dispatch(listLastMessageReceived(resultFormatChat));
+        dispatch(latestMessageGroupReceived(resultFormatMessage));
+
+        setSelectedUser(null);
+        setApiStatus((prev) => ({ ...prev, isLoading: false }));
+        setheaderMessage("Пользователь добавлен");
+      } else {
+        dispatch(isErrorReceived(data));
+        setApiStatus((prev) => ({
+          ...prev,
+          isLoading: false,
+          isErrorServer: true,
+          errorMessageServer: "Ошибка сервера",
+        }));
+      }
+    };
+
+    socket.addEventListener("message", handleMessage);
+    return () => socket.removeEventListener("message", handleMessage);
+  }, [socket, isConnected, dispatch]);
 
   return (
     <div className={styles.groupOverlay} onClick={handleClose}>
@@ -82,7 +169,13 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
 
       <div className={styles.groupContent}>
         <header className={styles.groupHeader}>
-          <h3>Добавить участника</h3>
+          {apiStatus.isErrorServer ? (
+            <div className={styles.errorMessage}>
+              {apiStatus.errorMessageServer}
+            </div>
+          ) : (
+            <h3>{headerMessage || "Добавить участника"}</h3>
+          )}
         </header>
 
         <div className={styles.searchContainer}>
