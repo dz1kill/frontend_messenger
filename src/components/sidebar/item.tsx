@@ -1,10 +1,11 @@
 import React from "react";
 
 import styles from "../../styles/sidebar_item.module.css";
-import { useAppDispatch } from "../../hooks/redux_hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
 import { targetConversation } from "../../store/chat/slice";
 import { FormatDataListLastMessage } from "../../types/chat";
 import { formatDate } from "./helper";
+import { RootState } from "../../store/store";
 
 const ChatItem: React.FC<FormatDataListLastMessage> = ({
   name,
@@ -16,6 +17,10 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
   groupName,
   createdAt,
 }) => {
+  const { currentConversation } = useAppSelector(
+    (state: RootState) => state.chats
+  );
+
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(
@@ -33,8 +38,16 @@ const ChatItem: React.FC<FormatDataListLastMessage> = ({
     );
   };
 
+  const isSelected =
+    currentConversation &&
+    ((groupId && currentConversation.groupId === groupId) ||
+      (!groupId && currentConversation.companionId === companionId));
+
   return (
-    <div className={styles.chatItem} onClick={handleClick}>
+    <div
+      className={`${styles.chatItem} ${isSelected ? styles.selected : ""}`}
+      onClick={handleClick}
+    >
       <div className={styles.avatar}> {groupId ? "👥" : "👤"}</div>
       <div className={styles.chatInfo}>
         <div className={styles.topRow}>

@@ -71,6 +71,11 @@
   font-size: 0.9rem;
 }
 
+.selected {
+  background-color: #cae0f793;
+  border-left: 2px solid #4a90e2;
+}
+
 @media (max-width: 480px) {
   .time {
     font-size: 0.4rem;
