@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/leave.group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -55,6 +56,7 @@ const LeaveGroup: React.FC<LeaveGroupProps> = ({
         dispatch(removeLastMessageByGroupId(data.params.item.groupId));
         dispatch(removeGroupMessages(data.params.item.groupId));
         dispatch(clearCurrentConversation());
+        toast.success("Вы успешно покинули группу");
         onFulfilled();
       } else {
         dispatch(isErrorReceived(data));

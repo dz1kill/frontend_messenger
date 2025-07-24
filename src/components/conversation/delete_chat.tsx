@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/delete_chat.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -53,6 +54,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
       );
       dispatch(removeDialogMessages(currentConversation?.companionId));
       dispatch(clearCurrentConversation());
+      toast.success("Чат был успешно удалён");
       onFulfilled();
     } else {
       const statusCode = resultAction.payload?.status || 500;

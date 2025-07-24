@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/delete_group.module.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux_hooks";
@@ -52,6 +53,7 @@ const DropGroup: React.FC<DeleteGroupProps> = ({
         dispatch(removeLastMessageByGroupId(data.params.item.groupId));
         dispatch(removeGroupMessages(data.params.item.groupId));
         dispatch(clearCurrentConversation());
+        toast.success("Группа удалена");
         onFulfilled();
       } else {
         dispatch(isErrorReceived(data));
