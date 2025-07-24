@@ -52,10 +52,6 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   const deferredQuery = useDeferredValue(searchQuery);
 
   const handleSelectUser = (user: ItemSearchUsers) => {
-    setApiStatus((prev) => ({
-      ...prev,
-      isErrorServer: false,
-    }));
     setSelectedUser((prev) => (prev?.userId === user.userId ? null : user));
   };
 
@@ -67,10 +63,6 @@ const AddMemberGroup: React.FC<AddMemberGroupProps> = ({
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setApiStatus((prev) => ({
-      ...prev,
-      isErrorServer: false,
-    }));
     setSearchQuery(e.target.value);
     if (e.target.value.length === 0) {
       dispatch(clearSearchResults());
