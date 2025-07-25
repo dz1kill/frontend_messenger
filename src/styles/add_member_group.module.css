@@ -1,0 +1,259 @@
+.groupOverlay,
+.loadingOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.groupOverlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.loadingOverlay {
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index: 2000;
+}
+
+.loadingSpinner {
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #1e88e5;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.groupContent {
+  background-color: white;
+  border-radius: 8px;
+  width: 400px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.groupHeader {
+  padding: 16px;
+  border-bottom: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.groupHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #5682a3;
+}
+
+.searchContainer {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eaeaea;
+  box-sizing: border-box;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3498db6b;
+  box-shadow: 0 0 0 2px #3498db6b;
+}
+
+.usersList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.userItem {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  gap: 15px;
+}
+
+.userItem:hover {
+  background-color: #e5e5e5;
+  transform: translateY(-0.3px);
+}
+.userItem:active {
+  background-color: #b3d4e6;
+  transform: scale(0.98);
+}
+
+.avatar {
+  width: 3.125rem;
+  height: 3.125rem;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+}
+
+.groupFooter {
+  padding: 12px 16px;
+  border-top: 1px solid #eaeaea;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.addButton {
+  padding: 8px 16px;
+  background-color: #5682a3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-width: 80px;
+}
+
+.cancelButton {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-width: 80px;
+}
+
+.addButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.cancelButton:hover {
+  background-color: #e0e0e0;
+}
+
+.addButton:hover {
+  background-color: #476a85;
+}
+
+.selected {
+  background-color: #e3f2fd;
+}
+
+.checkmark {
+  margin-left: auto;
+  color: #3498db;
+  font-weight: bold;
+}
+
+.noResults {
+  font-size: 0.9rem;
+  padding: 20px;
+  text-align: center;
+  color: #888;
+  font-weight: 600;
+}
+
+.errorMessage {
+  margin: 0;
+  font-size: 1rem;
+  color: #d32f2f;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.email {
+  color: #6b7280;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .addButton,
+  .cancelButton {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    min-width: 70px;
+  }
+
+  .dialogContent {
+    width: 95%;
+  }
+
+  .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+  }
+
+  .userName {
+    font-size: 0.85rem;
+  }
+
+  .onlineIndicator {
+    width: 8px;
+    height: 8px;
+  }
+
+  .groupContent {
+    width: 350px;
+    height: 500px;
+  }
+  .email {
+    font-size: 0.7rem;
+  }
+}
