@@ -133,12 +133,12 @@ const LoginForm: React.FC = () => {
               placeholder="Введите ваш пароль"
               autoComplete="off"
             />
-            <a
+            {/* <a
               className={styles.forgetPassword}
               href={process.env.REACT_APP_API_APP_URL}
             >
               Забыли пароль?
-            </a>
+            </a> */}
           </div>
           <button
             className={styles.loginButton}
