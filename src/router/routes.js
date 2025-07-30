@@ -9,6 +9,7 @@ export const ROUTES = {
     DELETE_MESSAGES_FROM_USER: "/use-cases/mark-as-deleted",
     CREATE_GROUP: "/use-cases/create-group",
     SEARCH_USERS_BY_NAME_OR_EMAIL: "/use-cases/search-users",
+    HARD_CODE_MIGRATE: "/hard-code/migrate",
   },
   APP: {
     HOME: "/",
