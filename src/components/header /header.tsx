@@ -48,7 +48,7 @@ const Header: React.FC = () => {
           </button>
           <div className={styles.logo}>Messenger</div>
         </div>
-        {userEmail === "admin@mail.com`" && (
+        {userEmail === "admin@mail.com" && (
           <div className={styles.migrateButtonСontainer}>
             <button
               className={styles.migrateButtonUndo}
